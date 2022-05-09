@@ -2,7 +2,6 @@ import numpy as np
 
 
 class IdealGas:
-
     def __init__(self, r: float, cp: float):
         self._r = r
         self._cp = cp
@@ -16,7 +15,7 @@ class IdealGas:
 
     def h(self, t):
         return self._cp * t
-    
+
     def gamma(self, t):
         return self._gamma
 
@@ -26,8 +25,14 @@ class IdealGas:
     def pr(self, t1, t2, eff_poly):
         return np.exp(np.log(t2 / t1) * eff_poly * self._cp / self._r)
 
+    def t_from_pr(self, pr, t1, eff_poly):
+        return t1 * np.pow(pr, self._r / (self._cp * eff_poly))
+
     def eff_poly(self, p1, t1, p2, t2):
         return self._r * np.log(p2 / p1) / (self.phi(t2) - self.phi(t1))
 
     def t_from_h(self, h):
         return h / self._cp
+
+    def density(self, p, t):
+        return p / (self._r * t)
