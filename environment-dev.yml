@@ -1,0 +1,5 @@
+name: pyturbo
+channels:
+  - conda-forge
+dependencies:
+  - cosapp
