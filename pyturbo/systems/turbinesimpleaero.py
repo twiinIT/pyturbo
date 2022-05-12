@@ -21,7 +21,7 @@ class TurbineSimpleAero(System):
 
         # inwards
         self.add_inward("eff_poly", 0.9, desc="polytropic efficiency")
-        self.add_inward("pr", 5.0, desc="pressure ratio")
+        self.add_inward("er", 5.0, desc="expansion ratio")
         self.add_inward("gas", IdealGas(287.058, 1004.0))
 
         # outwards
@@ -31,8 +31,8 @@ class TurbineSimpleAero(System):
     def compute(self):
         # fluid
         self.fl_out.W = self.fl_in.W
-        self.fl_out.pt = self.fl_in.pt / self.pr
-        self.fl_out.Tt = self.gas.t_from_pr(self.pr, self.fl_in.Tt, self.eff_poly)
+        self.fl_out.pt = self.fl_in.pt / self.er
+        self.fl_out.Tt = self.gas.t_from_pr(1.0 / self.er, self.fl_in.Tt, self.eff_poly)
         self.Tt_ratio = self.fl_out.Tt / self.fl_in.Tt
 
         # shaft power
