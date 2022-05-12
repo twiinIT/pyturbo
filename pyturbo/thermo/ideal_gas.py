@@ -26,7 +26,7 @@ class IdealGas:
         return np.exp(np.log(t2 / t1) * eff_poly * self._cp / self._r)
 
     def t_from_pr(self, pr, t1, eff_poly):
-        return t1 * np.pow(pr, self._r / (self._cp * eff_poly))
+        return t1 * np.power(pr, self._r / (self._cp * eff_poly))
 
     def eff_poly(self, p1, t1, p2, t2):
         return self._r * np.log(p2 / p1) / (self.phi(t2) - self.phi(t1))
