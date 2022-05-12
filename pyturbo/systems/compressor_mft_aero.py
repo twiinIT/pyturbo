@@ -1,5 +1,4 @@
 import numpy as np
-from cosapp.ports import Port
 from cosapp.systems import System
 
 from pyturbo.mft.compressor import SimplifiedMftCompressor
@@ -7,7 +6,7 @@ from pyturbo.ports import FluidPort
 from pyturbo.thermo.ideal_gas import IdealGas
 
 
-class CompressorAeroMft(System):
+class CompressorMftAero(System):
     def setup(self):
 
         self.add_input(FluidPort, "fl_in")
@@ -16,7 +15,7 @@ class CompressorAeroMft(System):
         self.add_inward("pcnr", 90.0)
         self.add_inward("gh", 0.0)
         self.add_inward("cmp_model", SimplifiedMftCompressor())
-        self.add_inward("gas", IdealGas(287.058, 1004.0)) # dry air
+        self.add_inward("gas", IdealGas(287.058, 1004.0))  # dry air
 
     def compute(self):
         self.fl_out.Tt = self.gas.t_from_h(self.gas.h(self.fl_in.Tt) + self.cmp_model.ghr(self.gh))
