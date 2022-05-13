@@ -59,5 +59,5 @@ class Shaft(System):
             fraction = self[f"{p.name}_power_fraction"]
             if self.has_many_outputs:
                 fraction *= self.fraction_scalar
-            p.power = self.total_input_power * fraction
+            p.power = self.total_input_power * fraction * self.eff
             self.total_output_power += p.power
