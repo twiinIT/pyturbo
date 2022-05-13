@@ -1,6 +1,5 @@
 from math import sqrt
 
-import numpy as np
 from cosapp.systems import System
 
 from pyturbo.ports import FluidPort
@@ -21,10 +20,8 @@ class NozzleSimpleAero(System):
 
         # inwards/outwards
         self.add_inward("gas", IdealGas(287.058, 1004.0))
-
         self.add_inward("section", 1.0, unit="m**2", desc="choked/exit section")
         self.add_inward("pamb", 101325.0, unit="Pa", desc="ambient static pressure")
-
         self.add_outward("thrust", unit="N")
 
         # solver
