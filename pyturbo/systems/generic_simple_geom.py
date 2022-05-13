@@ -3,6 +3,7 @@ from math import pi
 import numpy as np
 from cosapp.systems import System
 from pyoccad.create import CreateAxis, CreateRevolution, CreateWire
+from pyoccad.transform import Scale, Translate
 
 
 class GenericSimpleGeom(System):
@@ -17,6 +18,9 @@ class GenericSimpleGeom(System):
         self.add_inward("exit_area", 1.0, unit="m**2", desc="inlet area")
 
         self.add_inward("form_factor", 1.0, unit="", desc="length over mean height ratio")
+
+        self.add_inward("scaling", 1.0, unit="", desc="homothetic scaling factor")
+        self.add_inward("translation", [0.0, 0.0, 0.0], unit="", desc="3D translation")
 
         # outwards
         self.add_outward("shape", None, unit="", desc="geometry")
@@ -43,5 +47,8 @@ class GenericSimpleGeom(System):
             ),
             auto_close=True,
         )
+        revol = CreateRevolution.solid_from_curve(w, CreateAxis.ox())
+        Scale.from_factor(revol, self.scaling)
+        Translate.from_vector(revol, self.translation)
 
-        self.shape = CreateRevolution.solid_from_curve(w, CreateAxis.ox())
+        self.shape = revol
