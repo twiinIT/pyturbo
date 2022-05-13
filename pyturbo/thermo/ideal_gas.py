@@ -7,7 +7,8 @@ class IdealGas:
         self._cp = cp
         self._gamma = cp / (cp - r)
 
-    def r(self, t):
+    @property
+    def r(self):
         return self._r
 
     def cp(self, t):
