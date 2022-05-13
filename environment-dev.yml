@@ -3,5 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - cosapp
+  - pyoccad
+  - pythreejs
   - black
   - isort
