@@ -1,54 +1,54 @@
-from math import pi
-
-import numpy as np
 from cosapp.systems import System
 from pyoccad.create import CreateAxis, CreateRevolution, CreateWire
 from pyoccad.transform import Scale, Translate
+import numpy as np
 
 
 class GenericSimpleGeom(System):
     """A generic simple geometry based on a quasi cylindrical revolution."""
 
     def setup(self):
-        # inputs/outputs
-        self.add_inward("inlet_mean_radius", 1.0, unit="m", desc="inlet arithmetic mean radius")
-        self.add_inward("exit_mean_radius", 1.0, unit="m", desc="exit arithmetic mean radius")
+        # inwards
+        self.add_inward("inlet_hub_radius_ref", 0.5, unit="m", desc="reference inlet hub radius")
+        self.add_inward("inlet_tip_radius_ref", 1.0, unit="m", desc="reference inlet tip radius")
+        self.add_inward("exit_hub_radius_ref", 0.5, unit="m", desc="reference exit hub radius")
+        self.add_inward("exit_tip_radius_ref", 1.0, unit="m", desc="reference exit tip radius")
+        self.add_inward("axial_form_factor", 1.0, unit="", desc="length-over-radius form factor")
 
-        self.add_inward("inlet_area", 1.0, unit="m**2", desc="inlet area")
-        self.add_inward("exit_area", 1.0, unit="m**2", desc="inlet area")
+        self.add_inward("scale", 1.0, unit="", desc="scale factor")
+        self.add_inward("translation", np.zeros(3), unit="m", desc="translation vector")
 
-        self.add_inward("form_factor", 1.0, unit="", desc="length over mean height ratio")
-
-        self.add_inward("scaling", 1.0, unit="", desc="homothetic scaling factor")
-        self.add_inward("translation", [0.0, 0.0, 0.0], unit="", desc="3D translation")
-
-        # outwards
-        self.add_outward("shape", None, unit="", desc="geometry")
+        self.add_outward("inlet_hub_radius", 0.5, unit="m", desc="inlet hub radius")
+        self.add_outward("inlet_tip_radius", 1.0, unit="m", desc="inlet tip radius")
+        self.add_outward("exit_hub_radius", 0.5, unit="m", desc="exit hub radius")
+        self.add_outward("exit_tip_radius", 1.0, unit="m", desc="exit tip radius")
+        self.add_outward("shape", None, unit="", desc="view")
 
     def compute(self):
-        def f(mean_r, area):
-            c = area / (2 * pi)
-            r_hub = mean_r - c / (2 * mean_r)
-            r_tip = 1.0
-            return r_hub, r_tip
-
-        inlet_hub_r, inlet_tip_r = f(self.inlet_mean_radius, self.inlet_area)
-        exit_hub_r, exit_tip_r = f(self.exit_mean_radius, self.exit_area)
-        length = (
-            np.mean((inlet_tip_r, exit_tip_r)) - np.mean((inlet_hub_r, exit_hub_r))
-        ) * self.form_factor
-
+        axial_length = np.mean(
+            (
+                self.inlet_hub_radius_ref,
+                self.inlet_tip_radius_ref,
+                self.exit_hub_radius_ref,
+                self.exit_tip_radius_ref,
+            )
+        )
         w = CreateWire.from_points(
             (
-                (0.0, inlet_hub_r, 0.0),
-                (0.0, inlet_tip_r, 0.0),
-                (length, exit_tip_r, 0.0),
-                (length, exit_hub_r, 0.0),
+                (0.0, self.inlet_hub_radius_ref, 0.0),
+                (0.0, self.inlet_tip_radius_ref, 0.0),
+                (axial_length, self.exit_tip_radius_ref, 0.0),
+                (axial_length, self.exit_hub_radius_ref, 0.0),
             ),
             auto_close=True,
         )
-        revol = CreateRevolution.solid_from_curve(w, CreateAxis.ox())
-        Scale.from_factor(revol, self.scaling)
-        Translate.from_vector(revol, self.translation)
 
+        self.inlet_hub_radius = self.inlet_hub_radius_ref * self.scale
+        self.inlet_tip_radius = self.inlet_tip_radius_ref * self.scale
+        self.exit_hub_radius = self.exit_hub_radius_ref * self.scale
+        self.exit_tip_radius = self.exit_tip_radius_ref * self.scale
+
+        revol = CreateRevolution.solid_from_curve(w, CreateAxis.ox())
+        Scale.from_factor(revol, self.scale)
+        Translate.from_vector(revol, self.translation)
         self.shape = revol

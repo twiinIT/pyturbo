@@ -37,3 +37,11 @@ class IdealGas:
 
     def density(self, p, t):
         return p / (self._r * t)
+
+    def c(self, t):
+        return np.sqrt(self._gamma * self._r * t)
+
+
+class IdealDryAir(IdealGas):
+    def __init__(self):
+        super().__init__(r=287.058, cp=1004.0)
