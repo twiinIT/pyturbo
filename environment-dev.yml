@@ -7,3 +7,4 @@ dependencies:
   - pythreejs
   - black
   - isort
+  - pytest
