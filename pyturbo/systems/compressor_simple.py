@@ -18,10 +18,10 @@ class CompressorSimple(System):
                 CompressorSimpleGeom("geom", stage_count=stage_count),
                 pulling=[
                     "stage_count",
-                    "inlet_hub_radius",
-                    "inlet_tip_radius",
-                    "exit_hub_radius",
-                    "exit_tip_radius",
+                    "hub_in_r",
+                    "tip_in_r",
+                    "hub_out_r",
+                    "tip_out_r",
                 ],
             )
         if aero:
@@ -32,7 +32,7 @@ class CompressorSimple(System):
             self.connect(
                 self.geom.outwards,
                 self.aero.inwards,
-                ["inlet_tip_radius", "exit_tip_radius", "inlet_section"],
+                ["tip_in_r", "tip_out_r", "inlet_area"],
             )
             self.connect(self.geom.inwards, self.aero.inwards, ["stage_count"])
 

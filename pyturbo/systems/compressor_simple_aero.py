@@ -30,9 +30,9 @@ class CompressorSimpleAero(System):
         self.add_input(ShaftPort, "shaft_in")
 
         # geom characteristics
-        self.add_inward("inlet_tip_radius", 1.0, unit="m", desc="inlet tip radius")
-        self.add_inward("exit_tip_radius", 1.0, unit="m", desc="exit tip radius")
-        self.add_inward("inlet_section", 1.0, unit="m**2", desc="inlet section")
+        self.add_inward("tip_in_r", 1.0, unit="m", desc="inlet tip radius")
+        self.add_inward("tip_out_r", 1.0, unit="m", desc="exit tip radius")
+        self.add_inward("inlet_area", 1.0, unit="m**2", desc="inlet area")
 
         # aero characteristics
         self.add_inward("eff_poly", 0.9, desc="polytropic efficiency")
@@ -80,11 +80,11 @@ class CompressorSimpleAero(System):
         self.fl_out.pt = self.fl_in.pt * self.pr
 
         # axial flow coefficient
-        self.utip = self.shaft_in.N * np.pi / 30.0 * self.exit_tip_radius
+        self.utip = self.shaft_in.N * np.pi / 30.0 * self.tip_out_r
         rho = self.gas.density(self.fl_in.pt, self.fl_in.Tt)
-        vm = self.fl_in.W / (rho * self.inlet_section)
+        vm = self.fl_in.W / (rho * self.inlet_area)
         self.phi = vm / self.utip
 
         # load coefficient
-        self.psi = self.exit_tip_radius / self.inlet_tip_radius * (1 - self.phi / self.phiP)
+        self.psi = self.tip_out_r / self.tip_in_r * (1 - self.phi / self.phiP)
         self.eps_psi = delta_h / (self.stage_count * self.utip**2) - self.psi

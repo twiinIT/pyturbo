@@ -10,7 +10,7 @@ class NozzleSimpleAero(System):
     """A simple nozzle aerodynamic model.
 
     It computes the gross thrust from the inlet flow and ambient static
-    pressure assuming a choked throat=exit section (convergent nozzle).
+    pressure assuming a choked throat=exit area (convergent nozzle).
     """
 
     def setup(self):
@@ -20,7 +20,7 @@ class NozzleSimpleAero(System):
 
         # inwards/outwards
         self.add_inward("gas", IdealGas(287.058, 1004.0))
-        self.add_inward("section", 1.0, unit="m**2", desc="choked/exit section")
+        self.add_inward("area", 1.0, unit="m**2", desc="choked/exit area")
         self.add_inward("pamb", 101325.0, unit="Pa", desc="ambient static pressure")
         self.add_outward("thrust", unit="N")
 
@@ -42,6 +42,6 @@ class NozzleSimpleAero(System):
         v = mach_throat * sqrt(gamma * r * ts)
         ps = self.fl_in.pt * tr ** (-gamma / (gamma - 1.0))
 
-        self.fl_out.W = self.gas.density(ps, ts) * v * self.section
+        self.fl_out.W = self.gas.density(ps, ts) * v * self.area
         self.fl_out.Tt = self.fl_in.Tt
-        self.thrust = self.fl_in.W * v + (ps - self.pamb) * self.section
+        self.thrust = self.fl_in.W * v + (ps - self.pamb) * self.area

@@ -5,23 +5,27 @@ from pyturbo.systems.generic_simple_geom import GenericSimpleGeom
 class CompressorSimpleGeom(GenericSimpleGeom):
     """Compressor geometry.
 
-    - The geometrical envelop is a cylinder with inlet and outlet assumed fully radial
+    - The geometrical envelop is a cylinder with fully radial inlet and exit.
     - The geometry exposed to aero module is made of:
-            inlet section
-            inlet and outlet tip radius
+      - inlet area
+      - inlet and outlet tip radius
     """
 
     def setup(self, stage_count: int = 1):
         super().setup()
 
         self.add_inward("stage_count", 1)
+        self.add_inward("h_over_cx", 1.0, unit="", desc="height over axial chord ratio of a row")
+
         # aero outputs
-        self.add_outward("inlet_section", 1.0, unit="m**2", desc="inlet section")
+        self.add_outward("inlet_area", 1.0, unit="m**2", desc="inlet area")
 
         # design method
         self.add_design_method("sizing").add_unknown("scale")
 
     def compute(self):
-        super().compute()
+        self.axial_form_factor = self.stage_count * self.h_over_cx
 
-        self.inlet_section = pi * (self.exit_tip_radius**2 - self.exit_hub_radius**2)
+        self.compute_generic_geom()
+
+        self.inlet_area = pi * (self.tip_out_r**2 - self.hub_out_r**2)
