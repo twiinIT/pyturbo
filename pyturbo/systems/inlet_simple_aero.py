@@ -36,7 +36,7 @@ class InletSimpleAero(System):
         self.fl_out.pt = self.fl_in.pt * self.p_loss
 
         t = self.gas.static_t(self.fl_in.Tt, self.throat_Mach)
-        pr = self.gas.pr(self.fl_in.Tt, t, 1.)
+        pr = self.gas.pr(self.fl_in.Tt, t, 1.0)
         p = self.fl_out.pt * pr
         v = self.throat_Mach * self.gas.c(t)
 
