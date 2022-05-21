@@ -2,7 +2,7 @@ from cosapp.drivers import NonLinearSolver
 from numpy import pi
 
 from pyturbo.systems import CompressorSimpleAero, CompressorSimpleGeom
-from pyturbo.systems.compressor_simple import CompressorSimple
+from pyturbo.systems.compressor import CompressorSimple
 
 
 class TestCompressorSimpleAero:
