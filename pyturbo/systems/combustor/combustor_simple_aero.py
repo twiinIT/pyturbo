@@ -25,7 +25,7 @@ class CombustorSimpleAero(System):
 
     def compute(self):
         # computations
-        h_out = self.gas.h(self.fl_in.Tt) + self.fuel_in.W / self.fl_in.W * self.fhv * self.eff
+        h_out = self.gas.h(self.fl_in.Tt) + self.fuel_in.W * self.fhv * self.eff
 
         # output conditions
         self.fl_out.W = self.fl_in.W + self.fuel_in.W

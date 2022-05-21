@@ -1,4 +1,4 @@
-from pyturbo.systems.combustor_simple_aero import CombustorSimpleAero
+from pyturbo.systems.combustor import CombustorSimple, CombustorSimpleAero, CombustorSimpleGeom
 from pyturbo.systems.compressor_mft_aero import CompressorMftAero
 from pyturbo.systems.compressor_simple_aero import CompressorSimpleAero
 from pyturbo.systems.compressor_simple_geom import CompressorSimpleGeom
