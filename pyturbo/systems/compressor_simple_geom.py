@@ -1,6 +1,6 @@
 from numpy import pi
 
-from pyturbo.systems.generic import GenericSimpleGeom
+from pyturbo.systems.generic.generic_simple_geom import GenericSimpleGeom
 
 
 class CompressorSimpleGeom(GenericSimpleGeom):
@@ -29,4 +29,4 @@ class CompressorSimpleGeom(GenericSimpleGeom):
 
         self.compute_generic_geom()
 
-        self.inlet_area = pi * (self.tip_out_r**2 - self.hub_out_r**2)
+        self.inlet_area = pi * (self.tip_in_r**2 - self.hub_in_r**2)
