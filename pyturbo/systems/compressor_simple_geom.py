@@ -1,5 +1,6 @@
 from numpy import pi
-from pyturbo.systems.generic_simple_geom import GenericSimpleGeom
+
+from pyturbo.systems.generic import GenericSimpleGeom
 
 
 class CompressorSimpleGeom(GenericSimpleGeom):

@@ -1,7 +1,7 @@
-from cosapp.systems import System
-from pyoccad.create import CreateAxis, CreateRevolution, CreateWire
-from pyoccad.transform import Scale, Translate
 import numpy as np
+from cosapp.systems import System
+from pyoccad.create import CreateAxis, CreateRevolution, CreateTopology, CreateWire
+from pyoccad.transform import Scale, Translate
 
 
 class GenericSimpleGeom(System):
@@ -22,6 +22,7 @@ class GenericSimpleGeom(System):
         self.add_outward("tip_in_r", 1.0, unit="m", desc="inlet tip radius")
         self.add_outward("hub_out_r", 0.5, unit="m", desc="exit hub radius")
         self.add_outward("tip_out_r", 1.0, unit="m", desc="exit tip radius")
+        self.add_outward("out_x", 1.0, unit="m", desc="exit axial position")
         self.add_outward("shape", None, unit="", desc="view")
 
     def compute_generic_geom(self):
@@ -34,23 +35,32 @@ class GenericSimpleGeom(System):
             )
             * self.axial_form_factor
         )
-
-        w = CreateWire.from_points(
-            (
-                (0.0, self.hub_in_r_ref, 0.0),
-                (0.0, self.tip_in_r_ref, 0.0),
-                (axial_length, self.tip_out_r_ref, 0.0),
-                (axial_length, self.hub_out_r_ref, 0.0),
-            ),
-            auto_close=True,
-        )
+        self.out_x = (self.translation[0] + axial_length) * self.scale
 
         self.hub_in_r = self.hub_in_r_ref * self.scale
         self.tip_in_r = self.tip_in_r_ref * self.scale
         self.hub_out_r = self.hub_out_r_ref * self.scale
         self.tip_out_r = self.tip_out_r_ref * self.scale
 
-        revol = CreateRevolution.solid_from_curve(w, CreateAxis.ox())
-        Scale.from_factor(revol, self.scale)
-        Translate.from_vector(revol, self.translation)
-        self.shape = revol
+        w1 = CreateWire.from_points(
+            (
+                (0.0, self.hub_in_r_ref, 0.0),
+                (axial_length, self.hub_out_r_ref, 0.0),
+            ),
+        )
+        w2 = CreateWire.from_points(
+            (
+                (0.0, self.tip_in_r_ref, 0.0),
+                (axial_length, self.tip_out_r_ref, 0.0),
+            ),
+        )
+
+        inner_shell = CreateRevolution.surface_from_curve(w1, CreateAxis.ox())
+        Scale.from_factor(inner_shell, self.scale)
+        Translate.from_vector(inner_shell, self.translation)
+
+        outer_shell = CreateRevolution.surface_from_curve(w2, CreateAxis.ox())
+        Scale.from_factor(outer_shell, self.scale)
+        Translate.from_vector(outer_shell, self.translation)
+
+        self.shape = CreateTopology.make_compound(inner_shell, outer_shell)
