@@ -1,6 +1,6 @@
-from re import U
-import numpy as np
+from math import sqrt
 
+import numpy as np
 from cosapp.systems import System
 
 from pyturbo.ports import FluidPort, ShaftPort
@@ -43,8 +43,9 @@ class CompressorSimpleAero(System):
         self.add_outward("phi", 0.0, unit="", desc="axial flow velocity coefficient")
         self.add_outward("psi", 0.0, unit="", desc="load coefficient")
 
-        self.add_outward("pr", 1.0, desc="total pressure ratio")
-        self.add_outward("tr", 1.0, desc="total temperature ratio")
+        self.add_outward("pr", 1.0, unit="", desc="total pressure ratio")
+        self.add_outward("tr", 1.0, unit="", desc="total temperature ratio")
+        self.add_outward("spec_flow", 1.0, desc="inlet specific flow")
 
         # off design
         self.add_outward(
@@ -56,12 +57,13 @@ class CompressorSimpleAero(System):
         self.add_equation("eps_psi == 0")
 
         # design methods
-        self.add_inward("design_utip", unit="m/s", desc="tip speed at design point")
-        self.add_inward("design_pr", 1.3, unit="", desc="pressure ratio at design point")
+        self.add_inward("design_utip", 400.0, unit="m/s", desc="tip speed at design point")
+        self.add_inward("design_pr", 5.0, unit="", desc="pressure ratio at design point")
 
         self.add_design_method("sizing").add_equation("utip == design_utip").add_equation(
             "pr == design_pr"
-        )
+        ).add_equation("spec_flow == 200.")
+
         # calibration methods
         self.add_design_method("calib").add_unknown("design_utip").add_unknown(
             "design_pr"
@@ -84,6 +86,13 @@ class CompressorSimpleAero(System):
         rho = self.gas.density(self.fl_in.pt, self.fl_in.Tt)
         vm = self.fl_in.W / (rho * self.inlet_area)
         self.phi = vm / self.utip
+
+        self.spec_flow = (
+            self.fl_in.W
+            * sqrt(self.fl_in.Tt / 288.15)
+            / (self.fl_in.pt / 101325.0)
+            / self.inlet_area
+        )
 
         # load coefficient
         self.psi = self.tip_out_r / self.tip_in_r * (1 - self.phi / self.phiP)
