@@ -13,10 +13,10 @@ class KeypointsPort(Port):
     """
 
     def setup(self):
-        self.add_variable("inlet_hub", np.r_[0.9, 0.0], desc="inlet hub")
-        self.add_variable("inlet_tip", np.r_[0.9, 0.0], desc="inlet tip")
-        self.add_variable("exit_hub", np.r_[0.9, 0.0], desc="exit hub")
-        self.add_variable("exit_tip", np.r_[0.9, 0.0], desc="exit tip")
+        self.add_variable("inlet_hub", np.r_[0.0, 0.0], unit="m", desc="inlet hub")
+        self.add_variable("inlet_tip", np.r_[0.9, 0.0], unit="m", desc="inlet tip")
+        self.add_variable("exit_hub", np.r_[0.0, 0.9], unit="m", desc="exit hub")
+        self.add_variable("exit_tip", np.r_[0.9, 0.9], unit="m", desc="exit tip")
 
     @property
     def inlet_hub_r(self):
@@ -53,3 +53,67 @@ class KeypointsPort(Port):
     @property
     def mean_radius(self):
         return np.mean((self.inlet_hub, self.inlet_tip, self.exit_hub, self.exit_tip), axis=0)[0]
+
+
+class C1Keypoint:
+    """A keypoint class aggregating C1-continuity information: position and
+    1st order derivate.
+
+    The geometry is assumed to be revolution around x-axis and keypoint
+    is defined in {r, z} coordinates.
+    """
+
+    default_pos = np.ones(2)
+    default_der = np.ones(2)
+
+    def __init__(self, pos=default_pos, der=default_der):
+        self.pos = pos
+        self.der = der
+
+    @property
+    def rz(self):
+        return self.pos
+
+    @rz.setter
+    def rz(self, rz: np.ndarray):
+        self.pos = rz
+
+    @property
+    def r(self):
+        return self.pos[0]
+
+    @r.setter
+    def r(self, val: float):
+        self.pos[0] = val
+
+    @property
+    def z(self):
+        return self.pos[1]
+
+    @z.setter
+    def z(self, val: float):
+        self.pos[1] = val
+
+    @property
+    def drdz(self):
+        return self.der
+
+    @drdz.setter
+    def drdz(self, drdz: np.ndarray):
+        self.der = drdz
+
+    @property
+    def dr(self):
+        return self.der[0]
+
+    @dr.setter
+    def dr(self, val: float):
+        self.der[0] = val
+
+    @property
+    def dz(self):
+        return self.der[1]
+
+    @dz.setter
+    def dz(self, val: float):
+        self.der[1] = val

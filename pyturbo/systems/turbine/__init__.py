@@ -1,7 +1,9 @@
 # Copyright (C) 2022, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
-from pyturbo.systems.turbine.turbine_simple_aero import TurbineSimpleAero  # noqa
-from pyturbo.systems.turbine.turbine_simple_geom import TurbineSimpleGeom  # noqa
+from pyturbo.systems.turbine.turbine_aero import TurbineAero
+from pyturbo.systems.turbine.turbine_geom import TurbineGeom
 
-from pyturbo.systems.turbine.turbine_simple import TurbineSimple  # noqa # isort: skip
+from pyturbo.systems.turbine.turbine import Turbine, HPT, LPT  # isort: skip
+
+__all__ = ["TurbineAero", "TurbineGeom", "Turbine", "HPT", "LPT"]

@@ -1,7 +1,7 @@
 # Copyright (C) 2022, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
-from pyturbo.systems.turbofan_weight import TurbofanWeight
+from pyturbo.systems.turbofan import TurbofanWeight
 
 
 class TestTurbofanWeight:

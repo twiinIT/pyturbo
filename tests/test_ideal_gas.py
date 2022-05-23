@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import numpy as np
+import pytest
 
 from pyturbo.thermo.ideal_gas import IdealDryAir, IdealGas
 
@@ -51,6 +52,48 @@ class TestIdealGas:
         assert (
             abs(self.gas.eff_poly(self.p1, self.t1, self.p1 * self.pr, self.t2) - self.eff) < 1e-6
         )
+
+    def test_total_t(self):
+        mach = 0.5
+        ts = 300.0
+        tt = self.gas.total_t(ts, mach)
+        assert ts == pytest.approx(self.gas.static_t(tt, mach), 1e-3)
+
+    def test_static_t(self):
+        mach = 0.5
+        ts = 300.0
+        tt = self.gas.total_t(ts, mach)
+        assert ts == pytest.approx(self.gas.static_t(tt, mach), 1e-3)
+
+    def test_static_p(self):
+        mach = 0.5
+        ps = 1e5
+        ts = 300.0
+        tt = self.gas.total_t(ts, mach)
+        pt = self.gas.total_p(ps, ts, tt)
+        assert ps == pytest.approx(self.gas.static_p(pt, tt, mach), 1e-3)
+
+    def test_static_p_from_rhoV_subsonic(self):
+        mach = 0.5
+        ts = 300.0
+        ps = 1e5
+
+        tt = self.gas.total_t(ts, mach)
+        pt = self.gas.total_p(ps, ts, tt)
+        rhoV = self.gas.density(ps, ts) * mach * self.gas.c(ts)
+
+        assert ps == pytest.approx(self.gas.static_p_from_rhoV(pt, tt, rhoV, True), 1e-3)
+
+    def test_static_p_from_rhoV_supersonic(self):
+        mach = 1.5
+        ts = 300.0
+        ps = 1e5
+
+        tt = self.gas.total_t(ts, mach)
+        pt = self.gas.total_p(ps, ts, tt)
+        rhoV = self.gas.density(ps, ts) * mach * self.gas.c(ts)
+
+        assert ps == pytest.approx(self.gas.static_p_from_rhoV(pt, tt, rhoV, False), 1e-3)
 
 
 class TestDryAir:

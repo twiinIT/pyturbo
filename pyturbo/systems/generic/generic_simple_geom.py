@@ -1,11 +1,14 @@
 # Copyright (C) 2022, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
-import numpy as np
+from typing import Dict
+
 from cosapp.systems import System
+from OCC.Core.TopoDS import TopoDS_Shape
 from pyoccad.create import CreateAxis, CreateRevolution, CreateTopology, CreateWire
 
 from pyturbo.ports import KeypointsPort
+from pyturbo.utils import rz_to_3d
 
 
 class GenericSimpleGeom(System):
@@ -14,34 +17,17 @@ class GenericSimpleGeom(System):
     def setup(self):
         # inwards/outwards
         self.add_input(KeypointsPort, "kp")
-        self.add_outward("axial_form_factor", 1.0, unit="", desc="height over length form factor")
 
-    def compute(self):
-        length = self.kp.exit_tip_z - self.kp.inlet_tip_z
-        assert length
-        self.axial_form_factor = (
-            np.mean(
-                (self.kp.inlet_tip_r - self.kp.inlet_hub_r, self.kp.exit_tip_r - self.kp.exit_hub_r)
-            )
-            / length
-        )
-
-    def to_occt(self):
-
-        w1 = CreateWire.from_points(
+    def _to_occt(self) -> Dict[str, TopoDS_Shape]:
+        w = CreateWire.from_points(
             (
-                (self.kp.inlet_hub_z, self.kp.inlet_hub_r, 0.0),
-                (self.kp.exit_hub_z, self.kp.exit_hub_r, 0.0),
+                rz_to_3d(self.kp.inlet_hub),
+                rz_to_3d(self.kp.exit_hub),
+                rz_to_3d(self.kp.exit_tip),
+                rz_to_3d(self.kp.inlet_tip),
             ),
-        )
-        w2 = CreateWire.from_points(
-            (
-                (self.kp.inlet_tip_z, self.kp.inlet_tip_r, 0.0),
-                (self.kp.exit_tip_z, self.kp.exit_tip_r, 0.0),
-            ),
+            auto_close=True,
         )
 
-        inner_shell = CreateRevolution.surface_from_curve(w1, CreateAxis.ox())
-        outer_shell = CreateRevolution.surface_from_curve(w2, CreateAxis.ox())
-
-        return CreateTopology.make_compound(inner_shell, outer_shell)
+        shell = CreateRevolution.surface_from_curve(w, CreateAxis.oz())
+        return dict(geom=CreateTopology.make_compound(shell))
