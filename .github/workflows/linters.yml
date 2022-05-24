@@ -16,7 +16,9 @@ jobs:
       - name: Install dependencies
         uses: mamba-org/provision-with-micromamba@main
         with:
-          extra-specs: pre-commit
+          environment-file: ./environment-dev.yml
+          environment-name: linters
+          cache-env: true
       - name: Run all linters
         shell: pwsh
         run: |
