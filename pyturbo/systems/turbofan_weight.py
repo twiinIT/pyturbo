@@ -9,12 +9,12 @@ from pyturbo.thermo.ideal_gas import IdealGas
 class TurbofanWeight(System):
     """A simple weight model.
 
-    Weight is evaluated from diameter and lenght
-    coef are computed from CFM familly value
+    Weight is evaluated from diameter and length
+    coef are computed from CFM family value
     """
 
     def setup(self):
-        # coef - evaluated from CFM familly
+        # coef - evaluated from CFM family
         self.add_inward('c1', -1.1)
         self.add_inward('c2', 4.3)
         self.add_inward('c3', - 0.05)
