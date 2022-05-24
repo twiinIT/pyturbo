@@ -3,64 +3,43 @@ from cosapp.systems import System
 from pyoccad.create import CreateAxis, CreateRevolution, CreateTopology, CreateWire
 from pyoccad.transform import Scale, Translate
 
+from pyturbo.ports import KeypointsPort
+
 
 class GenericSimpleGeom(System):
     """A generic simple geometry based on a quasi cylindrical revolution."""
 
     def setup(self):
-        # inwards
-        self.add_inward("hub_in_r_ref", 0.5, unit="m", desc="reference inlet hub radius")
-        self.add_inward("tip_in_r_ref", 1.0, unit="m", desc="reference inlet tip radius")
-        self.add_inward("hub_out_r_ref", 0.5, unit="m", desc="reference exit hub radius")
-        self.add_inward("tip_out_r_ref", 1.0, unit="m", desc="reference exit tip radius")
-        self.add_inward("axial_form_factor", 1.0, unit="", desc="length-over-radius form factor")
+        # inwards/outwards
+        self.add_input(KeypointsPort, "kp")
+        self.add_outward("axial_form_factor", 1.0, unit="", desc="height over length form factor")
 
-        self.add_inward("scale", 1.0, unit="", desc="scale factor")
-        self.add_inward("translation", np.zeros(3), unit="m", desc="translation vector")
-
-        self.add_outward("hub_in_r", 0.5, unit="m", desc="inlet hub radius")
-        self.add_outward("tip_in_r", 1.0, unit="m", desc="inlet tip radius")
-        self.add_outward("hub_out_r", 0.5, unit="m", desc="exit hub radius")
-        self.add_outward("tip_out_r", 1.0, unit="m", desc="exit tip radius")
-        self.add_outward("out_x", 1.0, unit="m", desc="exit axial position")
-        self.add_outward("shape", None, unit="", desc="view")
-
-    def compute_generic_geom(self):
-        axial_length = (
+    def compute(self):
+        l = self.kp.exit_tip_z - self.kp.inlet_tip_z
+        assert l
+        self.axial_form_factor = (
             np.mean(
-                (
-                    self.tip_in_r_ref - self.hub_in_r_ref,
-                    self.tip_out_r_ref - self.hub_out_r_ref,
-                )
+                (self.kp.inlet_tip_r - self.kp.inlet_hub_r, self.kp.exit_tip_r - self.kp.exit_hub_r)
             )
-            * self.axial_form_factor
+            / l
         )
-        self.out_x = (self.translation[0] + axial_length) * self.scale
 
-        self.hub_in_r = self.hub_in_r_ref * self.scale
-        self.tip_in_r = self.tip_in_r_ref * self.scale
-        self.hub_out_r = self.hub_out_r_ref * self.scale
-        self.tip_out_r = self.tip_out_r_ref * self.scale
+    def to_occt(self):
 
         w1 = CreateWire.from_points(
             (
-                (0.0, self.hub_in_r_ref, 0.0),
-                (axial_length, self.hub_out_r_ref, 0.0),
+                (self.kp.inlet_hub_z, self.kp.inlet_hub_r, 0.0),
+                (self.kp.exit_hub_z, self.kp.exit_hub_r, 0.0),
             ),
         )
         w2 = CreateWire.from_points(
             (
-                (0.0, self.tip_in_r_ref, 0.0),
-                (axial_length, self.tip_out_r_ref, 0.0),
+                (self.kp.inlet_tip_z, self.kp.inlet_tip_r, 0.0),
+                (self.kp.exit_tip_z, self.kp.exit_tip_r, 0.0),
             ),
         )
 
         inner_shell = CreateRevolution.surface_from_curve(w1, CreateAxis.ox())
-        Scale.from_factor(inner_shell, self.scale)
-        Translate.from_vector(inner_shell, self.translation)
-
         outer_shell = CreateRevolution.surface_from_curve(w2, CreateAxis.ox())
-        Scale.from_factor(outer_shell, self.scale)
-        Translate.from_vector(outer_shell, self.translation)
 
-        self.shape = CreateTopology.make_compound(inner_shell, outer_shell)
+        return CreateTopology.make_compound(inner_shell, outer_shell)

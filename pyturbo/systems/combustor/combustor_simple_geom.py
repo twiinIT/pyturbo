@@ -9,12 +9,8 @@ class CombustorSimpleGeom(GenericSimpleGeom):
     The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit.
     """
 
-    def setup(self, stage_count: int = 1):
+    def setup(self):
         super().setup()
 
         # design method
-        self.add_design_method("sizing").add_unknown("scale")
-
-    def compute(self):
-        self.axial_form_factor = 3.0
-        self.compute_generic_geom()
+        self.add_design_method("axial_length").add_equation("axial_form_factor == 0.25")

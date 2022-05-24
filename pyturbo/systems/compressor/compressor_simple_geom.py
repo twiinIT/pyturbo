@@ -1,4 +1,4 @@
-from numpy import pi
+import numpy as np
 
 from pyturbo.systems.generic.generic_simple_geom import GenericSimpleGeom
 
@@ -21,14 +21,17 @@ class CompressorSimpleGeom(GenericSimpleGeom):
 
         # aero outputs
         self.add_outward("inlet_area", 1.0, unit="m**2", desc="inlet area")
+        self.add_outward("tip_in_r", 1.0, unit="m", desc="inlet tip radius")
+        self.add_outward("tip_out_r", 1.0, unit="m", desc="exit tip radius")
 
         # design method
-        self.add_design_method("sizing").add_unknown(("scale", "tip_in_r_ref"))
+        self.add_design_method("axial_length").add_equation(
+            "axial_form_factor == h_over_cx / (2. * stage_count)"
+        )
 
     def compute(self):
-        # a stage is composed of 2 rows
-        self.axial_form_factor = 2 * self.stage_count * self.h_over_cx
+        super().compute()
 
-        self.compute_generic_geom()
-
-        self.inlet_area = pi * (self.tip_in_r**2 - self.hub_in_r**2)
+        self.inlet_area = np.pi * (self.kp.inlet_tip_r**2 - self.kp.inlet_hub_r**2)
+        self.tip_in_r = self.kp.inlet_tip_r
+        self.tip_out_r = self.kp.exit_tip_r

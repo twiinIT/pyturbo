@@ -17,10 +17,7 @@ class TurbineSimple(System):
                 TurbineSimpleGeom("geom", stage_count=stage_count),
                 pulling=[
                     "stage_count",
-                    "hub_in_r",
-                    "tip_in_r",
-                    "hub_out_r",
-                    "tip_out_r",
+                    "kp",
                 ],
             )
         if aero:
@@ -36,6 +33,7 @@ class TurbineSimple(System):
             self.connect(self.geom.inwards, self.aero.inwards, ["stage_count"])
 
         # design method
-        self.add_design_method("sizing").extend(self.aero.design_methods["temp"]).extend(
-            self.geom.design_methods["sizing"]
-        )
+        temp_des = self.aero.design_methods["temperature"]
+        speed_des = self.aero.design_methods["speed"]
+        axial_length_des = self.geom.design_methods["axial_length"]
+        self.add_design_method("sizing").extend(temp_des).extend(speed_des).extend(axial_length_des)

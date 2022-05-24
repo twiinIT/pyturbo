@@ -1,5 +1,6 @@
+import numpy as np
+import pytest
 from cosapp.drivers import NonLinearSolver
-from numpy import pi
 
 from pyturbo.systems import CompressorSimpleAero, CompressorSimpleGeom
 from pyturbo.systems.compressor import CompressorSimple
@@ -29,10 +30,9 @@ class TestCompressorSimpleAero:
         sys.add_driver(NonLinearSolver("run"))
         sys.add_unknown("shaft_in.power")
 
-        # CFM56-3B
         sys.tip_in_r = 0.8
         sys.tip_out_r = 0.8
-        sys.inlet_area = pi * sys.tip_in_r**2 * (1 - 0.3**2)
+        sys.inlet_area = np.pi * sys.tip_in_r**2 * (1 - 0.3**2)
         sys.shaft_in.N = 5500
         sys.shaft_in.power = 5e6
 
@@ -45,7 +45,7 @@ class TestCompressorSimpleAero:
 
         sys.run_drivers()
 
-        assert abs(sys.shaft_in.power / 16.8e6 - 1) < 1e-2
+        assert sys.shaft_in.power == pytest.approx(16.8e6, rel=1e-2)
 
 
 class TestCompressorSimpleGeom:
@@ -61,12 +61,15 @@ class TestCompressorSimpleGeom:
     def test_compute(self):
         sys = CompressorSimpleGeom("sys")
 
-        sys.hub_in_r_ref = 0.5
-        sys.tip_in_r_ref = 1.0
-        sys.scale = 1.0
+        sys.kp.inlet_hub = np.r_[0.5, 0.0]
+        sys.kp.inlet_tip = np.r_[1.0, 0.0]
+        sys.kp.exit_hub = np.r_[0.5, 1.0]
+        sys.kp.exit_tip = np.r_[1.5, 1.0]
 
         sys.compute()
-        assert abs(sys.inlet_area - pi * (1 - 0.5**2)) < 1e-6
+        assert sys.inlet_area == pytest.approx(np.pi * (1 - 0.5**2), abs=1e-6)
+        assert sys.tip_in_r == 1.0
+        assert sys.tip_out_r == 1.5
 
 
 class TestCompressorSimple:
@@ -94,9 +97,11 @@ class TestCompressorSimple:
         sys.add_unknown("shaft_in.power")
 
         # CFM56-3B
-        sys.geom.tip_in_r_ref = 0.8
-        sys.geom.hub_in_r_ref = 0.8 * 0.3
-        sys.geom.tip_out_r_ref = 0.8
+        sys.kp.inlet_hub = np.r_[0.8, 0.0] * 0.3
+        sys.kp.inlet_tip = np.r_[0.8, 0.0]
+
+        sys.kp.exit_hub = np.r_[0.8, 1.0] * 0.6  # no impact
+        sys.kp.exit_tip = np.r_[0.8, 1.0]
 
         sys.shaft_in.N = 5500
         sys.shaft_in.power = 5e6
@@ -110,4 +115,4 @@ class TestCompressorSimple:
 
         sys.run_drivers()
 
-        assert abs(sys.shaft_in.power / 16.7e6 - 1) < 1e-2
+        assert sys.shaft_in.power == pytest.approx(16.8e6, rel=1e-2)

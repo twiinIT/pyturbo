@@ -41,7 +41,8 @@ class TurbineSimpleAero(System):
         self.add_outward("sf2", desc="")
 
         # design method
-        self.add_design_method("temp").add_equation("fl_in.Tt == 1700.")
+        self.add_design_method("temperature").add_target("fl_in.Tt")
+        self.add_design_method("speed").add_unknown("Ncdes", lower_bound=0.0)
 
     def compute(self):
         # fluid

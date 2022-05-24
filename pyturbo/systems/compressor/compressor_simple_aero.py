@@ -56,18 +56,11 @@ class CompressorSimpleAero(System):
         )
         self.add_equation("eps_psi == 0")
 
-        # design methods
-        self.add_inward("design_utip", 400.0, unit="m/s", desc="tip speed at design point")
-        self.add_inward("design_pr", 5.0, unit="", desc="pressure ratio at design point")
-
-        self.add_design_method("sizing").add_equation("utip == design_utip").add_equation(
-            "pr == design_pr"
-        ).add_equation("spec_flow == 200.")
+        # sizing methods
+        self.add_design_method("sizing").add_target("pr").add_target("psi")
 
         # calibration methods
-        self.add_design_method("calib").add_unknown("design_utip").add_unknown(
-            "design_pr"
-        ).add_equation("utip == design_utip").add_equation("pr == design_pr").add_unknown("phiP")
+        self.add_design_method("calib").add_target("utip").add_target("pr").add_unknown("phiP")
 
     def compute(self):
         # fl_out computed from fl_in, enthalpy and mass conservation

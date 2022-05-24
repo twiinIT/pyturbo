@@ -17,10 +17,7 @@ class CompressorSimple(System):
                 CompressorSimpleGeom("geom", stage_count=stage_count),
                 pulling=[
                     "stage_count",
-                    "hub_in_r",
-                    "tip_in_r",
-                    "hub_out_r",
-                    "tip_out_r",
+                    "kp",
                 ],
             )
         if aero:
@@ -38,7 +35,7 @@ class CompressorSimple(System):
         # design methods
         self.add_design_method("sizing")
         if geom:
-            self.design_methods["sizing"].extend(self.geom.design_methods["sizing"])
+            self.design_methods["sizing"].extend(self.geom.design_methods["axial_length"])
         if aero:
             self.design_methods["sizing"].extend(self.aero.design_methods["sizing"])
 

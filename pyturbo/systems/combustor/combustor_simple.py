@@ -13,9 +13,12 @@ class CombustorSimple(System):
     def setup(self, geom: bool = True, aero: bool = True):
         # childrens
         if geom:
-            self.add_child(CombustorSimpleGeom("geom"))
+            self.add_child(CombustorSimpleGeom("geom"), pulling="kp")
         if aero:
             self.add_child(CombustorSimpleAero("aero"), pulling=["fl_in", "fl_out", "fuel_in"])
 
         # design method
-        self.add_design_method("sizing").extend(self.geom.design_methods["sizing"])
+        sizing = self.add_design_method("sizing")
+        if geom:
+            axial_length_des = self.geom.design_methods["axial_length"]
+            sizing.extend(axial_length_des)
