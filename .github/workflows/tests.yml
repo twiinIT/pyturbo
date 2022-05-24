@@ -10,6 +10,7 @@ on:
 
 jobs:
   pyturbo_tests:
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
