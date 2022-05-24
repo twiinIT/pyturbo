@@ -1,4 +1,5 @@
 from math import sqrt
+import numpy as np
 
 from cosapp.systems import System
 
@@ -33,8 +34,8 @@ class TurbofanWeight(System):
         self.add_outward('ipps_weight', 1., unit='kg')
 
     def compute(self):
-
+        
         self.ipps_weight = \
             self.ipps_weight_ref * (self.fan_diameter / self.fan_diameter_ref) ** self.c1 \
-                * (self.length_ref / self.length_ref_ref) ** self.c2 \
-                    * (self.EIS - self.EIS_ref) ** self.c3
+                * (self.length / self.length_ref) ** self.c2 \
+                    * max([abs(self.EIS - self.EIS_ref), 1.]) ** (self.EIS_ref - self.EIS)
