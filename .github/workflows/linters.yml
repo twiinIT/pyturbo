@@ -17,9 +17,10 @@ jobs:
         uses: mamba-org/provision-with-micromamba@main
         with:
           environment-file: ./environment-dev.yml
-          environment-name: linters
+          environment-name: test_env
           cache-env: true
       - name: Run all linters
         shell: pwsh
         run: |
+          micromamba activate test_env
           pre-commit run --all-files --verbose --show-diff-on-failure
