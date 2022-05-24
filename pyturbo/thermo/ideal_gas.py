@@ -38,6 +38,12 @@ class IdealGas:
     def static_t(self, tt, mach):
         return tt / (1.0 + 0.5 * (self._cp / (self._cp - self._r) - 1.0) * mach**2)
 
+    def total_t(self, ts, mach):
+        return ts * (1.0 + 0.5 * (self._cp / (self._cp - self._r) - 1.0) * mach**2)
+
+    def total_p(self, ps, ts, tt):
+        return ps * self.pr(ts, tt, 1.0)
+
     def density(self, p, t):
         return p / (self._r * t)
 
