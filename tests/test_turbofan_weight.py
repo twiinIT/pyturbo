@@ -1,11 +1,9 @@
-import pytest
-from typing import Sequence
-
 from pyturbo.systems.turbofan_weight import TurbofanWeight
 
 
 class TestTurbofanWeight:
-    tfw = TurbofanWeight('tfw')
+    tfw = TurbofanWeight("tfw")
+
     def test_ref(self):
 
         tfw = self.tfw

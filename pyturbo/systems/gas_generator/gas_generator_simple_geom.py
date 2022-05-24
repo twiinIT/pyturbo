@@ -28,7 +28,6 @@ class GasGeneratorSimpleGeom(System):
         cmp_lenght_des = self.add_design_method("compressor_length").add_unknown(
             "compressor_length_ratio"
         )
-        # cmp_exit_radius = self.add_design_method("compressor_exit_radius").add_unknown("compressor_exit_radius_ratio")
         trb_length_des = self.add_design_method("turbine_length").add_unknown(
             "turbine_length_ratio"
         )
@@ -39,10 +38,10 @@ class GasGeneratorSimpleGeom(System):
 
     def compute(self):
         # external keypoints/interfaces
-        ## ensure axial positions are equal
+        # ensure axial positions are equal
         self.kp.inlet_hub[1] = self.kp.inlet_tip_z
         self.kp.exit_hub[1] = self.kp.exit_tip_z
-        ## set keypoints to internal components
+        # set keypoints to internal components
         self.compressor_kp.inlet_hub = self.kp.inlet_hub * self.scale
         self.compressor_kp.inlet_tip = self.kp.inlet_tip * self.scale
         self.turbine_kp.exit_hub = self.kp.exit_hub * self.scale
@@ -54,19 +53,19 @@ class GasGeneratorSimpleGeom(System):
         trb_length = self.turbine_kp.exit_hub_z - length * self.turbine_length_ratio
 
         # compressor/combustor interface
-        ## constant compressor internal and external radii
+        # constant compressor internal and external radii
         self.compressor_kp.exit_hub = np.r_[
             self.compressor_kp.inlet_tip_r * self.compressor_exit_radius_ratio, cmp_length
         ]
         self.compressor_kp.exit_tip = np.r_[self.compressor_kp.inlet_tip_r, cmp_length]
-        ## combustor inlet
+        # combustor inlet
         self.combustor_kp.inlet_hub = self.compressor_kp.exit_hub
         self.combustor_kp.inlet_tip = self.compressor_kp.exit_tip
 
         # combustor/turbine interface
-        ## constant turbine internal and external radii
+        # constant turbine internal and external radii
         self.turbine_kp.inlet_hub = np.r_[self.turbine_kp.exit_hub_r, trb_length]
         self.turbine_kp.inlet_tip = np.r_[self.turbine_kp.exit_tip_r, trb_length]
-        ## combustor exit
+        # combustor exit
         self.combustor_kp.exit_hub = self.turbine_kp.inlet_hub
         self.combustor_kp.exit_tip = self.turbine_kp.inlet_tip

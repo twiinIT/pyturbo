@@ -1,5 +1,3 @@
-from math import sqrt
-
 from cosapp.systems import System
 
 from pyturbo.ports import FluidPort

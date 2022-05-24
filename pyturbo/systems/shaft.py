@@ -4,7 +4,6 @@ import numpy as np
 from cosapp.systems import System
 
 from pyturbo.ports import ShaftPort
-from pyturbo.thermo.ideal_gas import IdealGas
 
 
 class Shaft(System):

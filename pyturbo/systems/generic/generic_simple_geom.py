@@ -1,7 +1,6 @@
 import numpy as np
 from cosapp.systems import System
 from pyoccad.create import CreateAxis, CreateRevolution, CreateTopology, CreateWire
-from pyoccad.transform import Scale, Translate
 
 from pyturbo.ports import KeypointsPort
 
@@ -15,13 +14,13 @@ class GenericSimpleGeom(System):
         self.add_outward("axial_form_factor", 1.0, unit="", desc="height over length form factor")
 
     def compute(self):
-        l = self.kp.exit_tip_z - self.kp.inlet_tip_z
-        assert l
+        length = self.kp.exit_tip_z - self.kp.inlet_tip_z
+        assert length
         self.axial_form_factor = (
             np.mean(
                 (self.kp.inlet_tip_r - self.kp.inlet_hub_r, self.kp.exit_tip_r - self.kp.exit_hub_r)
             )
-            / l
+            / length
         )
 
     def to_occt(self):

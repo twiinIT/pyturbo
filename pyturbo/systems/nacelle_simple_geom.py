@@ -1,25 +1,7 @@
 import numpy as np
 from cosapp.systems import System
-from OCC.Core.BRep import BRep_Tool
-from OCC.Core.BRepBuilderAPI import BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeWire
-from OCC.Core.GCE2d import GCE2d_MakeEllipse
-from OCC.Core.Geom import Geom_Circle, Geom_Ellipse, Geom_RectangularTrimmedSurface
-from OCC.Core.gp import gp_Ax2d, gp_Dir2d, gp_GTrsf2d, gp_Pnt, gp_Pnt2d
-from OCC.Core.ShapeFix import ShapeFix_Shape
-from pyoccad.create import (
-    CreateArray1,
-    CreateAxis,
-    CreateBezier,
-    CreateCircle,
-    CreateDirection,
-    CreateEllipse,
-    CreateFace,
-    CreatePoint,
-    CreateRevolution,
-    CreateTopology,
-    CreateWire,
-)
-from pyoccad.transform import Scale
+from OCC.Core.gp import gp_Pnt
+from pyoccad.create import CreateAxis, CreateBezier, CreateRevolution, CreateWire
 
 
 class NacelleSimpleGeom(System):

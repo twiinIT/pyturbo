@@ -33,7 +33,7 @@ class GasGeneratorSimple(System):
         self.compressor.shaft_in.power = 10e6
 
         # design method
-        ## geometries
+        # geometries
         geom_sizing = geom.design_methods["sizing"]
         cmp_sizing = cmp.design_methods["sizing"]
         cmb_sizing = cmb.design_methods["sizing"]
@@ -53,7 +53,7 @@ class GasGeneratorSimple(System):
     def jupyter_view(self):
         try:
             from pyoccad.render import JupyterThreeJSRenderer
-        except ImportError as e:
+        except ImportError:
             raise ImportError("Please install 'pythonocc_helpers' before using this function")
 
         super(System, self).__setattr__("_render", None)

@@ -12,8 +12,8 @@ class TurbineSimpleAero(System):
     """
     A simple aerodynamic gas turbine model.
 
-    It computes the exit gas `fl_out` from inlet gas `fl_in` for a given pressure ratio and efficency.
-    The generated power `shaft_out.power` is also computed.
+    It computes the exit gas `fl_out` from inlet gas `fl_in` for a given pressure ratio
+    and efficency. The generated power `shaft_out.power` is also computed.
     """
 
     def setup(self):

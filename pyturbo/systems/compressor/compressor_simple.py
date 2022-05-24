@@ -1,4 +1,3 @@
-import numpy as np
 from cosapp.systems import System
 
 from pyturbo.systems.compressor import CompressorSimpleAero, CompressorSimpleGeom

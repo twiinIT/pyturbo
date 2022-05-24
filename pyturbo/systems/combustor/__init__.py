@@ -1,4 +1,4 @@
-from pyturbo.systems.combustor.combustor_simple_aero import CombustorSimpleAero
-from pyturbo.systems.combustor.combustor_simple_geom import CombustorSimpleGeom
+from pyturbo.systems.combustor.combustor_simple_aero import CombustorSimpleAero  # noqa
+from pyturbo.systems.combustor.combustor_simple_geom import CombustorSimpleGeom  # noqa
 
-from pyturbo.systems.combustor.combustor_simple import CombustorSimple  # isort: skip
+from pyturbo.systems.combustor.combustor_simple import CombustorSimple  # noqa # isort: skip

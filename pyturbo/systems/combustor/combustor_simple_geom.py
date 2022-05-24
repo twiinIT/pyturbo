@@ -1,5 +1,3 @@
-from numpy import pi
-
 from pyturbo.systems.generic.generic_simple_geom import GenericSimpleGeom
 
 

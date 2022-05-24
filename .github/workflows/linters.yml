@@ -1,0 +1,23 @@
+name: Linters (Python)
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        uses: mamba-org/provision-with-micromamba@main
+        with:
+          extra-specs: pre-commit
+      - name: Run all linters
+        shell: pwsh
+        run: |
+          pre-commit run --all-files --verbose --show-diff-on-failure
