@@ -2,6 +2,7 @@ name: Linters (Python)
 
 on:
   push:
+    tags:
     branches:
       - master
   pull_request:
