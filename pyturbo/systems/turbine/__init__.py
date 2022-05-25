@@ -1,3 +1,6 @@
+# Copyright (C) 2022, twiinIT
+# SPDX-License-Identifier: BSD-3-Clause
+
 from pyturbo.systems.turbine.turbine_simple_aero import TurbineSimpleAero  # noqa
 from pyturbo.systems.turbine.turbine_simple_geom import TurbineSimpleGeom  # noqa
 

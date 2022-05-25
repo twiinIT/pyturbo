@@ -1,3 +1,6 @@
+# Copyright (C) 2022, twiinIT
+# SPDX-License-Identifier: BSD-3-Clause
+
 from typing import Sequence
 
 from pyturbo.ports import ShaftPort

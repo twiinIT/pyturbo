@@ -1,3 +1,6 @@
+# Copyright (C) 2022, twiinIT
+# SPDX-License-Identifier: BSD-3-Clause
+
 """The setup script."""
 
 from setuptools import setup

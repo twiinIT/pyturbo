@@ -1,1 +1,2 @@
-* Adrien DELSALLE <adrien.delsalle@twiinit.com>
+- Adrien DELSALLE <adrien.delsalle@twiinit.com>
+- Guy de Spiegeleer <guy.de-spiegeleer@twiinit.com>

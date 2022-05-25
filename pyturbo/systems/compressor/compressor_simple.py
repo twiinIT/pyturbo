@@ -1,3 +1,6 @@
+# Copyright (C) 2022, twiinIT
+# SPDX-License-Identifier: BSD-3-Clause
+
 from cosapp.systems import System
 
 from pyturbo.systems.compressor import CompressorSimpleAero, CompressorSimpleGeom

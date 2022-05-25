@@ -5,9 +5,3 @@ dependencies:
   - cosapp
   - pyoccad
   - numpy
-  - pythreejs
-  - pytest
-  - pre-commit
-  - black
-  - flake8
-  - isort
