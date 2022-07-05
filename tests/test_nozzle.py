@@ -1,0 +1,53 @@
+import pytest
+from cosapp.drivers import NonLinearSolver
+
+from pyturbo.systems.nozzle import Nozzle, NozzleAero
+
+
+class TestNozzle:
+    def test_system_setup(self):
+        # default constructor
+        sys = Nozzle("noz")
+
+        data_input = ["kp", "fl_in"]
+        data_inwards = []
+        data_output = []
+        data_outwards = ["thrust"]
+
+        for data in data_input:
+            assert data in sys.inputs
+        for data in data_output:
+            assert data in sys.outputs
+        for data in data_outwards:
+            assert data in sys.outwards
+        for data in data_inwards:
+            assert data in sys.inwards
+
+    @pytest.mark.skip("not relevant")
+    def test_run_once(self):
+        # basic run
+        sys = Nozzle("noz")
+
+        sys.fl_in.W = 400.0
+        sys.pamb = 1e5
+        sys.run_once()
+
+        assert sys.thrust == pytest.approx(30093.0, 0.1)
+
+    def test_run_solver(self):
+        # basic run
+        sys = NozzleAero("noz")
+        run = sys.add_driver(NonLinearSolver("run"))
+
+        run.add_unknown("area", max_rel_step=0.1)
+
+        sys.pamb = 1.01e5
+        sys.fl_in.Tt = 530.0
+        sys.fl_in.pt = 1.405e5
+        sys.fl_in.W = 30.0
+        sys.run_drivers()
+
+        assert sys.v == pytest.approx(308.3, 0.01)
+        assert sys.mach == pytest.approx(0.7, 0.01)
+        assert sys.thrust == pytest.approx(9250.0, 0.01)
+        assert sys.area == pytest.approx(0.133, 0.01)
