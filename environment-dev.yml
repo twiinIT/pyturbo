@@ -16,3 +16,4 @@ dependencies:
   - sphinx-autoapi
   - nbsphinx
   - sphinx_rtd_theme
+  - pythonocc-core==7.5.*
