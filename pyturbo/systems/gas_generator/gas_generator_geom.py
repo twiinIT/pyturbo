@@ -8,37 +8,39 @@ class GasGeneratorGeom(System):
     """
     A simple gas generator geometrical model.
 
-    This model defines the gas generator keypoints {r, z} coordinates.
+    This model defines the gas generator keypoints {r, z} coordinates. It is made of:
+    
+    - compressor
+    - combustor
+    - tubine
 
-    -------------------------------------------------
-    |   compressor   |   combustor   |   turbine    |
-    -------------------------------------------------
-
-    Components
-    ----------
-    compressor : Compressor
-    combustor : Combustor
-    turbine : Turbine
+    Sub-systems
+    -----------
+    compressor: Compressor
+        compressor
+    combustor: Combustor
+        combustor
+    turbine: Turbine
+        turbine
 
     Inputs
     ------
-    kp : KeypointPort
+    kp: KeypointPort
+        gas generator geometrical envelop
+
+    compressor_length_ratio[-]: float
+        compressor length over gg length ratio
+    turbine_length_ratio[-]: float
+        turbine length over gg length ratio
 
     Outputs
     -------
-    compressor_kp : KeypointPort
-    combustor_kp : KeypointPort
-    turbine_kp : KeypointPort
-
-    Inwards
-    -------
-    compressor_length_ratio: float
-        compressor length over gg length ratio
-    turbine_length_ratio: float
-        turbine length over gg length ratio
-
-    Good practice
-    -------------
+    compressor_kp: KeypointPort
+        compressor geometrical envelop
+    combustor_kp: KeypointPort
+        combustor geometrical envelop
+    turbine_kp: KeypointPort
+        turbine geometrical envelop
     """
 
     def setup(self):

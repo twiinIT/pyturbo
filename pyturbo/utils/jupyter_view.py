@@ -19,12 +19,11 @@ class JupyterViewable:
             raise ImportError("Please install 'pythonocc_helpers' before using this function")
 
         super(System, self).__setattr__("_renderer", None)
-        self._renderer = JupyterThreeJSRenderer(
-            view_size=(1800, 800),
-            camera_target=(1.0, 0.0, 0.0),
-            camera_position=(-2.0, 1.0, 2.0),
-            **kwargs
-        )
+
+        kwargs["view_size"] = kwargs.get("view_size", (1800, 800))
+        kwargs["camera_target"] = kwargs.get("camera_target", (1.0, 0.0, 0.0))
+        kwargs["camera_position"] = kwargs.get("camera_position", (-2.0, 1.0, 2.0))
+        self._renderer = JupyterThreeJSRenderer(**kwargs)
 
         if options is None:
             options = {}

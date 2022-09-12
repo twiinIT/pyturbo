@@ -1,7 +1,8 @@
 import numpy as np
 from cosapp.systems import System
 
-from pyturbo.systems.turbine import TurbineAero, TurbineGeom
+from pyturbo.systems.turbine.turbine_aero import TurbineAero
+from pyturbo.systems.turbine.turbine_geom import TurbineGeom
 from pyturbo.utils.jupyter_view import JupyterViewable
 
 
@@ -9,7 +10,36 @@ class Turbine(System, JupyterViewable):
     """
     Turbine simple assembly model.
 
-    It may contain aero and/or geometry sub-models.
+    Sub-systems
+    -----------
+    geom: TurbineGeom
+        geometry value from envelop
+    aero: TurbineAero
+        performance characteristics
+
+    Inputs
+    ------
+    stage_count: integer
+        number of stages
+
+    kp: KeypointPort
+        geometrical envelop
+    fl_in: FluidPort
+        inlet gas
+
+    Outputs
+    -------
+    fl_out: FluidPort
+        exit gas
+    sh_out: ShaftPort
+        exit shaft
+    fp_exit_hub_kp[m]: np.array(2)
+        exit hub flow position
+
+    pr[-]: float
+        total to total pressure ratio
+    N[rpm]: float
+        shaft speed rotation
     """
 
     def setup(self):

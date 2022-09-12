@@ -12,14 +12,12 @@ class NozzleGeom(GenericSimpleGeom):
     Inputs
     ------
     kp : KeypointPort
+        nozzle geometrical envelop
 
-    Outwards for aero
-    -----------------
-    area : float
-        exit area in m**2
-
-    Good practice
-    -------------
+    Outputs
+    -------
+    area[m**2] : float
+        exit area
     """
 
     def setup(self):

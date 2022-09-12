@@ -1,6 +1,7 @@
 from cosapp.systems import System
 
-from pyturbo.systems.inlet import InletAero, InletGeom
+from pyturbo.systems.inlet.inlet_aero import InletAero
+from pyturbo.systems.inlet.inlet_geom import InletGeom
 from pyturbo.utils.jupyter_view import JupyterViewable
 
 
@@ -8,33 +9,35 @@ class Inlet(System, JupyterViewable):
     """
     Inlet simple assembly model.
 
-    Physics
-    -------
-    geom : InletGeom
-    aero : InletAero
+    Sub-systems
+    -----------
+    geom: InletGeom
+        compute the geometrical data
+    aero: InletAero
+        compute aerodynamics performances
 
     Inputs
     ------
-    kp : KeypointPort
-    fl_in : FluidPort
+    kp: KeypointPort
+        inlet geometrical envelop
+    fl_in: FluidPort
+        inlet gas
+
+    pamb[Pa]: float
+        ambiant static pressure
 
     Outputs
     -------
-    fl_out : FluidPort
+    fl_out: FluidPort
+        exit gas
 
-    Inwards
-    -------
-    pamb : float
-        ambiant static pressure in Pa
-
-    Outwards
-    --------
-    drag : float
-        drag in N computed at throat. If drag < 0, aspiration contribute to thrust
+    drag[N]: float
+        drag computed at throat. If drag < 0, aspiration contribute to thrust
 
     Good practice
     -------------
-    1 - initiate sh_in.power with the good order of magnitude of shaft power
+    1:
+        initiate sh_in.power with the good order of magnitude of shaft power
     """
 
     def setup(self):

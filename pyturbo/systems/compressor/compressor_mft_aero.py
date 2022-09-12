@@ -10,6 +10,8 @@ from pyturbo.thermo.ideal_gas import IdealGas
 
 
 class CompressorMftAero(System):
+    """The doc"""
+
     def setup(self):
 
         self.add_input(FluidPort, "fl_in")

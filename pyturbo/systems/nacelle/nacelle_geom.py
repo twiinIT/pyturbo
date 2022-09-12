@@ -17,29 +17,24 @@ class NacelleGeom(System, JupyterViewable):
 
     Inputs
     ------
-    kp : KeypointPort
+    kp: KeypointPort
+        nacelle geometrical envelop
 
-    Inwards
-    -------
-    lip_length_ratio:float
+    lip_length_ratio[-]:float
         lip length ratio to throat radius
-    lip_height_ratio: float
+    lip_height_ratio[-]: float
         lip height ratio to throat radius
 
-    Outwards for aero
-    -----------------
-    lip_in: np.array
+    Outputs
+    -------
+    lip_in[m]: np.array
         coordinate of lip_in or throat
-    hilite: np.array
+    hilite[m]: np.array
         coordinate of lip mininum axial position
-    lip_out: np.array
+    lip_out[m]: np.array
         coordinate of lip end
-    external_sec_duct_out:np.array
+    external_sec_duct_out[m]:np.array
         coordinate secondary external duct end
-
-    Good practice
-    -------------
-
     """
 
     def setup(self):

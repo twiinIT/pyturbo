@@ -12,6 +12,8 @@ from pyturbo.utils import rz_to_3d
 
 
 class Cowl(System):
+    """my doc"""
+
     def setup(self):
         self.add_inward("inlet_kp", C1Keypoint(), desc="inlet keypoint")
         self.add_inward("exit_kp", C1Keypoint(), desc="exit keypoint")

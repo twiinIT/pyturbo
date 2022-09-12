@@ -1,50 +1,36 @@
 from cosapp.systems import System
 
-from pyturbo.systems.combustor import CombustorAero
+from pyturbo.systems.combustor.combustor_aero import CombustorAero
 from pyturbo.systems.generic import GenericSimpleGeom
 
 
 class Combustor(System):
     """Combustor assembly model.
 
-    Components
-    ----------
-
-    Physics
-    -------
-    geom : GenericSimpleGeom
+    Sub-systems
+    -----------
+    geom: GenericSimpleGeom
         geometry is generated from the keypoints
-    aero : CombustorAero
+    aero: CombustorAero
         combustion is performed from fluid flow and fuel flow
-
-    Parameters
-    ----------
 
     Inputs
     ------
-    fl_in : FluidPort
-    kp : KeyPointPort
+    fl_in: FluidPort
+        fluid going into the combustor
+    kp: KeyPointPort
+        the combustor geometrical envelop
+
+    fuel_W: [kg/s]float
+        fuel consumption
 
     Outputs
     -------
-    fl_out : FluidPort
+    fl_out: FluidPort
+        fluid leaving the combustor
 
-    Inwards
-    -------
-    fuel_W : float
-        fuel consumption in kg/s
-
-    Outwards
-    --------
-    Tcomb : float
+    Tcomb[K]: float
         combustion temperature
-
-    Off design methods
-    ------------------
-
-    Good practice
-    -------------
-
     """
 
     def setup(self):

@@ -1,6 +1,6 @@
 from cosapp.systems import System
 
-from pyturbo.systems.nacelle import PlugGeom
+from pyturbo.systems.nacelle.plug_geom import PlugGeom
 from pyturbo.utils.jupyter_view import JupyterViewable
 
 
@@ -8,13 +8,15 @@ class Plug(System, JupyterViewable):
     """
     Plug assembly model.
 
-    Physics
-    -------
-    geom : NacelleGeom
+    Sub-systems
+    -----------
+    geom: PlugGeom
+        geometrical data
 
     Inputs
     ------
-    kp : KeypointPort
+    trf_exit_hub_kp: KeypointPort
+        position of the plug
     """
 
     def setup(self):

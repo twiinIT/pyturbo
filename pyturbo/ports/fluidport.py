@@ -5,6 +5,19 @@ from cosapp.ports import Port
 
 
 class FluidPort(Port):
+
+    """A fluid port aggregating basic information
+
+    Variables
+    ---------
+    W [kg/s] : float
+        mass flow
+    pt [Pa] : float
+        total pressure
+    Tt [K] : float
+        total temperature
+    """
+
     def setup(self):
         self.add_variable("W", 1.0, unit="kg/s", desc="mass flow rate")
         self.add_variable("pt", 101325.0, unit="Pa", desc="total pressure")

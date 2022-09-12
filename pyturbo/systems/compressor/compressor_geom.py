@@ -4,39 +4,33 @@ from pyturbo.systems.generic.generic_simple_geom import GenericSimpleGeom
 
 
 class CompressorGeom(GenericSimpleGeom):
-    """Compressor geometry.
+    """
+    Compressor geometry.
 
-    The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit.
-
+    The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit. 
     The geometry exposed to aero module is made of:
       - inlet area
       - inlet and exit tip radius
 
-    Parameters
-    ----------
-    stage_count : integer
-        number of stages
-
     Inputs
     ------
-    kp : KeypointPort
+    kp: KeypointPort
+        compressor geometrical envelop
 
-    Inwards
-    -------
-    blade_height_ratio : float
+    stage_count: integer
+        number of stages
+
+    blade_height_ratio[-]: float
         inlet blade height relative to compressor inlet tip radius
 
-    Outwards for aero
-    -----------------
-    tip_in_r : float
-        inlet tip radius in m
-    tip_out_r : float
-        exit tip radius in m
-    inlet_area : float
-        inlet area in m**2
-
-    Good practice
-    -------------
+    Outputs
+    -------
+    tip_in_r[m]: float
+        inlet tip radius
+    tip_out_r[m]: float
+        exit tip radius
+    inlet_area[m**2]: float
+        inlet area
     """
 
     def setup(self):

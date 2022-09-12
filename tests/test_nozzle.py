@@ -47,7 +47,7 @@ class TestNozzle:
         sys.fl_in.W = 30.0
         sys.run_drivers()
 
-        assert sys.v == pytest.approx(308.3, 0.01)
+        assert sys.speed == pytest.approx(308.3, 0.01)
         assert sys.mach == pytest.approx(0.7, 0.01)
         assert sys.thrust == pytest.approx(9250.0, 0.01)
         assert sys.area == pytest.approx(0.133, 0.01)

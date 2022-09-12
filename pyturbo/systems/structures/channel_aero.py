@@ -6,6 +6,22 @@ from pyturbo.ports import FluidPort
 class ChannelAero(System):
     """
     Stator simple channel
+
+    pt_out = pt_in * (1 - pressure_loss)
+
+    Inputs
+    ------
+    fl_in: FluidPort
+        inlet fluid
+
+    pressure_loss[-]: float
+        pressure loss coefficient
+
+    Outputs
+    -------
+    fl_out: FluidPort
+        gas leaving the inlet
+
     """
 
     def setup(self):

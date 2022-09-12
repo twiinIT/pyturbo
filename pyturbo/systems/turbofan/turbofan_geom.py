@@ -12,53 +12,118 @@ class TurbofanGeom(System):
     Reference for all dimensions is fan diameter
 
     Turbofan module is made of components:
-    - inlet
-    - fan module
-    - gas generator
-    - turbine
-    - trf (turbine rear frame)
-    - primary nozzle
-    - secondary nozzle
-    - nacelle
-    - shaft
+        - inlet
+        - fan module
+        - gas generator
+        - turbine
+        - trf (turbine rear frame)
+        - primary nozzle
+        - secondary nozzle
+        - plug
+        - nacelle
+        - shaft
 
-    Pylon attach points X are also provided
+    Pylon attach points are also provided
 
-    ---------------------------------------\
-    |-----|------X--|    nacelle    |------|
-          |         |               |nozzle|
-          |   fan   |----------------------X---------|
-    inlet |  module | gas gen | turbine | trf |nozzle|_
-          |_________|---------|----------------------| \_
-         /|         |  shaft  |         |     |      |plug\_
-        /_|_________|_________|_________|_____|______|____ \
+    Inputs
+    ------
+    fan_diameter[m]: float
+        fan diameter
+
+    inlet_length_ratio[-]: float
+        inlet length relative to fan radius
+    inlet_radius_ratio[-]: float
+        inlet radius relative to fan radius"
+
+    fanmodule_length_ratio[-]:
+        fanmodule length relative to fan radius
+    ogv_exit_hqt[-]: float
+        fan OGV exit hub-to-tip ratio
+
+    core_radius_ratio[-]: float
+        high-pressure core radius relative to fan radius
+    core_length_ratio[-]:
+        high-pressure core length relative to its radius
+
+    shaft_radius_ratio[-]: float
+        shaft radius relative to fan radius
+
+    turbine_radius_ratio[-]: float
+        turbine radius relative to fan radius
+    turbine_length_ratio[-]: float
+        turbine length relative to turbine radius
+    turbine_fp_exit_hqt[-]: float
+        LPT turbine flowpath exit hub-to-tip ratio
+    trf_length_ratio[-]: float
+        trf length relative to turbine radius
+
+    core_cowl_slope[deg]: float
+        core cowl slope angle
+
+    primary_nozzle_length_ratio[-]: float
+        primary nozzle length relative to TRF radius
+
+    secondary_nozzle_length_ratio[-]: float
+        secondary nozzle length relative to fan_radius
+
+    pri_nozzle_area[-]: float
+        primary nozzle exit area
+    sec_nozzle_area[-]: float
+        secondary nozzle exit area
+
+    frd_mount_relative[-]: float
+        forward engine mount position relative to tip fan module
+    aft_mount_relative[-]: float
+        aftward engine mount position relative to tip trf
+
+    Outputs
+    -------
+    inlet_kp: KeypointsPort
+        inlet geometrical envelop
+    fanmodule_kp: KeypointsPort
+        fan module geometrical envelop
+    core_kp: KeypointsPort
+        core geometrical envelop
+    shaft_kp: KeypointsPort
+        shaft geometrical envelop
+    turbine_kp: KeypointsPort
+        turbine geometrical envelop
+    trf_kp: KeypointsPort
+        trf geometrical envelop
+    primary_nozzle_kp: KeypointsPort
+        primary nozzle geometrical envelop
+    secondary_nozzle_kp: KeypointsPort
+        secondary nozzle geometrical envelop
+
+    fan_inlet_tip_kp[m]: np.array(2)
+        fan inlet tip position
+    ogv_exit_hub_kp[m]: np.array(2)
+        ogv exit hub position
+    ogv_exit_tip_kp[m]: np.array(2)
+        ogv exit tip position
+    turbine_exit_tip_kp[m]: np.array(2)
+        turbine exit tip position
+    pri_nozzle_exit_kp: C1Keypoint
+        primary nozzle exit position
+    sec_nozzle_exit_kp[m]: np.array(2)
+        secondary nozzle exit tip position
+    sec_nozzle_exit_hub_kp: C1Keypoint
+        secondary nozzle exit hub position
+ 
+    frd_mount[m]: np.array(2)
+        forward engine mount
+    aft_mount[m]: np.array(2)
+        aftward engine mount
+
+    fan_module_length[m]: float
+        fan module length from fan inlet to intermediate case exit",
+    engine_length[m]: float
+        engine length from fan module to trf
     """
 
     def setup(self):
         # inwards
         self.add_inward("fan_diameter", 1.6, unit="m", desc="fan diameter")
-
-        # output keypoints
-        self.add_output(KeypointsPort, "inlet_kp")
-        self.add_output(KeypointsPort, "fanmodule_kp")
-        self.add_output(KeypointsPort, "core_kp")
-        self.add_output(KeypointsPort, "shaft_kp")
-        self.add_output(KeypointsPort, "turbine_kp")
-        self.add_output(KeypointsPort, "trf_kp")
-        self.add_output(KeypointsPort, "primary_nozzle_kp")
-        self.add_output(KeypointsPort, "secondary_nozzle_kp")
-
-        self.add_outward("fan_inlet_tip_kp", np.ones(2), unit="m")
-        self.add_outward("ogv_exit_hub_kp", np.ones(2), unit="m")
-        self.add_outward("ogv_exit_tip_kp", np.ones(2), unit="m")
-        self.add_outward("turbine_exit_tip_kp", np.ones(2), unit="m")
-        self.add_outward("pri_nozzle_exit_kp", C1Keypoint())
-        self.add_outward("sec_nozzle_exit_kp", np.ones(2), unit="m")
-
-        self.add_outward("sec_nozzle_exit_hub_kp", C1Keypoint())
-
-        self.add_outward("frd_mount", np.r_[0.9, 0.5], desc="forward engine mount")
-        self.add_outward("aft_mount", np.r_[0.5, 3.0], desc="aftward engine mount")
 
         self.add_inward(
             "inlet_length_ratio",
@@ -150,6 +215,26 @@ class TurbofanGeom(System):
         self.add_inward("sec_nozzle_area", 1.0, desc="secondary nozzle exit area")
 
         # outwards
+        self.add_output(KeypointsPort, "inlet_kp")
+        self.add_output(KeypointsPort, "fanmodule_kp")
+        self.add_output(KeypointsPort, "core_kp")
+        self.add_output(KeypointsPort, "shaft_kp")
+        self.add_output(KeypointsPort, "turbine_kp")
+        self.add_output(KeypointsPort, "trf_kp")
+        self.add_output(KeypointsPort, "primary_nozzle_kp")
+        self.add_output(KeypointsPort, "secondary_nozzle_kp")
+
+        self.add_outward("fan_inlet_tip_kp", np.ones(2), unit="m")
+        self.add_outward("ogv_exit_hub_kp", np.ones(2), unit="m")
+        self.add_outward("ogv_exit_tip_kp", np.ones(2), unit="m")
+        self.add_outward("turbine_exit_tip_kp", np.ones(2), unit="m")
+        self.add_outward("pri_nozzle_exit_kp", C1Keypoint())
+        self.add_outward("sec_nozzle_exit_kp", np.ones(2), unit="m")
+
+        self.add_outward("sec_nozzle_exit_hub_kp", C1Keypoint())
+
+        self.add_outward("frd_mount", np.r_[0.9, 0.5], desc="forward engine mount")
+        self.add_outward("aft_mount", np.r_[0.5, 3.0], desc="aftward engine mount")
         self.add_outward(
             "fan_module_length",
             1.0,

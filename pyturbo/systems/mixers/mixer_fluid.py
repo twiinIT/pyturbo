@@ -13,48 +13,48 @@ class MixerFluid(System):
 
     Parameters
     ----------
-    input_fluid : list[str]
+    input_fluid: list[str]
         list of the input fluid names. If name is 'fl_in', fluid will be self.fl_in
         default is ("fl_in")
-    output_fluid : list[str]
+    output_fluid: list[str]
         list of output fluid names
         default is ("fl_out")
 
     Inputs
     ------
-    fluid_in_name : FluidPort
+    fl_in: FluidPort
+        inlet fluid (for each name in input_fluid)
+
+    fluid_fraction: numpy array
+        size is len(output_shaft) - 1
+        proportion of fluid that goes to flow_out in the order of output_fluid list
 
     Outputs
     -------
-    fluid_out_name : FluidPort
+    fl_out: FluidPort
+        exit fluid (for each name in output_fluid)
 
-    Inwards
-    -------
-    fluid_fraction : numpy array of size len(output_shaft) - 1
-        proportion of fluid that goes to flow_out in the order of output_fluid list
-
-    Outwards
-    --------
-    pt : float
+    pt[Pa]: float
         mean fluid total pressure in pa
         all flow_in total pressure should be the same
-    W : float
+    W[kg/s]: float
         mass fluid in kg/s
         total flow_in mass fluid and flow_out mass fluid are equal
-    Tt : float
+    Tt[K]: float
         mean fluid total temperature in K
 
-    Off design methods
+    Design methods
     ------------------
-    parameter : fluid_fraction
-    equations : input_fluid total pressure are equal to mean total pressure
+    off design:
+        parameters - fluid_fraction
+        equations - input_fluid total pressure are equal to mean total pressure
 
     Good practice
     -------------
-    1 - consider at last the bigest fluid mass flow in output_fluids list
-    2 - If fluid out have very different mass flow, it should be good to initiate fluid_fraction
-    with a good order of magnitude
-
+    1
+        consider at last the bigest fluid mass flow in output_fluids list
+    2
+        If fluid out have very different mass flow, it should be good to initiate fluid_fraction with a good order of magnitude
     """
 
     def setup(

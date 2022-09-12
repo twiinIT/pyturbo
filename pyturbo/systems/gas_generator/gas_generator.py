@@ -5,7 +5,7 @@ from cosapp.systems import System
 
 from pyturbo.systems.combustor import Combustor
 from pyturbo.systems.compressor import HPC
-from pyturbo.systems.gas_generator import GasGeneratorGeom
+from pyturbo.systems.gas_generator.gas_generator_geom import GasGeneratorGeom
 from pyturbo.systems.turbine import HPT
 from pyturbo.utils.jupyter_view import JupyterViewable
 
@@ -17,45 +17,42 @@ class GasGenerator(System, JupyterViewable):
     This model includes a compressor, a combustor and a turbine. The power transmission
     between the turbine and the compressor is direct without and intermediate shaft model.
 
-    --------------------------------------
-    |   hpc   |   combustor   |   hpt    |
-    --------------------------------------
+    Sub-systems
+    -----------
+    hpc: HPC
+        high pressure compressor
+    combustor: Combustor
+        combustor
+    hpt: HPT
+        high pressure turbine
 
-    Components
-    ----------
-    hpc : HPC
-    combustor : Combustor
-    hpt : HPT
-
-    Physics
-    -------
-    geom : GasGeneratorGeom
-        component kp from gg kp
+    geom: GasGeneratorGeom
+        provide the sub-elemnts geometrical envelops
 
     Inputs
     ------
-    kp : KeypointPort
-    fl_in : FluidPort
+    kp: KeypointPort
+        gas generator geometrical envelop
+    fl_in: FluidPort
+        fluid going into the gas generator
+
+    fuel_W[kg/s]: float
+        fuel mass flow
 
     Outputs
     -------
-    fl_out : FluidPort
+    fl_out: FluidPort
+        gas leaving the gas generator
 
-    Inwards
-    -------
-    fuel_W : float
-        fuel mass flow
-
-    Outwards:
-    ---------
-    opr : float
+    opr[-]: float
         compressor pressure ration
-    N : float
-        shaft speed rotation in rpm
+    N[rpm]: float
+        shaft speed rotation
 
     Good practice
     -------------
-    1 - init compressor.aero.sh_in.power to the good order of magnitude
+    1:
+        init compressor.aero.sh_in.power to the good order of magnitude
     """
 
     def setup(self):

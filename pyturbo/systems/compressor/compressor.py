@@ -9,38 +9,43 @@ from pyturbo.utils.jupyter_view import JupyterViewable
 class Compressor(System, JupyterViewable):
     """Compressor assembly model.
 
-    Physics
-    -------
-    geom : CompressorGeom
-    aero : CompressorAero
-
-    Parameters
-    ----------
-    stage_count : integer
-        number of stages
+    Sub-systems
+    -----------
+    geom: CompressorGeom
+        geometry value from envelop
+    aero: CompressorAero
+        performance characteristics
 
     Inputs
     ------
-    kp : KeypointPort
-    fl_in : FluidPort
-    sh_in : ShaftPort
+    stage_count: integer
+        number of stages
+
+    kp: KeypointPort
+        compressor geometrical envelop
+    fl_in: FluidPort
+        fluid going into the compressor
+    sh_in: ShaftPort
+        shaft driving the compressor
 
     Outputs
     -------
-    fl_out : FluidPort
-
-    Outwards
-    --------
-    pr : float
+    fl_out: FluidPort
+        fluid leaving the compressor
+    pr[-]: float
         total to total pressure ratio
+    N[rpm]: float
+        shaft speed rotation
 
-    Off design methods
-    ------------------
-    psi computed from enthalpy conservation equal psi computed from characteristics
+    Design methods
+    --------------
+    off design: 
+        psi computed from enthalpy conservation equal psi computed from characteristics
 
     Good practice
     -------------
-    1 - initiate sh_in.power with the good order of magnitude of shaft power
+    1:
+        initiate sh_in.power with the good order of magnitude of shaft power
     """
 
     def setup(self):
@@ -61,6 +66,7 @@ class Compressor(System, JupyterViewable):
         )
 
         # outwards
+        # TODO check how to avoid this standard copy
         self.add_outward("N", 1.0, unit="rpm", desc="shaft speed rotation")
 
     def compute(self):

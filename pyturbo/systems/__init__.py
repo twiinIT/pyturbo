@@ -1,30 +1,56 @@
 # Copyright (C) 2022, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
-from pyturbo.systems.combustor import Combustor
-from pyturbo.systems.compressor import HPC, Booster, Fan
-from pyturbo.systems.inlet import Inlet
-from pyturbo.systems.nacelle import Nacelle
-from pyturbo.systems.nozzle import Nozzle
-from pyturbo.systems.turbine import HPT, LPT
+from pyturbo.systems.combustor import Combustor, CombustorAero
+from pyturbo.systems.compressor import HPC, Booster, CompressorGeom, CompressorMftAero, Fan
+from pyturbo.systems.inlet import Inlet, InletAero, InletGeom
+from pyturbo.systems.nacelle import Nacelle, NacelleGeom, Plug, PlugGeom
+from pyturbo.systems.nozzle import Nozzle, NozzleAero, NozzleGeom
+from pyturbo.systems.turbine import HPT, LPT, Turbine, TurbineAero, TurbineGeom
 
 from pyturbo.systems.fan_module import FanModule  # isort: skip
-from pyturbo.systems.gas_generator import GasGenerator  # isort: skip
-
-from pyturbo.systems.turbofan import Turbofan  # isort: skip
+from pyturbo.systems.gas_generator import GasGenerator, GasGeneratorGeom  # isort: skip
+from pyturbo.systems.turbofan import (  # isort: skip
+    Turbofan,
+    TurbofanAero,
+    TurbofanGeom,
+    TurbofanWeight,
+)
 
 
 __all__ = [
     "Combustor",
+    "CombustorAero",
+    "CompressorAero",
+    "CompressorGeom",
+    "CompressorMftAero",
     "HPC",
     "Booster",
     "Fan",
     "Inlet",
+    "InletAero",
+    "InletGeom",
+    "NacelleGeom",
+    "PlugGeom",
     "Nacelle",
+    "Plug",
+    "NozzleAero",
+    "NozzleGeom",
     "Nozzle",
+    "Channel",
+    "IntermediateCasing",
+    "FanDuct",
+    "CoreCowl",
+    "TurbineAero",
+    "TurbineGeom",
+    "Turbine",
     "HPT",
     "LPT",
     "FanModule",
+    "GasGeneratorGeom",
     "GasGenerator",
+    "TurbofanAero",
+    "TurbofanGeom",
+    "TurbofanWeight",
     "Turbofan",
 ]

@@ -5,7 +5,15 @@ from cosapp.ports import Port
 
 
 class ShaftPort(Port):
-    """A mechanical shaft port"""
+    """A mechanical shaft port
+
+    Variables
+    ---------
+    power [W] : float
+        shaft mechanical power
+    N [rpm] : float
+        shaft rotationnal speed
+    """
 
     def setup(self):
         self.add_variable("power", 1e6, unit="W", desc="mechanical power")

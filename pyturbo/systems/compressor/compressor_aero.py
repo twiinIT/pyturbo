@@ -11,73 +11,72 @@ from pyturbo.thermo import IdealDryAir
 
 
 class CompressorAero(System):
-    """Compressor aero simple model.
+    """A compressor aero simple model.
 
     The methodology is consistent with https://oatao.univ-toulouse.fr/17882
     Binder, Nicolas Aéro-thermodynamique des Turbomachines en Fonctionnement
     Hors-Adaptation. (2016) [HDR]
       - exit flow is computed from inlet one
       - polytropic efficiency is constant
-      - aerodynamic load and axial flow velocity are linked using a linear
-      modeling
+      - aerodynamic load and axial flow velocity are linked using a linear modeling
 
     Parameters
     ----------
-    gas : IdealDryAir
-        class provided the characteristics of gas.
-        gas.h           : to get enthalpy from temperature
-        gas.t_from_h    : to get temperature from enthapie
+    FluidLaw: Class, default is IdealDryAir
+        Class providing gas characteristics
+        gas.h to get enthalpy from temperature
+        gas.t_from_h to get temperature from enthapie
+        gas.pr to get density from Tt_in, Tt_out, eff_poly
+        gas.density to get pressure ratio from p, T
 
     Inputs
     ------
-    fl_in : FluidPort
-    sh_in : ShaftPort
+    fl_in: FluidPort
+        fluid going into the compressor
+    sh_in: ShaftPort
+        shaft driving the compressor
+
+    eff_poly[-]: float
+        polytropic efficiency
+    phiP[-]: float
+        axial flow velocity coefficient for no power consumption of the compressor
+
+    stage_count: int
+        number of stages
+    tip_in_r[m]: float
+        inlet tip radius
+    tip_out_r[m]: float
+        exit tip radius
+    inlet_area[m**2]: float
+        inlet area
 
     Outputs
     -------
-    fl_out : FluidPort
+    fl_out: FluidPort
+        fluid leaving the compressor
 
-    Inwards
-    -------
-    eff_poly : float
-        polytropic efficiency
-    phiP : float
-        axial flow velocity coefficient for no power consumption of the compressor
-
-    Inwards from geom
-    -----------------
-    stage_count : int
-        number of stages
-    tip_in_r : float
-        inlet tip radius in m
-    tip_out_r : float
-        exit tip radius in m
-    inlet_area : float
-        inlet area in m**2
-
-    Outwards
-    --------
-    utip : float
+    utip[m/s]: float
         blade tip speed at inlet
-    phi : float
+    phi[-]: float
         axial flow velocity coefficient
-    psi : float
+    psi[-]: float
         load coefficient
-
-    pr : float
+    pr[-]: float
         total to total pressure ratio
-    tr : float
+    tr[-]: float
         total to total temperature ratio
-    spec_flow : float
+    spec_flow[kg/s]: float
         inlet specific flow
 
-    Off design methods
-    ------------------
-    psi computed from enthalpy conservation equal psi computed from characteristics
+    Design methods
+    --------------
+    off design:
+        psi computed from enthalpy conservation equal psi computed from characteristics
 
     Good practice
     -------------
-    1 - initiate sh_in.power with the good order of magnitude of shaft power
+    1:
+        initiate sh_in.power with the good order of magnitude of shaft power
     """
 
     def setup(self, FluidLaw=IdealDryAir):
@@ -106,7 +105,7 @@ class CompressorAero(System):
 
         self.add_outward("pr", 1.0, unit="", desc="total pressure ratio")
         self.add_outward("tr", 1.0, unit="", desc="total temperature ratio")
-        self.add_outward("spec_flow", 1.0, desc="inlet specific flow")
+        self.add_outward("spec_flow", 1.0, unit="kg/s/m**2", desc="inlet specific flow")
 
         # off design
         self.add_outward(

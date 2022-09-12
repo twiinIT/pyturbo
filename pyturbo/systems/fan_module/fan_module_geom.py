@@ -7,67 +7,54 @@ from pyturbo.ports import KeypointsPort
 class FanModuleGeom(System):
     """
     Fan module geometry
-
-    Components
-    ----------
-    fan : Compressor
-        rotor
-    ogv : Stator
-        outlet guided vane in the secondary flow
-    booster : Compressor
-        multi stage compressor link to the LP shaft
-    ic : IntermediateCasing
-        intermediate casing suports lp shaft front bearings, and forward mounts
-
-                   --------------------------------
-                   |         |         |          |
-                   |   fan   |         |   ic     |
-                   |         |   ogv   |          |
-                   |         |         |          |
-                   |         |---------|          |
-                   |         | booster |          |
-        spinner  _/|         |---------|----------|
-               _/  |         |    shaft funnel    |
-             _/____|_________|____________________|
-
-
-    Physics
-    -------
-
-    Parameters
-    ----------
+    
+    It computes the key points for the Fan Module Sub-systems: 
+    - spinner, 
+    - fan, 
+    - ogv, 
+    - booster, 
+    - ic (intermediate casing)
 
     Inputs
     ------
-    kp : KeypointPort
+    kp: KeypointPort
+        fan module geometrical envelop
+
+    fan_length_ratio[-]: float
+        fan length relative to fan module length
+
+    fan_hub_radius_ratio[-]: float
+        fan hub radius ratio
+
+    booster_length_ratio[-]: float
+        booster length relative to fan module length
+
+    booster_radius_ratio[-]: float
+        booster tip radius relative to fan module radius
+
+    shaft_radius_ratio[-]: float
+        shaft radius relative to fan module tip radius
+
+    spinner_angle[deg]: float
+        fan spinner ang
 
     Outputs
     -------
-    fan_kp : KeypointPort
-    ogv_kp : KeypointPort
-    booster_kp : KeypointPort
-    ic_kp : KeypointPort
-    shaft_kp : KeypointPort
+    fan_kp: KeypointPort
+        fan geometrical envelop
+    ogv_kp: KeypointPort
+        ogv geometrical envelop
+    booster_kp: KeypointPort
+        booster geometrical envelop
+    ic_kp: KeypointPort
+        ic geometrical envelop
+    shaft_kp: KeypointPort
+        shaft geometrical envelop
 
-    Inwards
-    -------
-    fan_length_ratio : float
-        fan length relative to fan module length
-
-    fan_hub_radius_ratio : float
-        fan hub radius ratio
-
-    booster_length_ratio : float
-        booster length relative to fan module length
-
-    booster_radius_ratio : float
-        booster tip radius relative to fan module radius
-
-    shaft_radius_ratio : float
-        shaft radius relative to fan module tip radius
-
-    Good practice
-    -------------
+    fan_inlet_hub_kp[m]: np.array(2)
+        fan inlet hub position 
+    spinner_apex_kp[m]: np.array(2)
+        spinner inlet hub position 
     """
 
     def setup(self):
@@ -115,6 +102,7 @@ class FanModuleGeom(System):
         self.add_output(KeypointsPort, "booster_kp")
         self.add_output(KeypointsPort, "ic_kp")
         self.add_output(KeypointsPort, "shaft_kp")
+
         self.add_outward("fan_hub_kp", np.ones(2))
         self.add_outward("spinner_apex_kp", np.ones(2))
         self.add_outward("fan_inlet_hub_kp", np.ones(2))

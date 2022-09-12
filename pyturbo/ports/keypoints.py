@@ -10,6 +10,17 @@ class KeypointsPort(Port):
 
     The geometry is assumed to be revolution around x-axis and keypoints
     are defined in {r, z} coordinates.
+
+    Variables
+    ---------
+    inlet_hub [m] : np.ndarray
+        inlet hub keypoint
+    inlet_tip [m] : np.ndarray
+        inlet tip keypoint
+    exit_hub [m] : np.ndarray
+        exit hub keypoint
+    exit_tip [m] : np.ndarray
+        exit tip keypoint
     """
 
     def setup(self):
@@ -56,8 +67,9 @@ class KeypointsPort(Port):
 
 
 class C1Keypoint:
-    """A keypoint class aggregating C1-continuity information: position and
-    1st order derivate.
+    """A keypoint class including C1-continuity info
+
+    A C1 keypoint contains both position `pos` and first order derivate `der`.
 
     The geometry is assumed to be revolution around x-axis and keypoint
     is defined in {r, z} coordinates.

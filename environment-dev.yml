@@ -11,3 +11,8 @@ dependencies:
   - black
   - flake8
   - isort
+  - sphinx
+  - sphinx-autodoc-typehints
+  - sphinx-autoapi
+  - nbsphinx
+  - sphinx_rtd_theme

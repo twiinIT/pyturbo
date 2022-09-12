@@ -14,70 +14,60 @@ class FanModule(System, JupyterViewable):
     """
     Fan module
 
-    Components
-    ----------
-    fan : Fan
+    It is made of: 
+
+    - spinner,
+    - fan,
+    - ogv (outlet guided vanes),
+    - booster,
+    - ic (intermediate casing),
+
+    Sub-systems
+    -----------
+    fan: Fan
         rotor
-    ogv : Stator
+    ogv: Stator
         outlet guided vane in the secondary flow
-    booster : Booster
+    booster: Booster
         multi stage compressor link to the LP shaft
-    ic : IntermediateCasing
+    ic: IntermediateCasing
         intermediate casing suports lp shaft front bearings, and forward mounts
 
-    Numerics
-    --------
-    splitter_shaft : SplitterShaft
-        split power from LP shaft towar booster and fan shaft
-
-                --------------------------------
-                |         |         |          |
-                |   fan   |         |   ic     |
-                |         |   ogv   |          |
-                |         |         |          |
-                |         |---------|
-               /|         | booster |          |
-      spinner / |         |---------|----------|
-             /  |         |      shaft         |
-            /---|------------------------------|
-
-
-    Physics
-    -------
-    geom : FanModuleGeom
+    geom: FanModuleGeom
         component kp from fan module kp
 
-    Numerics
-    ----------
     splitter_shaft: MixerShaft
-    splitter_fluid : MixerFluid
-
-    Parameters
-    ----------
+        split power from LP shaft toward booster and fan shaft
+    splitter_fluid: MixerFluid
+        split fluid flow from fan toward booster and ogv
 
     Inputs
     ------
-    kp : KeypointPort
-    fl_in : FluidPort
+    kp: KeypointPort
+        fan module geometrical envelop
+    fl_in: FluidPort
+        fluid going into the fan madule
+    sh_in: FluidShaft
+        shaft dring the fan madule
 
     Outputs
     -------
-    fl_out : FluidPort
+    fl_booster: FluidPort
+        fluid leaving the booster
+    fl_ogv: FluidPort
+        fluid leaving the ogv
 
-    Inwards
-    -------
-
-    Outwards:
-    ---------
-    bpr : float
+    bpr[-]: float
         by pass ratio = secondary flow / primary flow
-    pr : float
+    pr[-]: float
         pressure ration = fan.pr * booster.pr
 
     Good practice
     -------------
-    1 - init mass flow split between booster and fan at the good level of magnitude
-    2 - init mass flow split between booster shaft and fan shaft at the good level of magnitude
+    1:
+        init mass flow split between booster and fan at the good level of magnitude
+    2:
+        init mass flow split between booster shaft and fan shaft at the good level of magnitude
     """
 
     def setup(self):

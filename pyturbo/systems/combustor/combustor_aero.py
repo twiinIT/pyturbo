@@ -5,55 +5,39 @@ from pyturbo.thermo import IdealDryAir
 
 
 class CombustorAero(System):
-    """A simple aerodynamic model of a combustor.
+    """
+    A simple aerodynamic model of a combustor
 
     This model takes into account a burner efficiency to compute exit temperature from
     inlet fluid (air) and fuel.
     The Fuel Heating Value is also an input of the model.
 
-    Components
-    ----------
-
-    Physics
-    -------
-
-    Parameters
-    ----------
-    gas : IdealDryAir
-        class provided the characteristics of gas as a simplistic air without fuel
-        gas.h           : to get enthalpy from temperature
-        gas.t_from_h    : to get temperature from enthapie
-
     Inputs
     ------
-    fl_in : FluidPort
+    gas: Class, default is IdealDryAir
+        class provided the characteristics of gas as a simplistic air without fuel
+        gas.h: to get enthalpy from temperature
+        gas.t_from_h: to get temperature from enthapie
 
-    Outputs
-    -------
-    fl_out : FluidPort
+    fl_in: FluidPort
+        fluid going into the combustor
 
-    Inwards
-    -------
-    fuel_W : float
-        fuel consumption in kg/s
-    fvh : float
-        Fuel Heating Value in J/Kg
-        default value is 46e6 J/Kg corresponding at fuel cosumption in air
-    eff : float
+    fuel_W[kg/s]: float
+        fuel consumption
+    fvh[J/Kg]: float
+        Fuel Heating Value
+        default value is 46e6 J/Kg corresponding at fuel comsumption in air
+    eff[-]: float
         efficiency of combustion
         default value is 0.99
 
-    Outwards
-    --------
-    Tcomb : float
+    Outputs
+    -------
+    fl_out: FluidPort
+        fluid leaving the combustor
+
+    Tcomb[K]: float
         combustion temperature
-
-    Off design methods
-    ------------------
-
-    Good practice
-    -------------
-
     """
 
     def setup(self):

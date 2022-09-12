@@ -12,39 +12,44 @@ class MixerShaft(System):
 
     Parameters
     ----------
-    input_shafts : list[str]
+    input_shafts: list[str]
         list of the input shaft names. If name is 'sh_in', shaft will be self.sh_in
         default is ("sh_in")
-    output_shafts : list[str]
+    output_shafts: list[str]
         list of output shaft names
         default is ("sh_out")
-    n_in : number ou input shafts
-    n_out : number ou output shafts
+    n_in: int
+        number ou input shafts
+    n_out: int
+        number ou output shafts
 
-    Inwards
-    -------
-    power_fraction : numpy array of size len(output_shaft) - 1
+    Inputs
+    ------
+    power_fraction: numpy array
+        size is len(output_shaft) - 1
         proportion of power that goes to shaft_out in the order of output_shaft list
 
-    Outwards
-    --------
-    N : float
-        mean shaft speed rotation in rpm
+    Outputs
+    -------
+    N[rpm]: float
+        mean shaft speed rotation
         all sh_in power should have the same speed rotation
-    power : float
-        shaft power in W.
+    power[W]: float
+        shaft power.
         total sh_in power and sh_out power are equal
 
-    Off design methods
-    ------------------
-    parameter : power_fraction
-    equations : input_shaft speed rotation are equal to mean speed rotation
+    Design methods
+    --------------
+    off design:
+        parameter: power_fraction
+        equations: input_shaft speed rotation are equal to mean speed rotation
 
     Good practice
     -------------
-    1 - consider at last the most powerfull shaft in output_shafts list
-    2 - If shaft out have very different power, it should be good to initiate power_fraction
-    with a good order of magnitude
+    1:
+        consider at least the most powerfull shaft in output_shafts list
+    2:
+        If shaft out have very different power, it should be good to initiate power_fraction with a good order of magnitude
 
     """
 

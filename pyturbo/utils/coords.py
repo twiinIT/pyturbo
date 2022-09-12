@@ -13,8 +13,9 @@ def slope_to_drdz(slope: float) -> np.ndarray:
 
 
 def slope_to_3d(slope: float) -> np.ndarray:
+    """Computes the slope from ..."""
     return rz_to_3d(slope_to_drdz(slope))
 
 
-def derivative_slope(kp: C1Keypoint):
+def derivative_slope(kp: C1Keypoint) -> float:
     return np.arctan(kp.dr / kp.dz)

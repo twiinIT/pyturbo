@@ -15,13 +15,16 @@ class PlugGeom(System, JupyterViewable):
     It also has an aerodynamical function to guide the primary (core) flow
     after the nozzle exit section.
 
-    Parameters
-    ----------
-    lpt_exit_hub_kp [m] : np.ndarray[2]
+    Inputs
+    ------
+    trf_exit_hub_kp[m]: np.ndarray[2]
         low pressure turbine exit hub keypoint
-    LqD [-] : float
+    LqD[-]: float
         length over diameter ratio (form factor)
-    exit_radius_ratio [-] : float
+
+    Outputs
+    -------
+    exit_radius_ratio[-]: float
         exit radius over inlet one ratio
     """
 
@@ -35,10 +38,10 @@ class PlugGeom(System, JupyterViewable):
             desc="low pressure turbine rear frame exit hub keypoint",
         )
         self.add_inward("LqD", 1.0, unit="", desc="length over diameter ratio (form factor)")
-
         self.add_inward("exit_radius_ratio", 0.1, unit="", desc="exit radius over inlet one ratio")
 
-        self.add_inward("exit_kp", np.ones(2), unit="m", desc="exit keypoint")
+        # outwards
+        self.add_outward("exit_kp", np.ones(2), unit="m", desc="exit keypoint")
 
     def compute(self):
         self.exit_kp = (

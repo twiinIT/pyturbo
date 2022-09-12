@@ -1,6 +1,6 @@
 from cosapp.systems import System
 
-from pyturbo.systems.nacelle import NacelleGeom
+from pyturbo.systems.nacelle.nacelle_geom import NacelleGeom
 from pyturbo.utils.jupyter_view import JupyterViewable
 
 
@@ -8,13 +8,15 @@ class Nacelle(System, JupyterViewable):
     """
     Nacelle simple assembly model.
 
-    Physics
-    -------
-    geom : NacelleGeom
+    Sub-systems
+    -----------
+    geom: NacelleGeom
+        provide the geometry for visualisation
 
     Inputs
     ------
-    kp : KeypointPort
+    kp: KeypointPort
+        nacelle geometrical envelop
     """
 
     def setup(self):
@@ -24,7 +26,6 @@ class Nacelle(System, JupyterViewable):
             pulling=[
                 "hilite_kp",
                 "ogv_exit_tip_kp",
-                # "turbine_exit_tip_kp",
                 "sec_nozzle_exit_kp",
                 "fan_diameter",
             ],

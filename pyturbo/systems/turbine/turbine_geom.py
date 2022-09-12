@@ -16,10 +16,31 @@ class TurbineGeom(GenericSimpleGeom):
     Turbine geometry.
 
     The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit.
-
     The geometry exposed to aero module is made of:
       - inlet area
       - inlet and exit tip radius
+
+    Inputs
+    ------
+    kp: KeypointPort
+        geometrical envelop
+
+    stage_count: integer
+        number of stages
+
+    blade_height_ratio[-]: float
+        inlet blade height relative to compressor inlet tip radius
+    exit_hubqtip[-]: float
+        exit hub-to-tip radius ratio
+
+    Outputs
+    -------
+    mean_radius[m]: float
+        mean radius
+    fp_exit_hub_kp[m]: np.array(2)
+        flowpath exit hub keypoint
+    area_in[m**2]: float
+        inlet area
     """
 
     def setup(self):

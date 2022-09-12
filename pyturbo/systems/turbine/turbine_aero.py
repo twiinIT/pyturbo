@@ -14,9 +14,63 @@ class TurbineAero(System):
 
     It computes the exit gas `fl_out` from inlet gas `fl_in` for a given pressure ratio
     and efficency. The generated power `sh_out.power` is also computed.
+
+    Parameters
+    ----------
+    FluidLaw: Class, default is IdealDryAir
+        Class providing gas characteristics
+        gas.h to get enthalpy from temperature
+        gas.t_from_h to get temperature from enthapie
+        gas.pr to get density from Tt_in, Tt_out, eff_poly
+        gas.density to get pressure ratio from p, T
+        gas.c to get mach
+
+    Inputs
+    ------
+    fl_in: FluidPort
+        inlet gas
+
+    eff_poly[-]: float
+        polytropic efficiency
+    er[-]: float
+        expansion ratio
+    Ncdes[%]: float
+        design corrected speed
+    Ncqdes[rpm/K**0.5]: float
+        corrected speed over design value ratio
+
+    stage_count: int
+        number of stages
+    area_in[m**2]: float
+        inlet area
+    mean_radius[m]: float
+        mean radius
+
+    Outputs
+    -------
+    fl_out: FluidPort
+        fluid leaving the compressor
+    sh_out: ShaftPort
+        shaft
+
+    Wc[kg/s]: float
+        corrected mass flow
+    Tt_ratio[-]: float
+        total temperature ratio
+    psi[-]: float
+        aerodynamic loading
+
+    Design methods
+    --------------
+    off design:
+        Ncqdes unknown
+
     """
 
-    def setup(self):
+    def setup(self, FluidLaw=IdealDryAir):
+        # properties
+        self.add_property("gas", FluidLaw())
+
         # inputs/outputs
         self.add_input(FluidPort, "fl_in")
         self.add_output(FluidPort, "fl_out")
@@ -24,10 +78,10 @@ class TurbineAero(System):
 
         # inwards
         self.add_inward("eff_poly", 0.9, desc="polytropic efficiency")
-        self.add_inward("er", 5.0, desc="expansion ratio")
-        self.add_inward("Ncdes", 150.0, desc="design corrected speed")
-        self.add_inward("Ncqdes", 100.0, desc="corrected speed over design value ratio")
-        self.add_inward("gas", IdealDryAir())
+        self.add_inward("er", 5.0, unit="", desc="expansion ratio")
+        # TODO: fix unit
+        self.add_inward("Ncdes", 150.0, unit="rpm/K", desc="design corrected speed")
+        self.add_inward("Ncqdes", 100.0, unit="", desc="corrected speed over design value ratio")
 
         self.add_inward("area_in", 1.0, unit="m**2", desc="inlet area")
         self.add_inward("mean_radius", 1.0, unit="m", desc="mean radius")
@@ -35,8 +89,8 @@ class TurbineAero(System):
 
         # outwards
         self.add_outward("Wc", unit="kg/s", desc="corrected mass flow")
-        self.add_outward("Tt_ratio", desc="total temperature ratio")
-        self.add_outward("psi", desc="aerodynamic loading")
+        self.add_outward("Tt_ratio", unit="", desc="total temperature ratio")
+        self.add_outward("psi", unit="", desc="aerodynamic loading")
 
         # off design
         self.add_unknown("Ncqdes", max_rel_step=0.5)

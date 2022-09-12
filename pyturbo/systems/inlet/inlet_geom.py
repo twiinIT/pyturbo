@@ -13,15 +13,13 @@ class InletGeom(System, JupyterViewable):
 
     Inputs
     ------
-    kp : KeypointPort
+    kp: KeypointPort
+        inlet geometrical envelop
 
-    Outwards for aero
-    -----------------
-    area : float
-        throat area in m**2
-
-    Good practice
-    -------------
+    Outputs
+    -------
+    area[m**2]: float
+        throat area
     """
 
     def setup(self):

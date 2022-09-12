@@ -8,6 +8,25 @@ class Channel(System):
     """
     Channel vane with aero
 
+    Sub-systems
+    -----------
+    geom: GenericSimpleGeom
+        channel envelop
+    aero: ChannelAero
+        compute aerodyanmic characteristics
+
+    Inputs
+    ------
+    kp: KeypointPort
+        geometrical envelop
+    fl_in: FluidPort
+        inlet fluid
+
+    Outputs
+    -------
+    fl_out: FluidPort
+        exit fluid
+
     """
 
     def setup(self, geom_class=GenericSimpleGeom, aero_class=ChannelAero):
