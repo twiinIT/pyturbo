@@ -14,9 +14,9 @@ class JupyterViewable:
         **kwargs
     ):
         try:
-            from pythonocc_helpers.render import JupyterThreeJSRenderer
+            from pyoccad.render import JupyterThreeJSRenderer
         except ImportError:
-            raise ImportError("Please install 'pythonocc_helpers' before using this function")
+            raise ImportError("Please install 'pyoccad' before using this function")
 
         super(System, self).__setattr__("_renderer", None)
 
@@ -61,7 +61,7 @@ def add_nacelle_brand(nacelle_geom: System, renderer, brand_path: str):
     try:
         from pythreejs import ImageTexture, MeshStandardMaterial
     except ImportError:
-        raise ImportError("Please install 'pythonocc_helpers' before using this function")
+        raise ImportError("Please install 'pythreejs' before using this function")
 
     logo = ImageTexture(imageUri=brand_path)
     renderer.add_shape(
