@@ -39,7 +39,7 @@ class Compressor(System, JupyterViewable):
 
     Design methods
     --------------
-    off design: 
+    off design:
         psi computed from enthalpy conservation equal psi computed from characteristics
 
     Good practice
@@ -86,7 +86,7 @@ class Fan(Compressor):
         # init inputs
         self.fl_in.W = 350
         self.fl_in.Tt = 288.15
-        self.fl_in.pt = 101325.0
+        self.fl_in.Pt = 101325.0
 
         self.sh_in.power = 18e6
         self.sh_in.N = 5500
@@ -114,7 +114,7 @@ class HPC(Compressor):
         # init inputs
         self.fl_in.W = 60
         self.fl_in.Tt = 330.0
-        self.fl_in.pt = 1.7e5
+        self.fl_in.Pt = 1.7e5
 
         self.sh_in.power = 20e6
         self.sh_in.N = 15000
@@ -142,7 +142,7 @@ class Booster(Compressor):
         # init inputs
         self.fl_in.W = 60
         self.fl_in.Tt = 310.0
-        self.fl_in.pt = 1.7e5
+        self.fl_in.Pt = 1.7e5
 
         self.sh_in.power = 2e6
         self.sh_in.N = 5000

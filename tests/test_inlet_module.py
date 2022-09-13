@@ -27,7 +27,7 @@ class TestInlet:
 
         sys.pamb = 1e5
         sys.fl_in.W = 400.0
-        sys.fl_in.pt = 101325.0
+        sys.fl_in.Pt = 101325.0
         sys.fl_in.Tt = 300.0
 
         sys.run_once()

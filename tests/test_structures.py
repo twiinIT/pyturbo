@@ -24,12 +24,12 @@ class TestChannel:
         # basic run
         sys = self.sys
 
-        sys.fl_in.pt = 100.0
+        sys.fl_in.Pt = 100.0
         sys.aero.pressure_loss = 0.01
 
         sys.run_once()
 
-        assert sys.fl_out.pt == 99.0
+        assert sys.fl_out.Pt == 99.0
 
 
 class TestIntermediateCasing:

@@ -34,7 +34,7 @@ class MixerFluid(System):
     fl_out: FluidPort
         exit fluid (for each name in output_fluid)
 
-    pt[Pa]: float
+    Pt[Pa]: float
         mean fluid total pressure in pa
         all flow_in total pressure should be the same
     W[kg/s]: float
@@ -79,13 +79,13 @@ class MixerFluid(System):
             self.add_inward("fluid_fractions", np.ones(self.n_out - 1) / self.n_out)
 
         self.add_outward("W", 1.0, unit="kg/s")
-        self.add_outward("pt", 1.0, unit="pa")
+        self.add_outward("Pt", 1.0, unit="pa")
         self.add_outward("Tt", 1.0, unit="K")
 
         # off design
         for i, p in enumerate(input_fluids):
             if i != 0:
-                self.add_equation(f"pt == {p}.pt")
+                self.add_equation(f"Pt == {p}.Pt")
 
         if self.n_out > 1:
             self.add_unknown("fluid_fractions", max_rel_step=0.1)
@@ -96,7 +96,7 @@ class MixerFluid(System):
         fluid_in_ports = [p for p in self.inputs.values() if type(p) == FluidPort]
 
         self.W = np.sum([p.W for p in fluid_in_ports])
-        self.pt = np.mean([p.pt for p in fluid_in_ports])
+        self.Pt = np.mean([p.Pt for p in fluid_in_ports])
         self.Tt = np.mean([p.W * p.Tt for p in fluid_in_ports]) / self.W
 
         # output flows
@@ -104,7 +104,7 @@ class MixerFluid(System):
 
         W = 0.0
         for i, p in enumerate(fluid_out_ports):
-            p.pt = self.pt
+            p.Pt = self.Pt
             p.Tt = self.Tt
             if i < self.n_out - 1:
                 p.W = self.W * self.fluid_fractions[i]
