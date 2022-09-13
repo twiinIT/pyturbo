@@ -126,18 +126,18 @@ class CompressorAero(System):
 
         self.tr = self.fl_out.Tt / self.fl_in.Tt
         self.pr = self.gas.pr(self.fl_in.Tt, self.fl_out.Tt, self.eff_poly)
-        self.fl_out.pt = self.fl_in.pt * self.pr
+        self.fl_out.Pt = self.fl_in.Pt * self.pr
 
         # axial flow coefficient
         self.utip = self.sh_in.N * np.pi / 30.0 * self.tip_out_r
-        rho = self.gas.density(self.fl_in.pt, self.fl_in.Tt)
+        rho = self.gas.density(self.fl_in.Pt, self.fl_in.Tt)
         vm = self.fl_in.W / (rho * self.inlet_area)
         self.phi = vm / self.utip
 
         self.spec_flow = (
             self.fl_in.W
             * sqrt(self.fl_in.Tt / 288.15)
-            / (self.fl_in.pt / 101325.0)
+            / (self.fl_in.Pt / 101325.0)
             / self.inlet_area
         )
 

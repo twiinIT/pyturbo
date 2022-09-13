@@ -24,7 +24,7 @@ class CompressorMftAero(System):
 
     def compute(self):
         self.fl_out.Tt = self.gas.t_from_h(self.gas.h(self.fl_in.Tt) + self.cmp_model.ghr(self.gh))
-        self.fl_out.pt = self.fl_in.pt * self.cmp_model.pr(self.pcnr, self.gh)
+        self.fl_out.Pt = self.fl_in.Pt * self.cmp_model.pr(self.pcnr, self.gh)
         self.fl_out.W = (
-            self.cmp_model.wr(self.pcnr, self.gh) * self.fl_out.pt / np.sqrt(self.fl_out.Tt)
+            self.cmp_model.wr(self.pcnr, self.gh) * self.fl_out.Pt / np.sqrt(self.fl_out.Tt)
         )

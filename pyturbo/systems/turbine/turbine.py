@@ -76,7 +76,7 @@ class HPT(Turbine):
         # init inputs
         self.fl_in.W = 60
         self.fl_in.Tt = 1500.0
-        self.fl_in.pt = 33e5
+        self.fl_in.Pt = 33e5
 
         self.kp.inlet_hub = np.r_[0.0, 0.0]
         self.kp.inlet_tip = np.r_[0.4, 0.0]
@@ -107,7 +107,7 @@ class LPT(Turbine):
         # init inputs
         self.fl_in.W = 60
         self.fl_in.Tt = 1100.0
-        self.fl_in.pt = 8e5
+        self.fl_in.Pt = 8e5
 
         self.kp.inlet_hub = np.r_[0.0, 0.0]
         self.kp.inlet_tip = np.r_[0.4, 0.0]

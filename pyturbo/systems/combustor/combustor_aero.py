@@ -56,7 +56,7 @@ class CombustorAero(System):
         self.add_outward("Tcomb", 0.0, unit="K", desc="combustion temperature")
 
     def compute(self):
-        self.fl_out.pt = self.fl_in.pt
+        self.fl_out.Pt = self.fl_in.Pt
         self.fl_out.W = self.fl_in.W + self.fuel_W
 
         h_out = self.gas.h(self.fl_in.Tt) + self.fuel_W / self.fl_out.W * self.fhv * self.eff

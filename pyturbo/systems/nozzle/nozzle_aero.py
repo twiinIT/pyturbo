@@ -26,7 +26,7 @@ class NozzleAero(System):
     Inputs
     ------
     fl_in: FluidPort
-        inlet gas 
+        inlet gas
 
     pamb[Pa]: float
         ambiant static pressure
@@ -56,7 +56,7 @@ class NozzleAero(System):
     Good practice
     -------------
     1:
-        fl_in.pt must be bigger than pamb.
+        fl_in.Pt must be bigger than pamb.
     """
 
     def setup(self, FluidLaw=IdealDryAir):
@@ -85,17 +85,17 @@ class NozzleAero(System):
 
     def compute(self):
         # outputs
-        self.fl_out.pt = self.fl_in.pt
+        self.fl_out.Pt = self.fl_in.Pt
         self.fl_out.Tt = self.fl_in.Tt
 
         # assumes convergent nozzle (throat at exit)
-        self.mach = self.gas.mach_ptpstt(self.fl_in.pt, self.pamb, self.fl_in.Tt)
+        self.mach = self.gas.mach_ptpstt(self.fl_in.Pt, self.pamb, self.fl_in.Tt)
 
         if self.mach > 1.0:
             self.mach = 1.0
 
         ts = self.gas.static_t(self.fl_in.Tt, self.mach)
-        self.ps = self.gas.static_p(self.fl_in.pt, self.fl_in.Tt, self.mach)
+        self.ps = self.gas.static_p(self.fl_in.Pt, self.fl_in.Tt, self.mach)
         rho = self.gas.density(self.ps, ts)
         self.speed = self.gas.c(ts) * self.mach
         self.fl_out.W = rho * self.speed * self.area

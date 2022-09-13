@@ -38,7 +38,7 @@ class TestCompressorAero:
         sys.sh_in.power = 17e6
 
         sys.fl_in.W = 308.3
-        sys.fl_in.pt = 101325.0
+        sys.fl_in.Pt = 101325.0
         sys.fl_in.Tt = 288.15
 
         sys.run_drivers()

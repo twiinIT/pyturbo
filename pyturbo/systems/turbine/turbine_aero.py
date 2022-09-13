@@ -102,7 +102,7 @@ class TurbineAero(System):
     def compute(self):
         # fluid
         self.fl_out.W = self.fl_in.W
-        self.fl_out.pt = self.fl_in.pt / self.er
+        self.fl_out.Pt = self.fl_in.Pt / self.er
         self.fl_out.Tt = self.gas.t_from_pr(1.0 / self.er, self.fl_in.Tt, 1.0 / self.eff_poly)
         self.Tt_ratio = self.fl_out.Tt / self.fl_in.Tt
 
@@ -115,7 +115,7 @@ class TurbineAero(System):
         # inlet Mach number
         def Mach_solver(mach):
             t = self.gas.static_t(self.fl_in.Tt, mach)
-            p = self.gas.pr(self.fl_in.Tt, t, 1.0) * self.fl_in.pt
+            p = self.gas.pr(self.fl_in.Tt, t, 1.0) * self.fl_in.Pt
             rho = self.gas.density(p, t)
             vm = self.fl_in.W / (rho * self.area_in)
             return mach - vm / self.gas.c(t)
@@ -124,4 +124,4 @@ class TurbineAero(System):
         self.psi = dh / (2.0 * self.stage_count * u**2)
 
         # outwards
-        self.Wc = self.fl_in.W * np.sqrt(self.fl_in.Tt / 288.15) / (self.fl_in.pt / 101325.0)
+        self.Wc = self.fl_in.W * np.sqrt(self.fl_in.Tt / 288.15) / (self.fl_in.Pt / 101325.0)

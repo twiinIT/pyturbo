@@ -48,10 +48,10 @@ class InletAero(System):
     Good practice
     -------------
     1:
-        fl_in.pt must remain bigger than pamb
+        fl_in.Pt must remain bigger than pamb
     """
 
-    def setup(self, FluidFlow = IdealDryAir):
+    def setup(self, FluidFlow=IdealDryAir):
         # inputs / outputs
         self.add_input(FluidPort, "fl_in")
         self.add_output(FluidPort, "fl_out")
@@ -69,10 +69,10 @@ class InletAero(System):
 
     def compute(self):
         self.fl_out.Tt = self.fl_in.Tt
-        self.fl_out.pt = self.fl_in.pt
+        self.fl_out.Pt = self.fl_in.Pt
         self.fl_out.W = self.fl_in.W
 
-        pt = self.fl_in.pt
+        pt = self.fl_in.Pt
         tt = self.fl_in.Tt
         self.mach = self.gas.mach(pt, tt, self.fl_in.W / self.area)
 

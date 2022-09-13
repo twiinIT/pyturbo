@@ -7,7 +7,7 @@ class ChannelAero(System):
     """
     Stator simple channel
 
-    pt_out = pt_in * (1 - pressure_loss)
+    Pt_out = Pt_in * (1 - pressure_loss)
 
     Inputs
     ------
@@ -35,4 +35,4 @@ class ChannelAero(System):
     def compute(self):
         self.fl_out.W = self.fl_in.W
         self.fl_out.Tt = self.fl_in.Tt
-        self.fl_out.pt = self.fl_in.pt * (1.0 - self.pressure_loss)
+        self.fl_out.Pt = self.fl_in.Pt * (1.0 - self.pressure_loss)
