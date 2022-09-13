@@ -24,10 +24,6 @@ class CompressorAero(System):
     ----------
     FluidLaw: Class, default is IdealDryAir
         Class providing gas characteristics
-        gas.h to get enthalpy from temperature
-        gas.t_from_h to get temperature from enthapie
-        gas.pr to get density from Tt_in, Tt_out, eff_poly
-        gas.density to get pressure ratio from p, T
 
     Inputs
     ------
@@ -36,18 +32,18 @@ class CompressorAero(System):
     sh_in: ShaftPort
         shaft driving the compressor
 
-    eff_poly[-]: float
+    eff_poly[-]: float, default=0.9
         polytropic efficiency
-    phiP[-]: float
+    phiP[-]: float, default=0.4
         axial flow velocity coefficient for no power consumption of the compressor
 
-    stage_count: int
-        number of stages
-    tip_in_r[m]: float
+    stage_count[-]: int, default=1
+        number of compressor stages
+    tip_in_r[m]: float, default=1.0
         inlet tip radius
-    tip_out_r[m]: float
+    tip_out_r[m]: float, default=1.0
         exit tip radius
-    inlet_area[m**2]: float
+    inlet_area[m**2]: float, default=1.0
         inlet area
 
     Outputs
@@ -55,17 +51,17 @@ class CompressorAero(System):
     fl_out: FluidPort
         fluid leaving the compressor
 
-    utip[m/s]: float
+    utip[m/s]: float, default=0.0
         blade tip speed at inlet
-    phi[-]: float
+    phi[-]: float, default=0.0
         axial flow velocity coefficient
-    psi[-]: float
+    psi[-]: float, default=0.0
         load coefficient
-    pr[-]: float
+    pr[-]: float, default=1.0
         total to total pressure ratio
-    tr[-]: float
+    tr[-]: float, default=1.0
         total to total temperature ratio
-    spec_flow[kg/s]: float
+    spec_flow[kg/s]: float, default=1.0
         inlet specific flow
 
     Design methods
@@ -96,15 +92,19 @@ class CompressorAero(System):
 
         # aero characteristics
         self.add_inward("eff_poly", 0.9, desc="polytropic efficiency")
-        self.add_inward("phiP", 0.4, desc="")
+        self.add_inward(
+            "phiP",
+            0.4,
+            desc="axial flow velocity coefficient for zero compressor consumption",
+        )
 
         # functional characteristics
         self.add_outward("utip", 0.0, unit="m/s", desc="tip speed")
         self.add_outward("phi", 0.0, unit="", desc="axial flow velocity coefficient")
         self.add_outward("psi", 0.0, unit="", desc="load coefficient")
 
-        self.add_outward("pr", 1.0, unit="", desc="total pressure ratio")
-        self.add_outward("tr", 1.0, unit="", desc="total temperature ratio")
+        self.add_outward("pr", 1.0, unit="", desc="total to total pressure ratio")
+        self.add_outward("tr", 1.0, unit="", desc="total to total temperature ratio")
         self.add_outward("spec_flow", 1.0, unit="kg/s/m**2", desc="inlet specific flow")
 
         # off design
