@@ -22,7 +22,7 @@ class CompressorAero(System):
 
     Parameters
     ----------
-    FluidLaw: Class, default is IdealDryAir
+    FluidLaw: Class, default=IdealDryAir
         Class providing gas characteristics
 
     Inputs

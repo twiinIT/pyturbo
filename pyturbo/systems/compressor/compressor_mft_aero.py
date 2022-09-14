@@ -10,15 +10,41 @@ from pyturbo.thermo.ideal_gas import IdealGas
 
 
 class CompressorMftAero(System):
-    """The doc"""
+    """Calculate, from a compressor map, the thermodynamic characteristics.
+
+    Parameters
+    ----------
+    FluidLaw: Class, default=IdealDryAir
+        Class providing gas characteristics
+
+    Inputs
+    ------
+    fl_in: FluidPort
+        fluid going into the compressor
+
+    pcnr[%]: float, default=90.0
+        percentage of the reduced shaft speed
+    gh[J/kg]: float, default=0.0
+        enthalpy minimum loss delta
+
+    cmp_model: Class
+        compressor map model
+    gas: Class
+        class providing gas characteristics
+
+    Outputs
+    -------
+    fl_out: FluidPort
+        fluid leaving the compressor
+    """
 
     def setup(self):
 
         self.add_input(FluidPort, "fl_in")
         self.add_output(FluidPort, "fl_out")
 
-        self.add_inward("pcnr", 90.0)
-        self.add_inward("gh", 0.0)
+        self.add_inward("pcnr", 90.0, unit="%", desc="percentage of the reduced shaft speed")
+        self.add_inward("gh", 0.0, unit="J/kg", desc="enthalpy minimum loss delta")
         self.add_inward("cmp_model", SimplifiedMftCompressor())
         self.add_inward("gas", IdealGas(287.058, 1004.0))  # dry air
 

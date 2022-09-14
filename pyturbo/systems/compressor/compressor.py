@@ -21,7 +21,7 @@ class Compressor(System, JupyterViewable):
     stage_count: integer
         number of stages
 
-    kp: KeypointPort
+    kp: KeypointsPort
         compressor geometrical envelop
     fl_in: FluidPort
         fluid going into the compressor

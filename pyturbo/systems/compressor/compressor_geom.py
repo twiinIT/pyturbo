@@ -4,32 +4,31 @@ from pyturbo.systems.generic.generic_simple_geom import GenericSimpleGeom
 
 
 class CompressorGeom(GenericSimpleGeom):
-    """
-    Compressor geometry.
+    """Compressor geometry.
 
-    The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit. 
+    The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit.
     The geometry exposed to aero module is made of:
       - inlet area
       - inlet and exit tip radius
 
     Inputs
     ------
-    kp: KeypointPort
+    kp: KeypointsPort
         compressor geometrical envelop
 
-    stage_count: integer
+    stage_count[-]: integer, default=1
         number of stages
 
-    blade_height_ratio[-]: float
+    blade_height_ratio[-]: float, default=0.2
         inlet blade height relative to compressor inlet tip radius
 
     Outputs
     -------
-    tip_in_r[m]: float
+    tip_in_r[m]: float, default=1.0
         inlet tip radius
-    tip_out_r[m]: float
+    tip_out_r[m]: float, default=1.0
         exit tip radius
-    inlet_area[m**2]: float
+    inlet_area[m**2]: float, default=1.0
         inlet area
     """
 
@@ -44,7 +43,7 @@ class CompressorGeom(GenericSimpleGeom):
             desc="blade hub-to-tip radius ratio",
         )
 
-        # aero outputs
+        # blade geometric properties
         self.add_outward("inlet_area", 1.0, unit="m**2", desc="inlet area")
         self.add_outward("tip_in_r", 1.0, unit="m", desc="inlet tip radius")
         self.add_outward("tip_out_r", 1.0, unit="m", desc="exit tip radius")
@@ -52,7 +51,7 @@ class CompressorGeom(GenericSimpleGeom):
     def compute(self):
         super().compute()
 
-        # aero outputs
+        # Compute blade hub radial position
         hub_in_r = self.kp.inlet_tip_r * self.blade_hub_to_tip_ratio
 
         self.inlet_area = np.pi * (self.kp.inlet_tip_r**2 - hub_in_r**2)
