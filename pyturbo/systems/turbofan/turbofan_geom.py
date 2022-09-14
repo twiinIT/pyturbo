@@ -6,8 +6,7 @@ from pyturbo.utils import slope_to_drdz
 
 
 class TurbofanGeom(System):
-    r"""
-    Turbofan geometry
+    """Turbofan geometry.
 
     Reference for all dimensions is fan diameter
 
@@ -27,53 +26,53 @@ class TurbofanGeom(System):
 
     Inputs
     ------
-    fan_diameter[m]: float
+    fan_diameter[m]: float, default=1.6
         fan diameter
 
-    inlet_length_ratio[-]: float
+    inlet_length_ratio[-]: float, default=0.4
         inlet length relative to fan radius
-    inlet_radius_ratio[-]: float
+    inlet_radius_ratio[-]: float, default=0.9
         inlet radius relative to fan radius"
 
-    fanmodule_length_ratio[-]:
+    fanmodule_length_ratio[-]: float, default=1.0
         fanmodule length relative to fan radius
-    ogv_exit_hqt[-]: float
+    ogv_exit_hqt[-]: float, default=0.6
         fan OGV exit hub-to-tip ratio
 
-    core_radius_ratio[-]: float
+    core_radius_ratio[-]: float, default=0.25
         high-pressure core radius relative to fan radius
-    core_length_ratio[-]:
+    core_length_ratio[-]: float, default=3.0
         high-pressure core length relative to its radius
 
-    shaft_radius_ratio[-]: float
+    shaft_radius_ratio[-]: float, default=0.1
         shaft radius relative to fan radius
 
-    turbine_radius_ratio[-]: float
+    turbine_radius_ratio[-]: float, default=0.65
         turbine radius relative to fan radius
-    turbine_length_ratio[-]: float
+    turbine_length_ratio[-]: float, default=1.0
         turbine length relative to turbine radius
-    turbine_fp_exit_hqt[-]: float
+    turbine_fp_exit_hqt[-]: float, default=0.8
         LPT turbine flowpath exit hub-to-tip ratio
-    trf_length_ratio[-]: float
+    trf_length_ratio[-]: float, default=0.15
         trf length relative to turbine radius
 
-    core_cowl_slope[deg]: float
+    core_cowl_slope[deg]: float, default=-20.0
         core cowl slope angle
 
-    primary_nozzle_length_ratio[-]: float
+    primary_nozzle_length_ratio[-]: float, default=0.5
         primary nozzle length relative to TRF radius
 
-    secondary_nozzle_length_ratio[-]: float
+    secondary_nozzle_length_ratio[-]: float, default=0.2
         secondary nozzle length relative to fan_radius
 
-    pri_nozzle_area[-]: float
+    pri_nozzle_area[-]: float, default=0.3
         primary nozzle exit area
-    sec_nozzle_area[-]: float
+    sec_nozzle_area[-]: float, default=1.0
         secondary nozzle exit area
 
-    frd_mount_relative[-]: float
+    frd_mount_relative[-]: float, default=0.75
         forward engine mount position relative to tip fan module
-    aft_mount_relative[-]: float
+    aft_mount_relative[-]: float, default=0.75
         aftward engine mount position relative to tip trf
 
     Outputs
@@ -95,29 +94,29 @@ class TurbofanGeom(System):
     secondary_nozzle_kp: KeypointsPort
         secondary nozzle geometrical envelop
 
-    fan_inlet_tip_kp[m]: np.array(2)
+    fan_inlet_tip_kp[m]: np.array(2), default=np.ones(2)
         fan inlet tip position
-    ogv_exit_hub_kp[m]: np.array(2)
+    ogv_exit_hub_kp[m]: np.array(2), default=np.ones(2)
         ogv exit hub position
-    ogv_exit_tip_kp[m]: np.array(2)
+    ogv_exit_tip_kp[m]: np.array(2), default=np.ones(2)
         ogv exit tip position
-    turbine_exit_tip_kp[m]: np.array(2)
+    turbine_exit_tip_kp[m]: np.array(2), default=np.ones(2)
         turbine exit tip position
     pri_nozzle_exit_kp: C1Keypoint
         primary nozzle exit position
-    sec_nozzle_exit_kp[m]: np.array(2)
+    sec_nozzle_exit_kp[m]: np.array(2), default=np.ones(2)
         secondary nozzle exit tip position
     sec_nozzle_exit_hub_kp: C1Keypoint
         secondary nozzle exit hub position
- 
-    frd_mount[m]: np.array(2)
+
+    frd_mount[m]: np.array(2), default=np.r_[0.9, 0.5]
         forward engine mount
-    aft_mount[m]: np.array(2)
+    aft_mount[m]: np.array(2), default=np.r_[0.9, 0.5]
         aftward engine mount
 
-    fan_module_length[m]: float
+    fan_module_length[m]: float, default=1.0
         fan module length from fan inlet to intermediate case exit",
-    engine_length[m]: float
+    engine_length[m]: float, default=1.0
         engine length from fan module to trf
     """
 

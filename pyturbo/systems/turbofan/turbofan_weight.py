@@ -5,8 +5,7 @@ from cosapp.systems import System
 
 
 class TurbofanWeight(System):
-    """
-    A simple weight model.
+    """A simple weight model.
 
     Weight is evaluated from diameter and length
     coef are computed from CFM family value
@@ -15,29 +14,29 @@ class TurbofanWeight(System):
 
     Inputs
     ------
-    c1, c2, c3[-]: float
+    c1, c2, c3[-]: float, default= -1.1, 4.3, 0.95
         constant coefficient
-    
-    ipps_weight_ref[m]: float
+
+    ipps_weight_ref[m]: float, default=1.0
         CFM56-7 ipps weight
 
-    fan_diameter_ref[m]: float
+    fan_diameter_ref[m]: float, default=1.0
         CFM56-7 fan diameter
-    length_ref[m]: float
+    length_ref[m]: float, default=3.451
         CFM56-7 length
-    EIS_ref[year]: float
-        CFM56-7 eentry into service year
-    
-    fan_diameter[m]: float
+    EIS_ref[year]: float, default=1997
+        CFM56-7 entry into service year
+
+    fan_diameter[m]: float, default=1.0
         fan diameter
-    length[m]: float
+    length[m]: float, default=1.0
         engine length
-    EIS[year]: float
+    EIS[year]: float, default=2022
         Entry into service
 
     Outputs
     -------
-    ipps_weight[kg]: float
+    ipps_weight[kg]: float, default=1.0
         ipps weight
     """
 
@@ -62,7 +61,8 @@ class TurbofanWeight(System):
 
     def compute(self):
 
-        self.ipps_weight = (self.ipps_weight_ref
+        self.ipps_weight = (
+            self.ipps_weight_ref
             * (self.fan_diameter / self.fan_diameter_ref) ** self.c1
             * (self.length / self.length_ref) ** self.c2
             * self.c3 ** (self.EIS - self.EIS_ref)

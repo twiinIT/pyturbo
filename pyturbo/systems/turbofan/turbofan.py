@@ -17,8 +17,7 @@ from pyturbo.utils import JupyterViewable
 
 
 class Turbofan(System, JupyterViewable):
-    """
-    Turbofan model.
+    """Turbofan assembly system.
 
     Sub-systems
     -----------
