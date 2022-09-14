@@ -8,8 +8,7 @@ from pyturbo.utils import JupyterViewable, rz_to_3d
 
 
 class NacelleGeom(System, JupyterViewable):
-    """
-    A nacelle simple geometrical model.
+    """A nacelle simple geometrical model.
 
     It is a Short Duct Separated Flow (SDSF) configuration.
     All the cowl are represented from the inlet to the nozzle, using
@@ -17,24 +16,24 @@ class NacelleGeom(System, JupyterViewable):
 
     Inputs
     ------
-    kp: KeypointPort
+    kp: KeypointsPort
         nacelle geometrical envelop
 
-    lip_length_ratio[-]:float
-        lip length ratio to throat radius
-    lip_height_ratio[-]: float
-        lip height ratio to throat radius
+    hilite_kp[m]: np.array(2), default=np.ones(2)
+        inlet hilite keypoint
+    ogv_exit_tip_kp[m]: np.array(2), default=np.ones(2)
+        OGV exit tip keypoint
+    sec_nozzle_exit_kp[m]: np.array(2), default=np.ones(2)
+        Secondary nozzle exit keypoint
+
+    fan_diameter[m]: float, default=1.0
+        fan diameter
+    dmax_over_dfan[-]: float, default=1.2
+        max nacelle diameter over fan diameter
 
     Outputs
     -------
-    lip_in[m]: np.array
-        coordinate of lip_in or throat
-    hilite[m]: np.array
-        coordinate of lip mininum axial position
-    lip_out[m]: np.array
-        coordinate of lip end
-    external_sec_duct_out[m]:np.array
-        coordinate secondary external duct end
+    external_max_diameter[m]: np.array, default=np.ones(2)
     """
 
     def setup(self):

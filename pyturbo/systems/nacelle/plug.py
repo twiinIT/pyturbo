@@ -5,8 +5,7 @@ from pyturbo.utils.jupyter_view import JupyterViewable
 
 
 class Plug(System, JupyterViewable):
-    """
-    Plug assembly model.
+    """Plug assembly model.
 
     Sub-systems
     -----------
@@ -15,7 +14,7 @@ class Plug(System, JupyterViewable):
 
     Inputs
     ------
-    trf_exit_hub_kp: KeypointPort
+    trf_exit_hub_kp: KeypointsPort
         position of the plug
     """
 

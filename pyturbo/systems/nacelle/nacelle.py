@@ -5,8 +5,7 @@ from pyturbo.utils.jupyter_view import JupyterViewable
 
 
 class Nacelle(System, JupyterViewable):
-    """
-    Nacelle simple assembly model.
+    """Nacelle simple assembly model.
 
     Sub-systems
     -----------
@@ -15,7 +14,7 @@ class Nacelle(System, JupyterViewable):
 
     Inputs
     ------
-    kp: KeypointPort
+    kp: KeypointsPort
         nacelle geometrical envelop
     """
 

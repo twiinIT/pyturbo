@@ -6,8 +6,7 @@ from pyturbo.utils import JupyterViewable, rz_to_3d
 
 
 class PlugGeom(System, JupyterViewable):
-    """
-    A plug geometrical model.
+    """A plug geometrical model.
 
     In a turbofan, the plug is the physical part at engine exit (after the
     Turbine Rear Frame TRF) protecting the Low-Pressure Turbine LPT inner
