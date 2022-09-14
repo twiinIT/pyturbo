@@ -4,8 +4,7 @@ from pyturbo.ports import FluidPort
 
 
 class ChannelAero(System):
-    """
-    Stator simple channel
+    """Stator simple channel model.
 
     Pt_out = Pt_in * (1 - pressure_loss)
 
@@ -14,7 +13,7 @@ class ChannelAero(System):
     fl_in: FluidPort
         inlet fluid
 
-    pressure_loss[-]: float
+    pressure_loss[-]: float, default=0.01
         pressure loss coefficient
 
     Outputs

@@ -5,8 +5,7 @@ from pyturbo.systems.structures.channel_aero import ChannelAero
 
 
 class IntermediateCasing(System):
-    """
-    Intermediate Casing with primary and secondary flow
+    """Intermediate Casing with primary and secondary flow
 
     Sub-systems
     -----------
@@ -19,19 +18,19 @@ class IntermediateCasing(System):
 
     Inputs
     ------
-    kp : KeypointPort
+    kp : KeypointsPort
         nozzle geometrical envelop
     fl_booster: FluidPort
-        boosler outlet fluid 
+        boosler outlet fluid
     fl_ogv: FluidPort
-        ogv outlet fluid 
+        ogv outlet fluid
 
     Outputs
     -------
     fl_core: FluidPort
-        core fluid 
+        core fluid
     fl_bypass: FluidPort
-        bypass fluid 
+        bypass fluid
 
     """
 

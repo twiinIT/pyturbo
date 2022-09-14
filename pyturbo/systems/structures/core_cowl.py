@@ -12,7 +12,15 @@ from pyturbo.utils import rz_to_3d
 
 
 class CoreCowl(System):
-    """doc"""
+    """A simple core cowl geometrical model.
+
+    Inputs
+    ------
+    inlet_kp: KeypointsPort
+        inlet cowl keypoints
+    exit_kp: KeypointsPort
+        exit cowl keypoints
+    """
 
     def setup(self):
         self.add_inward("inlet_kp", C1Keypoint(), desc="inlet keypoint")

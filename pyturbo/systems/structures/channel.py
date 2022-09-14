@@ -5,8 +5,7 @@ from pyturbo.systems.structures.channel_aero import ChannelAero
 
 
 class Channel(System):
-    """
-    Channel vane with aero
+    """Channel vane with aero.
 
     Sub-systems
     -----------
@@ -17,7 +16,7 @@ class Channel(System):
 
     Inputs
     ------
-    kp: KeypointPort
+    kp: KeypointsPort
         geometrical envelop
     fl_in: FluidPort
         inlet fluid

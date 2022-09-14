@@ -14,6 +14,16 @@ from pyturbo.utils import rz_to_3d, slope_to_3d
 
 
 class FanDuctGeom(GenericSimpleGeom):
+    """A simple fan duct geometrical model.
+
+    Inputs
+    ------
+    core_cowl_slope[deg]: float, default=-20.0
+        core cowl slope
+    exit_tip_slope: float, default=15.0
+        exit tip slope
+    """
+
     def setup(self):
         super().setup()
 
@@ -48,10 +58,7 @@ class FanDuctGeom(GenericSimpleGeom):
 
 
 class FanDuct(Channel):
-    """
-    Fan duct
-
-    """
+    """Fan duct assembly system."""
 
     def setup(self, geom_class=FanDuctGeom, aero_class=ChannelAero):
         if geom_class is not None:
