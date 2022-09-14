@@ -5,8 +5,7 @@ from pyturbo.thermo import IdealDryAir
 
 
 class InletAero(System):
-    """
-    A simple inlet aerodynamic model.
+    """A simple inlet aerodynamic model.
 
     It compute drag at throat:
 
@@ -16,19 +15,16 @@ class InletAero(System):
     ----------
     FluidFlow: Class, default is IdealDryAir
         Class provided the characteristics of gas.
-        gas.mach: compute mach from total pressure and temperature, mass per area
-        gas.static_p: compute static pressure from total pressure and mach
-        gas.c: compute speed of sound
 
     Inputs
     ------
     fl_in: FluidPort
         gas going into the inlet
 
-    pamb[Pa]: float
+    pamb[Pa]: float, default=101325.0
         ambiant static pressure
 
-    area[m**2]: float
+    area[m**2]: float, default=1.0
         inlet throat area
 
     Outputs
@@ -36,13 +32,13 @@ class InletAero(System):
     fl_out: FluidPort
         gas leaving the inlet
 
-    ps[Pa]: float
+    ps[Pa]: float, default=0.0
         static pressure at throat
-    mach[-]: float
+    mach[-]: float, default=0.0
         fluid mach number at throat
-    speed[m/s]: float
+    speed[m/s]: float, default=0.0
         fluid speed at throat in m/s
-    drag[N]: float
+    drag[N]: float, default=0.0
         drag computed at throat. If drag < 0, aspiration contribute to thrust
 
     Good practice

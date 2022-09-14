@@ -6,8 +6,7 @@ from pyturbo.utils.jupyter_view import JupyterViewable
 
 
 class Inlet(System, JupyterViewable):
-    """
-    Inlet simple assembly model.
+    """Inlet simple assembly model.
 
     Sub-systems
     -----------
@@ -18,7 +17,7 @@ class Inlet(System, JupyterViewable):
 
     Inputs
     ------
-    kp: KeypointPort
+    kp: KeypointsPort
         inlet geometrical envelop
     fl_in: FluidPort
         inlet gas

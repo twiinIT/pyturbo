@@ -6,19 +6,29 @@ from pyturbo.utils import JupyterViewable
 
 
 class InletGeom(System, JupyterViewable):
-    """
-    Inlet geometry.
+    """Inlet geometry.
 
     The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit.
 
     Inputs
     ------
-    kp: KeypointPort
+    kp: KeypointsPort
         inlet geometrical envelop
+
+    fan_inlet_tip_kp[m]: np.array(2), default=np.ones(2)
+        Fan inlet tip (A1) keypoint
+
+    LqD[-]: float, default=0.3
+        Length over fan diameter ratio
 
     Outputs
     -------
     area[m**2]: float
+        throat area
+
+    hilite_kp[m]: np.array(2), default=np.ones(2)
+        hilite keypoint
+    area[m**2]: float, default=1.0
         throat area
     """
 
