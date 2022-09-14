@@ -22,24 +22,24 @@ class TurbineGeom(GenericSimpleGeom):
 
     Inputs
     ------
-    kp: KeypointPort
+    kp: KeypointsPort
         geometrical envelop
 
     stage_count: integer
         number of stages
 
-    blade_height_ratio[-]: float
+    blade_height_ratio[-]: float, default=0.2
         inlet blade height relative to compressor inlet tip radius
-    exit_hubqtip[-]: float
+    exit_hubqtip[-]: float, default=0.8
         exit hub-to-tip radius ratio
 
     Outputs
     -------
-    mean_radius[m]: float
+    mean_radius[m]: float, default=1.0
         mean radius
-    fp_exit_hub_kp[m]: np.array(2)
+    fp_exit_hub_kp[m]: np.array(2), default=np.ones(2)
         flowpath exit hub keypoint
-    area_in[m**2]: float
+    area_in[m**2]: float, default=1.0
         inlet area
     """
 

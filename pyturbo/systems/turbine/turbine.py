@@ -22,7 +22,7 @@ class Turbine(System, JupyterViewable):
     stage_count: integer
         number of stages
 
-    kp: KeypointPort
+    kp: KeypointsPort
         geometrical envelop
     fl_in: FluidPort
         inlet gas
@@ -33,7 +33,7 @@ class Turbine(System, JupyterViewable):
         exit gas
     sh_out: ShaftPort
         exit shaft
-    fp_exit_hub_kp[m]: np.array(2)
+    fp_exit_hub_kp[m]: np.array(2), default=np.ones(2)
         exit hub flow position
 
     pr[-]: float
