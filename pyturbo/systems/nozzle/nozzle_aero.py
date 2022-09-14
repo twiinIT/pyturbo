@@ -5,8 +5,7 @@ from pyturbo.thermo import IdealDryAir
 
 
 class NozzleAero(System):
-    """
-    A simple nozzle aerodynamic model.
+    """A simple nozzle aerodynamic model.
 
     It computes the gross thrust from the flow and ambient static
     pressure assuming a choked throat=exit area (convergent nozzle).
@@ -15,23 +14,18 @@ class NozzleAero(System):
 
     Parameters
     ----------
-    FluidLaw: Class, default is IdealDryAir
+    FluidLaw: Class, default=IdealDryAir
         class provided the characteristics of gas.
-        gas.mach_ptpstt
-        gas.static_t
-        gas.static_p
-        gas.density
-        gas.c
 
     Inputs
     ------
     fl_in: FluidPort
         inlet gas
 
-    pamb[Pa]: float
+    pamb[Pa]: float, default=101325.0
         ambiant static pressure
 
-    area[m**2]: float
+    area[m**2]: float, default=1.0
         nozzle throat area
 
     Outputs
@@ -39,13 +33,13 @@ class NozzleAero(System):
     fl_out: FluidPort
         exit gas
 
-    ps[Pa]: float
-        static pressure at throat in pa
-    mach[-]: float
+    ps[Pa]: float, default=0.0
+        static pressure at throat
+    mach[-]: float, default=0.0
         fluid mach number at throat
-    speed[m/s]: float
-        fluid speed at throat in m/s
-    thrust[N]: float
+    speed[m/s]: float, default=0.0
+        fluid speed at throat
+    thrust[N]: float, default=0.0
         thrust in N computed at throat. If drag < 0, aspiration contribute to thrust
 
     Design methods

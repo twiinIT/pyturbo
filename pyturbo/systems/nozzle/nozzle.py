@@ -9,8 +9,7 @@ from pyturbo.utils.jupyter_view import JupyterViewable
 
 
 class Nozzle(System, JupyterViewable):
-    """
-    Nozzle simple assembly model with geom and aero.
+    """Nozzle simple assembly model with geom and aero.
 
     Sub-systems
     -----------
@@ -21,10 +20,10 @@ class Nozzle(System, JupyterViewable):
 
     Inputs
     ------
-    kp : KeypointPort
+    kp : KeypointsPort
         nozzle geometrical envelop
     fl_in: FluidPort
-        inlet gas 
+        inlet gas
 
     pamb[Pa]: float
         ambiant static pressure

@@ -4,19 +4,18 @@ from pyturbo.systems.generic.generic_simple_geom import GenericSimpleGeom
 
 
 class NozzleGeom(GenericSimpleGeom):
-    """
-    Nozzle geometry.
+    """Nozzle geometry model.
 
     The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit.
 
     Inputs
     ------
-    kp : KeypointPort
+    kp : KeypointsPort
         nozzle geometrical envelop
 
     Outputs
     -------
-    area[m**2] : float
+    area[m**2] : float, default=1.0
         exit area
     """
 
@@ -24,7 +23,7 @@ class NozzleGeom(GenericSimpleGeom):
         super().setup()
 
         # aero
-        self.add_outward("area", 1.0, unit="m ** 2", desc="exit area")
+        self.add_outward("area", 1.0, unit="m**2", desc="exit area")
 
     def compute(self):
         # area
