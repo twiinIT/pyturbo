@@ -6,6 +6,8 @@ from pyturbo.systems.structures.channel import Channel
 
 
 class TestChannel:
+    """Define tests for the structure model."""
+
     sys = Channel("ch")
 
     def test_system_setup(self):
@@ -33,6 +35,8 @@ class TestChannel:
 
 
 class TestIntermediateCasing:
+    """Define tests for the intermediate casing model."""
+
     sys = IntermediateCasing("ic")
 
     def test_system_setup(self):

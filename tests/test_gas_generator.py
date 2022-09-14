@@ -5,6 +5,8 @@ from pyturbo.systems import GasGenerator
 
 
 class TestGasGenerator:
+    """Define tests for the gas generator assembly system."""
+
     def test_system_setup(self):
         # default constructor
         sys = GasGenerator("core")

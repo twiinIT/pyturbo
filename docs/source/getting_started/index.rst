@@ -19,7 +19,7 @@ Create an environment with the minimal requirements:
 
     $ cat pyturbo_example.py
     from pyturbo.systems import Turbofan
-     
+
     tf = Turbofan("tf")
     tf.run_once()
 

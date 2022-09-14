@@ -5,6 +5,8 @@ from pyturbo.systems.turbofan import Turbofan
 
 
 class TestTurbofan:
+    """Define tests for the turbofan assembly system."""
+
     sys = Turbofan("tf")
 
     def test_system_setup(self):

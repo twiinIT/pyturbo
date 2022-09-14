@@ -6,6 +6,8 @@ from pyturbo.systems.compressor.compressor_aero import CompressorAero
 
 
 class TestCompressorAero:
+    """Define tests for the compressor aero model."""
+
     def test_system_setup(self):
         # default constructor
         sys = CompressorAero("cmp")

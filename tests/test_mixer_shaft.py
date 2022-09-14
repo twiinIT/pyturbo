@@ -6,6 +6,8 @@ from pyturbo.systems.mixers import MixerShaft
 
 
 class TestShaft:
+    """Define tests for the mixer shaft model."""
+
     s = MixerShaft("shaft", input_shafts=["in0", "in1"], output_shafts=["out0", "out1"])
 
     def test_system_setup(self):

@@ -77,6 +77,8 @@ class Compressor(System, JupyterViewable):
 
 
 class Fan(Compressor):
+    """Instantiate a fan module."""
+
     def setup(self):
         super().setup()
 
@@ -105,6 +107,8 @@ class Fan(Compressor):
 
 
 class HPC(Compressor):
+    """Instantiate a high pressure compressor."""
+
     def setup(self):
         super().setup()
 
@@ -133,6 +137,8 @@ class HPC(Compressor):
 
 
 class Booster(Compressor):
+    """Instantiate a booster module."""
+
     def setup(self):
         super().setup()
 

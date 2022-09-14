@@ -5,6 +5,8 @@ from pyturbo.systems.nozzle import Nozzle, NozzleAero
 
 
 class TestNozzle:
+    """Define tests for the nozzle."""
+
     def test_system_setup(self):
         # default constructor
         sys = Nozzle("noz")

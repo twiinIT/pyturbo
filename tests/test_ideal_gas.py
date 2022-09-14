@@ -8,6 +8,8 @@ from pyturbo.thermo.ideal_gas import IdealDryAir, IdealGas
 
 
 class TestIdealGas:
+    """Define tests for the ideal gas model."""
+
     gas = IdealGas(r=287.058, cp=1004.0)
 
     t1 = 100.0
@@ -97,6 +99,8 @@ class TestIdealGas:
 
 
 class TestDryAir:
+    """Define tests for the dry air gas."""
+
     gas = IdealGas(r=287.058, cp=1004.0)
     air = IdealDryAir()
 

@@ -13,7 +13,7 @@ repos:
     rev: 4.0.0
     hooks:
       - id: pydocstyle
-        args: [--ignore, "D100,D104,D107,D102"]
+        args: [--ignore, "D100,D104,D107,D102,D202,D203,D213,D413,D416"]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
     hooks:

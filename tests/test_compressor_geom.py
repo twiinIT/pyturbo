@@ -5,6 +5,8 @@ from pyturbo.systems.compressor.compressor_geom import CompressorGeom
 
 
 class TestCompressorGeom:
+    """Define tests for the compressor geometric model."""
+
     def test_system_setup(self):
         # default constructor
         sys = CompressorGeom("sys")

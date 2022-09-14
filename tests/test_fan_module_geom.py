@@ -5,6 +5,8 @@ from pyturbo.systems.fan_module import FanModuleGeom
 
 
 class TestFanModuleGeom:
+    """Define tests for the fan geometric model."""
+
     sys = FanModuleGeom("fm")
 
     @classmethod

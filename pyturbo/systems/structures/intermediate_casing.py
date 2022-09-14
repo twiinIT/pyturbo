@@ -5,7 +5,7 @@ from pyturbo.systems.structures.channel_aero import ChannelAero
 
 
 class IntermediateCasing(System):
-    """Intermediate Casing with primary and secondary flow
+    """Intermediate Casing with primary and secondary flow.
 
     Sub-systems
     -----------

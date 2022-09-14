@@ -10,7 +10,10 @@ class TurbofanWeight(System):
     Weight is evaluated from diameter and length
     coef are computed from CFM family value
 
-    ipps_weight_EIS = ipps_weight_ref * (fan_diameter/fan_diameter_ref)**c1 * (length/length_ref)**c2 * (EIS-EIS_ref)**c3
+    ipps_weight_EIS = ipps_weight_ref * (
+        fan_diameter/fan_diameter_ref)**c1 *
+        (length/length_ref)**c2 *
+        (EIS-EIS_ref)**c3
 
     Inputs
     ------

@@ -12,8 +12,7 @@ from pyturbo.utils import rz_to_3d
 
 
 class TurbineGeom(GenericSimpleGeom):
-    """
-    Turbine geometry.
+    """Turbine geometry.
 
     The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit.
     The geometry exposed to aero module is made of:

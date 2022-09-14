@@ -5,6 +5,8 @@ from pyturbo.systems.fan_module import FanModule
 
 
 class TestFanModule:
+    """Define tests for the fan assembly module."""
+
     sys = FanModule("fm")
 
     def test_system_setup(self):

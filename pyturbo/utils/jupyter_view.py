@@ -6,6 +6,8 @@ from OCC.Core.TopoDS import TopoDS_Shape
 
 
 class JupyterViewable:
+    """JupyterViewable utils."""
+
     def jupyter_view(
         self,
         *,
@@ -58,6 +60,7 @@ class JupyterViewable:
 
 
 def add_nacelle_brand(nacelle_geom: System, renderer, brand_path: str):
+    """Add brand on nacelle geometry."""
     try:
         from pythreejs import ImageTexture, MeshStandardMaterial
     except ImportError:

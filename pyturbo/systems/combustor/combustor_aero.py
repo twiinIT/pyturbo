@@ -5,8 +5,7 @@ from pyturbo.thermo import IdealDryAir
 
 
 class CombustorAero(System):
-    """
-    A simple aerodynamic model of a combustor
+    """A simple aerodynamic model of a combustor.
 
     This model takes into account a burner efficiency to compute exit temperature from
     inlet fluid (air) and fuel.

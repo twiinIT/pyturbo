@@ -67,7 +67,7 @@ class KeypointsPort(Port):
 
 
 class C1Keypoint:
-    """A keypoint class including C1-continuity info
+    """A keypoint class including C1-continuity info.
 
     A C1 keypoint contains both position `pos` and first order derivate `der`.
 

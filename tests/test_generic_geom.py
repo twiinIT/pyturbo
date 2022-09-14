@@ -5,6 +5,8 @@ from pyturbo.systems.generic.generic_simple_geom import GenericSimpleGeom
 
 
 class TestGenericSimpleGeom:
+    """Define tests for the generic simple geometry."""
+
     def test_system_setup(self):
         # default constructor
         sys = GenericSimpleGeom("sys")

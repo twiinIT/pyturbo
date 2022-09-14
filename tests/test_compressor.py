@@ -9,6 +9,8 @@ from pyturbo.systems.compressor.compressor import Compressor
 
 
 class TestCompressor:
+    """Define tests for the compressor assembly system."""
+
     def test_system_setup(self):
         # default constructor
         sys = Compressor("cmp")

@@ -5,6 +5,8 @@ from pyturbo.systems import Combustor
 
 
 class TestCombustor:
+    """Define tests for the combustor aero model."""
+
     sys = Combustor("comb")
 
     def test_system_setup(self):

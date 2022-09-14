@@ -5,6 +5,8 @@ from pyturbo.systems.inlet import Inlet
 
 
 class TestInlet:
+    """Define tests for the inlet assembly model."""
+
     sys = Inlet("inlet")
 
     def test_system_setup(self):

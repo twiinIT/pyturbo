@@ -6,6 +6,8 @@ from pyturbo.systems.mixers import MixerFluid
 
 
 class TestMixerFluid:
+    """Define tests for the mixer aero model."""
+
     s = MixerFluid("aero", input_fluids=["in0", "in1"], output_fluids=["out0", "out1"])
 
     def test_system_setup(self):

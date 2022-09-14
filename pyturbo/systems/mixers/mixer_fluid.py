@@ -53,7 +53,8 @@ class MixerFluid(System):
     1
         consider at last the bigest fluid mass flow in output_fluids list
     2
-        If fluid out have very different mass flow, it should be good to initiate fluid_fraction with a good order of magnitude
+        If fluid out have very different mass flow, it should be good to initiate fluid_fraction
+        with a good order of magnitude
     """
 
     def setup(

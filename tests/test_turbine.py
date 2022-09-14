@@ -6,6 +6,8 @@ from pyturbo.systems.turbine import Turbine
 
 
 class TestTurbine:
+    """Define tests for the turbine assembly model."""
+
     def test_system_setup(self):
         # default constructor
         sys = Turbine("tur")

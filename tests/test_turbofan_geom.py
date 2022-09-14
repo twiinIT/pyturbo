@@ -7,6 +7,8 @@ from pyturbo.systems.turbofan import TurbofanGeom
 
 
 class TestTurbofanGeom:
+    """Define tests for the turbofan geometric model."""
+
     @classmethod
     def setup_class(cls):
         cls.geom = geom = TurbofanGeom("tf")

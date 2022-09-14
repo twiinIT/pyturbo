@@ -49,7 +49,8 @@ class MixerShaft(System):
     1:
         consider at least the most powerfull shaft in output_shafts list
     2:
-        If shaft out have very different power, it should be good to initiate power_fraction with a good order of magnitude
+        If shaft out have very different power, it should be good to initiate power_fraction with
+        a good order of magnitude
 
     """
 

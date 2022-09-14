@@ -4,4 +4,3 @@
 {{ separator }}
 .. autoclass:: {{ module_name }}.{{ name }}
     :members:
-

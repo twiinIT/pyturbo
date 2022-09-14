@@ -7,8 +7,7 @@ from pyturbo.utils.jupyter_view import JupyterViewable
 
 
 class Turbine(System, JupyterViewable):
-    """
-    Turbine simple assembly model.
+    """Turbine simple assembly model.
 
     Sub-systems
     -----------
@@ -62,7 +61,7 @@ class Turbine(System, JupyterViewable):
 
 
 class HPT(Turbine):
-    """High pressure turbine
+    """High pressure turbine.
 
     It may contain aero and/or geometry sub-models.
     """
@@ -93,7 +92,7 @@ class HPT(Turbine):
 
 
 class LPT(Turbine):
-    """Low pressure turbine
+    """Low pressure turbine.
 
     It may contain aero and/or geometry sub-models.
     """

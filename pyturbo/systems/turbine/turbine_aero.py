@@ -9,8 +9,7 @@ from pyturbo.thermo import IdealDryAir
 
 
 class TurbineAero(System):
-    """
-    A simple aerodynamic gas turbine model.
+    """A simple aerodynamic gas turbine model.
 
     It computes the exit gas `fl_out` from inlet gas `fl_in` for a given pressure ratio
     and efficency. The generated power `sh_out.power` is also computed.

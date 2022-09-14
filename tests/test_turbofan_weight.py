@@ -5,6 +5,8 @@ from pyturbo.systems.turbofan import TurbofanWeight
 
 
 class TestTurbofanWeight:
+    """Define tests for the turbofan weight model."""
+
     tfw = TurbofanWeight("tfw")
 
     def test_ref(self):

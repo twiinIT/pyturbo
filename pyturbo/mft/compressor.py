@@ -5,6 +5,7 @@ import numpy as np
 
 
 class SimplifiedMftCompressor:
+    """Define a simplified MFT compressor."""
 
     Pstd = 101325.0
     Tstd = 288.15

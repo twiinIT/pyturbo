@@ -21,7 +21,7 @@ sys.setrecursionlimit(1500)
 # -- Project information -----------------------------------------------------
 
 project = "pyturbo"
-copyright = "2022, twiinIT"
+copyright = "2022, twiinIT"  # noqa
 author = "Adrien DELSALLE"
 
 autosummary_generate = True
@@ -57,7 +57,7 @@ napoleon_include_init_with_doc = True
 
 autodoc_member_order = "bysource"
 
-## Default flags used by autodoc directives
+# Default flags used by autodoc directives
 autodoc_default_options = {
     "members": True,
     "member-order": "alphabetical",
@@ -65,7 +65,7 @@ autodoc_default_options = {
     "show-inheritance": True,
 }
 
-## Generate autodoc stubs with summaries from code
+# Generate autodoc stubs with summaries from code
 autosummary_generate = True
 autoapi_type = "python"
 autoapi_dirs = ["../../pyturbo"]
@@ -82,6 +82,7 @@ autoapi_template_dir = "_templates/autoapi"
 
 
 def skip_util_classes(app, what, name, obj, skip, options):
+    """Skip util classes."""
     if what == "class":
         skip = False
     else:
@@ -90,6 +91,7 @@ def skip_util_classes(app, what, name, obj, skip, options):
 
 
 def setup(sphinx):
+    """Set sphinx."""
     sphinx.connect("autoapi-skip-member", skip_util_classes)
 
 
@@ -113,7 +115,7 @@ source_suffix = ".rst"
 master_doc = "index"
 project = "pyturbo"
 
-copyright = "2022, twiinIT"
+copyright = "2022, twiinIT"  # noqa
 author = "twiinIT"
 
 html_context = {
@@ -131,8 +133,6 @@ nbsphinx_execute = "always"
 nbsphinx_allow_errors = False
 
 
-import nbsphinx
-
 napoleon_custom_sections = [
     "variables",
     "inputs",
@@ -148,7 +148,5 @@ napoleon_custom_sections = [
 html_static_path = ["_static"]
 
 html_css_files = ["css/default.css"]
-
-import sys
 
 sys.path.insert(0, os.path.abspath(".."))
