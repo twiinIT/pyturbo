@@ -13,13 +13,13 @@ class KeypointsPort(Port):
 
     Variables
     ---------
-    inlet_hub [m] : np.ndarray
+    inlet_hub[m]: np.ndarray, default=np.r_[0.0, 0.0]
         inlet hub keypoint
-    inlet_tip [m] : np.ndarray
+    inlet_tip[m]: np.ndarray, default=np.r_[0.9, 0.0]
         inlet tip keypoint
-    exit_hub [m] : np.ndarray
+    exit_hub[m]: np.ndarray, default=np.r_[0.0, 0.9]
         exit hub keypoint
-    exit_tip [m] : np.ndarray
+    exit_tip[m]: np.ndarray, default=np.r_[0.9, 0.9]
         exit tip keypoint
     """
 

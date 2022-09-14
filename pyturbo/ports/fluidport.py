@@ -5,16 +5,15 @@ from cosapp.ports import Port
 
 
 class FluidPort(Port):
-
-    """A fluid port aggregating basic information
+    """A fluid port aggregating basic information.
 
     Variables
     ---------
-    W [kg/s] : float
+    W[kg/s]: float, default=1.0
         mass flow
-    Pt [Pa] : float
+    Pt[Pa]: float, default=101325.0
         total pressure
-    Tt [K] : float
+    Tt[K]: float, default=288.15
         total temperature
     """
 

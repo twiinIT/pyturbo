@@ -5,13 +5,13 @@ from cosapp.ports import Port
 
 
 class ShaftPort(Port):
-    """A mechanical shaft port
+    """A mechanical shaft port.
 
     Variables
     ---------
-    power [W] : float
+    power[W]: float, default=1e6
         shaft mechanical power
-    N [rpm] : float
+    N[rpm]: float, default=5000.0
         shaft rotationnal speed
     """
 
