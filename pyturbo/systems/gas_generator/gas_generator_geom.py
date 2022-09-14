@@ -5,11 +5,9 @@ from pyturbo.ports import KeypointsPort
 
 
 class GasGeneratorGeom(System):
-    """
-    A simple gas generator geometrical model.
+    """A simple gas generator geometrical model.
 
     This model defines the gas generator keypoints {r, z} coordinates. It is made of:
-    
     - compressor
     - combustor
     - tubine
@@ -25,21 +23,21 @@ class GasGeneratorGeom(System):
 
     Inputs
     ------
-    kp: KeypointPort
+    kp: KeypointsPort
         gas generator geometrical envelop
 
-    compressor_length_ratio[-]: float
-        compressor length over gg length ratio
-    turbine_length_ratio[-]: float
-        turbine length over gg length ratio
+    compressor_length_ratio[-]: float, default=0.5
+        compressor length over gas generator length ratio
+    turbine_length_ratio[-]: float, default=0.2
+        turbine length over gas generator length ratio
 
     Outputs
     -------
-    compressor_kp: KeypointPort
+    compressor_kp: KeypointsPort
         compressor geometrical envelop
-    combustor_kp: KeypointPort
+    combustor_kp: KeypointsPort
         combustor geometrical envelop
-    turbine_kp: KeypointPort
+    turbine_kp: KeypointsPort
         turbine geometrical envelop
     """
 

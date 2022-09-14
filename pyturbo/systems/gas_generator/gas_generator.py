@@ -11,11 +11,10 @@ from pyturbo.utils.jupyter_view import JupyterViewable
 
 
 class GasGenerator(System, JupyterViewable):
-    """
-    A simple gas generator model.
+    """A simple gas generator model.
 
     This model includes a compressor, a combustor and a turbine. The power transmission
-    between the turbine and the compressor is direct without and intermediate shaft model.
+    between the turbine and the compressor is direct without an intermediate shaft model.
 
     Sub-systems
     -----------
@@ -31,7 +30,7 @@ class GasGenerator(System, JupyterViewable):
 
     Inputs
     ------
-    kp: KeypointPort
+    kp: KeypointsPort
         gas generator geometrical envelop
     fl_in: FluidPort
         fluid going into the gas generator
