@@ -5,8 +5,7 @@ from pyturbo.ports.fluidport import FluidPort
 
 
 class MixerFluid(System):
-    """
-    Mixer aero
+    """Mixer aero model.
 
     A mixer and splitter of fluid that forwards the mass fluid received at input(s) to output(s).
     Their must have at least an input and an output.
@@ -34,13 +33,13 @@ class MixerFluid(System):
     fl_out: FluidPort
         exit fluid (for each name in output_fluid)
 
-    Pt[Pa]: float
-        mean fluid total pressure in pa
+    Pt[Pa]: float, default=1.0
+        mean fluid total pressure
         all flow_in total pressure should be the same
-    W[kg/s]: float
+    W[kg/s]: float, default=1.0
         mass fluid in kg/s
         total flow_in mass fluid and flow_out mass fluid are equal
-    Tt[K]: float
+    Tt[K]: float, default=1.0
         mean fluid total temperature in K
 
     Design methods
@@ -78,9 +77,9 @@ class MixerFluid(System):
         if self.n_out > 1:
             self.add_inward("fluid_fractions", np.ones(self.n_out - 1) / self.n_out)
 
-        self.add_outward("W", 1.0, unit="kg/s")
-        self.add_outward("Pt", 1.0, unit="pa")
-        self.add_outward("Tt", 1.0, unit="K")
+        self.add_outward("W", 1.0, unit="kg/s", desc="mean fluid total pressure")
+        self.add_outward("Pt", 1.0, unit="pa", desc="mass fluid")
+        self.add_outward("Tt", 1.0, unit="K", desc="mean fluid total temperature")
 
         # off design
         for i, p in enumerate(input_fluids):

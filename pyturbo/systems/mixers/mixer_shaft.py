@@ -5,7 +5,7 @@ from pyturbo.ports import ShaftPort
 
 
 class MixerShaft(System):
-    """Shaft splitter and mixer
+    """Shaft splitter and mixer model.
 
     A mixer and splitter of shafts that forwards the power received at input(s) to output(s).
     Their must have at least an input and an output.
@@ -31,10 +31,10 @@ class MixerShaft(System):
 
     Outputs
     -------
-    N[rpm]: float
+    N[rpm]: float, default=1.0
         mean shaft speed rotation
         all sh_in power should have the same speed rotation
-    power[W]: float
+    power[W]: float, default=1.0
         shaft power.
         total sh_in power and sh_out power are equal
 
