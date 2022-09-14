@@ -5,56 +5,66 @@ from pyturbo.ports import KeypointsPort
 
 
 class FanModuleGeom(System):
-    """
-    Fan module geometry
-    
-    It computes the key points for the Fan Module Sub-systems: 
-    - spinner, 
-    - fan, 
-    - ogv, 
-    - booster, 
+    """Fan module geometry.
+
+    It computes the key points for the Fan Module Sub-systems:
+    - spinner,
+    - fan,
+    - ogv,
+    - booster,
     - ic (intermediate casing)
 
     Inputs
     ------
-    kp: KeypointPort
+    kp: KeypointsPort
         fan module geometrical envelop
 
-    fan_length_ratio[-]: float
+    length[m]: float, default=0.8
+        fan module length
+
+    fan_diameter[m]: float, default=1.0
+        fan module length
+
+    fan_length_ratio[-]: float, default=0.3
         fan length relative to fan module length
 
-    fan_hub_radius_ratio[-]: float
+    fan_hub_radius_ratio[-]: float, default=0.25
         fan hub radius ratio
 
-    booster_length_ratio[-]: float
+    booster_length_ratio[-]: float, default=0.3
         booster length relative to fan module length
 
-    booster_radius_ratio[-]: float
+    booster_radius_ratio[-]: float, default=0.6
         booster tip radius relative to fan module radius
 
-    shaft_radius_ratio[-]: float
+    shaft_radius_ratio[-]: float, default=0.1
         shaft radius relative to fan module tip radius
 
-    spinner_angle[deg]: float
+    spinner_angle[deg]: float, default=40.0
         fan spinner ang
+
+    fan_to_splitter_axial_gap[-]: float, default=0.02
+        fan to splitter axial gap as a ratio of fan diameter
 
     Outputs
     -------
-    fan_kp: KeypointPort
+    fan_kp: KeypointsPort
         fan geometrical envelop
-    ogv_kp: KeypointPort
+    ogv_kp: KeypointsPort
         ogv geometrical envelop
-    booster_kp: KeypointPort
+    booster_kp: KeypointsPort
         booster geometrical envelop
-    ic_kp: KeypointPort
+    ic_kp: KeypointsPort
         ic geometrical envelop
-    shaft_kp: KeypointPort
+    shaft_kp: KeypointsPort
         shaft geometrical envelop
 
-    fan_inlet_hub_kp[m]: np.array(2)
-        fan inlet hub position 
-    spinner_apex_kp[m]: np.array(2)
-        spinner inlet hub position 
+    fan_hub_kp[m]: np.array(2), default=np.ones(2)
+        fan inlet hub position
+    fan_inlet_hub_kp[m]: np.array(2), default=np.ones(2)
+        fan inlet hub position
+    spinner_apex_kp[m]: np.array(2), default=np.ones(2)
+        spinner inlet hub position
     """
 
     def setup(self):
@@ -103,9 +113,9 @@ class FanModuleGeom(System):
         self.add_output(KeypointsPort, "ic_kp")
         self.add_output(KeypointsPort, "shaft_kp")
 
-        self.add_outward("fan_hub_kp", np.ones(2))
-        self.add_outward("spinner_apex_kp", np.ones(2))
-        self.add_outward("fan_inlet_hub_kp", np.ones(2))
+        self.add_outward("fan_hub_kp", np.ones(2), unit="m", desc="fan inlet hub position")
+        self.add_outward("spinner_apex_kp", np.ones(2), unit="m", desc="spinner inlet hub position")
+        self.add_outward("fan_inlet_hub_kp", np.ones(2), unit="m", desc="fan inlet hub position")
 
     def compute(self):
         # set keypoints to internal components

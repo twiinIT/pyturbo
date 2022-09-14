@@ -11,11 +11,9 @@ from pyturbo.utils import JupyterViewable
 
 
 class FanModule(System, JupyterViewable):
-    """
-    Fan module
+    """Fan assembly model.
 
-    It is made of: 
-
+    The Fan assembly model is made of:
     - spinner,
     - fan,
     - ogv (outlet guided vanes),
@@ -43,12 +41,12 @@ class FanModule(System, JupyterViewable):
 
     Inputs
     ------
-    kp: KeypointPort
+    kp: KeypointsPort
         fan module geometrical envelop
     fl_in: FluidPort
         fluid going into the fan madule
     sh_in: FluidShaft
-        shaft dring the fan madule
+        shaft driving the fan madule
 
     Outputs
     -------
@@ -57,9 +55,9 @@ class FanModule(System, JupyterViewable):
     fl_ogv: FluidPort
         fluid leaving the ogv
 
-    bpr[-]: float
+    bpr[-]: float, default=1.0
         by pass ratio = secondary flow / primary flow
-    pr[-]: float
+    pr[-]: float, default=1.0
         pressure ration = fan.pr * booster.pr
 
     Good practice

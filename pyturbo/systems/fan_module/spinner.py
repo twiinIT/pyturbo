@@ -6,11 +6,23 @@ from pyturbo.utils import rz_to_3d, slope_to_3d
 
 
 class SpinnerGeom(System):
-    """ """
+    """Spinner module geometry.
+
+    Inputs
+    ------
+    fan_hub_kp[m]: np.array(2), default=np.ones(2)
+        fan hub keypoints
+
+    apex_kp[m]: np.array(2), default=np.ones(2)
+        fan apex keypoints
+
+    mean_angle[deg]: float, default=40.0
+        spinner mean angle
+    """
 
     def setup(self):
-        self.add_inward("fan_hub_kp", np.ones(2))
-        self.add_inward("apex_kp", np.ones(2))
+        self.add_inward("fan_hub_kp", np.ones(2), unit="m", desc="fan hub keypoints")
+        self.add_inward("apex_kp", np.ones(2), unit="m", desc="fan apex keypoints")
         self.add_inward("mean_angle", 40.0, unit="deg", desc="spinner mean angle")
 
     def _to_occt(self):
