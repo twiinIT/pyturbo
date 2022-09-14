@@ -12,11 +12,19 @@ from pyturbo.utils import rz_to_3d
 
 
 class Cowl(System):
-    """my doc"""
+    """A simple cowl geometrical model.
+
+    Inputs
+    ------
+    inlet_kp: KeypointsPort
+        inlet cowl keypoints
+    outlet_kp: KeypointsPort
+        outlet cowl keypoints
+    """
 
     def setup(self):
-        self.add_inward("inlet_kp", C1Keypoint(), desc="inlet keypoint")
-        self.add_inward("exit_kp", C1Keypoint(), desc="exit keypoint")
+        self.add_inward("inlet_kp", C1Keypoint(), desc="inlet keypoints")
+        self.add_inward("exit_kp", C1Keypoint(), desc="exit keypoints")
 
     def _to_occt(self) -> Dict[str, TopoDS_Shape]:
         b = CreateBezier.g1_relative_tension(
