@@ -70,7 +70,7 @@ class FanModule(System, JupyterViewable):
 
     def setup(self):
         # component
-        self.add_child(Fan("fan"), pulling=["fl_in", "N"])
+        self.add_child(Fan("fan"), pulling=["N"])
         self.add_child(Booster("booster"))
         self.add_child(Channel("ogv"))
         self.add_child(IntermediateCasing("ic"), pulling=["fl_core", "fl_bypass"])
@@ -81,16 +81,18 @@ class FanModule(System, JupyterViewable):
 
         # numerics
         self.add_child(
-            MixerShaft("splitter_shaft", output_shafts=["sh_booster", "sh_fan"]), pulling=["sh_in"]
+            MixerShaft("splitter_shaft", output_shafts=["sh_fan", "sh_booster"]), pulling=["sh_in"]
         )
-        self.add_child(MixerFluid("splitter_fluid", output_fluids=["fl_booster", "fl_ogv"]))
+        self.add_child(
+            MixerFluid("splitter_fluid", output_fluids=["fl_fan", "fl_booster"]), pulling=["fl_in"]
+        )
 
         # exec order
         self.exec_order = [
             "geom",
             "splitter_shaft",
-            "fan",
             "splitter_fluid",
+            "fan",
             "booster",
             "ogv",
             "ic",
@@ -98,12 +100,12 @@ class FanModule(System, JupyterViewable):
         ]
 
         # Fluid ports connectors
-        self.connect(self.fan.fl_out, self.splitter_fluid.fl_in)
-
+        self.connect(self.splitter_fluid.fl_fan, self.fan.fl_in)
         self.connect(self.splitter_fluid.fl_booster, self.booster.fl_in)
+
         self.connect(self.booster.fl_out, self.ic.fl_booster)
 
-        self.connect(self.splitter_fluid.fl_ogv, self.ogv.fl_in)
+        self.connect(self.fan.fl_out, self.ogv.fl_in)
         self.connect(self.ogv.fl_out, self.ic.fl_ogv)
 
         # Shaft ports connectors
@@ -127,19 +129,21 @@ class FanModule(System, JupyterViewable):
 
         # inwards/outwards
         self.add_outward("bpr", 1.0, unit="", desc="By pass ratio")
-        self.add_outward("pr", 1.0, unit="", desc="fan and booster pr")
+        self.add_outward("fan_pr", 1.0, unit="", desc="fan pressure ratio")
+        self.add_outward("booster_pr", 1.0, unit="", desc="booster pressure ratio")
 
         # init
         self.sh_in.power = 20e6
         self.sh_in.N = 5100.0
         self.fl_in.W = 350.0
 
-        self.splitter_shaft.power_fractions = np.r_[0.1]
-        self.splitter_fluid.fluid_fractions = np.r_[0.2]
+        self.splitter_shaft.power_fractions = np.r_[0.9]
+        self.splitter_fluid.fluid_fractions = np.r_[0.8]
 
     def compute(self):
-        self.bpr = self.splitter_fluid.fl_ogv.W / self.splitter_fluid.fl_booster.W
-        self.pr = self.fan.pr * self.booster.pr
+        self.bpr = self.splitter_fluid.fl_fan.W / self.splitter_fluid.fl_booster.W
+        self.fan_pr = self.fan.pr
+        self.booster_pr = self.booster.pr
 
     def _to_occt(self):
         return dict(

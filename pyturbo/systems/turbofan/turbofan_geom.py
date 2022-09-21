@@ -39,13 +39,20 @@ class TurbofanGeom(System):
     ogv_exit_hqt[-]: float, default=0.6
         fan OGV exit hub-to-tip ratio
 
-    core_radius_ratio[-]: float, default=0.25
-        high-pressure core radius relative to fan radius
+    core_inlet_radius_ratio[-]: float, default=0.25
+        high-pressure core inlet radius relative to fan radius
+    core_exit_radius_ratio[-]: float, default=0.3
+        high-pressure core exit radius relative to fan radius
     core_length_ratio[-]: float, default=3.0
         high-pressure core length relative to its radius
 
     shaft_radius_ratio[-]: float, default=0.1
         shaft radius relative to fan radius
+
+    tcf_exit_radius_ratio[-]: float, default=1.2
+        turbine center frame exit radius relative to inlet one
+    tcf_length_ratio[-]: float, default=0.15
+        turbine center frame length relative its inlet tip radius
 
     turbine_radius_ratio[-]: float, default=0.65
         turbine radius relative to fan radius
@@ -65,10 +72,10 @@ class TurbofanGeom(System):
     secondary_nozzle_length_ratio[-]: float, default=0.2
         secondary nozzle length relative to fan_radius
 
-    pri_nozzle_area[-]: float, default=0.3
-        primary nozzle exit area
-    sec_nozzle_area[-]: float, default=1.0
-        secondary nozzle exit area
+    pri_nozzle_area_ratio[-]: float, default=0.9
+        primary nozzle area ratio
+    sec_nozzle_area_ratio[-]: float, default=0.9
+        secondary nozzle area ratio
 
     frd_mount_relative[-]: float, default=0.75
         forward engine mount position relative to tip fan module
@@ -85,10 +92,12 @@ class TurbofanGeom(System):
         core geometrical envelop
     shaft_kp: KeypointsPort
         shaft geometrical envelop
+    tcf_kp: KeypointsPort
+        turbine center frame geometrical envelop
     turbine_kp: KeypointsPort
         turbine geometrical envelop
     trf_kp: KeypointsPort
-        trf geometrical envelop
+        turbine rear frame geometrical envelop
     primary_nozzle_kp: KeypointsPort
         primary nozzle geometrical envelop
     secondary_nozzle_kp: KeypointsPort
@@ -145,10 +154,16 @@ class TurbofanGeom(System):
         )
         self.add_inward("ogv_exit_hqt", 0.6, unit="", desc="fan OGV exit hub-to-tip ratio")
         self.add_inward(
-            "core_radius_ratio",
+            "core_inlet_radius_ratio",
             0.25,
             unit="",
-            desc="high-pressure core radius relative to fan radius",
+            desc="high-pressure core inlet radius relative to fan radius",
+        )
+        self.add_inward(
+            "core_exit_radius_ratio",
+            0.3,
+            unit="",
+            desc="high-pressure core exit radius relative to fan radius",
         )
         self.add_inward(
             "core_length_ratio",
@@ -162,6 +177,18 @@ class TurbofanGeom(System):
             0.1,
             unit="",
             desc="shaft radius relative to fan radius",
+        )
+        self.add_inward(
+            "tcf_exit_radius_ratio",
+            1.2,
+            unit="",
+            desc="turbine center frame exit radius relative to inlet one",
+        )
+        self.add_inward(
+            "tcf_length_ratio",
+            0.15,
+            unit="",
+            desc="turbine center frame length relative its inlet tip radius",
         )
         self.add_inward(
             "turbine_radius_ratio",
@@ -209,15 +236,19 @@ class TurbofanGeom(System):
             "aft_mount_relative", 0.75, desc="aftward engine mount position relative to tip trf"
         )
 
-        self.add_inward("pri_nozzle_area", 0.3, desc="primary nozzle exit area")
-
-        self.add_inward("sec_nozzle_area", 1.0, desc="secondary nozzle exit area")
+        self.add_inward(
+            "pri_nozzle_area_ratio", 0.9, unit="", desc="primary nozzle exit area ratio"
+        )
+        self.add_inward(
+            "sec_nozzle_area_ratio", 0.9, unit="", desc="secondary nozzle exit area ratio"
+        )
 
         # outwards
         self.add_output(KeypointsPort, "inlet_kp")
         self.add_output(KeypointsPort, "fanmodule_kp")
         self.add_output(KeypointsPort, "core_kp")
         self.add_output(KeypointsPort, "shaft_kp")
+        self.add_output(KeypointsPort, "tcf_kp")
         self.add_output(KeypointsPort, "turbine_kp")
         self.add_output(KeypointsPort, "trf_kp")
         self.add_output(KeypointsPort, "primary_nozzle_kp")
@@ -253,8 +284,9 @@ class TurbofanGeom(System):
         inlet_radius = fan_radius * self.inlet_radius_ratio
         inlet_length = fan_radius * self.inlet_length_ratio
 
-        core_radius = fan_radius * self.core_radius_ratio
-        core_length = core_radius * self.core_length_ratio
+        core_inlet_radius = fan_radius * self.core_inlet_radius_ratio
+        core_exit_radius = fan_radius * self.core_exit_radius_ratio
+        core_length = core_inlet_radius * self.core_length_ratio
 
         shaft_radius = fan_radius * self.shaft_radius_ratio
 
@@ -284,23 +316,36 @@ class TurbofanGeom(System):
         self.inlet_kp.inlet_hub = np.r_[0.0, self.fanmodule_kp.inlet_hub_z - inlet_length]
         self.inlet_kp.inlet_tip = np.r_[inlet_radius, self.fanmodule_kp.inlet_hub_z - inlet_length]
 
-        # shaft
+        # shaft inlet
         self.shaft_kp.inlet_hub = self.fanmodule_kp.exit_hub
         self.shaft_kp.inlet_tip = self.fanmodule_kp.exit_hub + np.r_[shaft_radius, 0.0]
 
-        self.shaft_kp.exit_hub = self.shaft_kp.inlet_hub + np.r_[0.0, core_length]
-        self.shaft_kp.exit_tip = self.shaft_kp.inlet_tip + np.r_[0.0, core_length]
-
         # core
         self.core_kp.inlet_hub = self.shaft_kp.inlet_tip
-        self.core_kp.inlet_tip = self.shaft_kp.inlet_hub + np.r_[core_radius, 0.0]
+        self.core_kp.inlet_tip = np.r_[core_inlet_radius, self.core_kp.inlet_hub_z]
 
         self.core_kp.exit_hub = self.core_kp.inlet_hub + np.r_[0.0, core_length]
-        self.core_kp.exit_tip = self.core_kp.inlet_tip + np.r_[0.0, core_length]
+        self.core_kp.exit_tip = np.r_[core_exit_radius, self.core_kp.exit_hub_z]
+
+        # tcf
+        self.tcf_kp.inlet_hub = self.core_kp.exit_hub
+        self.tcf_kp.inlet_tip = self.core_kp.exit_tip
+
+        tcf_length = self.tcf_kp.inlet_tip_r * self.tcf_length_ratio
+
+        self.tcf_kp.exit_hub = self.tcf_kp.inlet_hub + np.r_[0.0, tcf_length]
+        self.tcf_kp.exit_tip = (
+            self.core_kp.exit_tip * np.r_[self.tcf_exit_radius_ratio, 1.0] + np.r_[0.0, tcf_length]
+        )
+
+        # shaft exit
+        shaft_length = core_length + tcf_length
+        self.shaft_kp.exit_hub = self.shaft_kp.inlet_hub + np.r_[0.0, shaft_length]
+        self.shaft_kp.exit_tip = self.shaft_kp.inlet_tip + np.r_[0.0, shaft_length]
 
         # turbine
         self.turbine_kp.inlet_hub = self.shaft_kp.exit_hub
-        self.turbine_kp.inlet_tip = self.core_kp.exit_tip
+        self.turbine_kp.inlet_tip = self.tcf_kp.exit_tip
 
         trb_exit_z = self.turbine_kp.inlet_hub_z + turbine_length
         self.turbine_kp.exit_hub = np.r_[self.turbine_kp.inlet_hub_r, trb_exit_z]
@@ -322,8 +367,14 @@ class TurbofanGeom(System):
         self.primary_nozzle_kp.exit_hub = (
             self.primary_nozzle_kp.inlet_hub + np.r_[0.0, primary_nozzle_length]
         )
+        inlet_area = np.pi * (
+            self.primary_nozzle_kp.inlet_tip_r**2 - self.primary_nozzle_kp.inlet_hub_r**2
+        )
         self.primary_nozzle_kp.exit_tip = np.r_[
-            np.sqrt(self.pri_nozzle_area / np.pi + self.primary_nozzle_kp.inlet_hub_r**2),
+            np.sqrt(
+                self.pri_nozzle_area_ratio * inlet_area / np.pi
+                + self.primary_nozzle_kp.inlet_hub_r**2
+            ),
             self.trf_kp.exit_tip_z,
         ]
 
@@ -348,7 +399,12 @@ class TurbofanGeom(System):
         sec_noz_hub_r = self.trf_kp.exit_tip_r + dr
         self.secondary_nozzle_kp.exit_hub = np.r_[sec_noz_hub_r, sec_noz_tip_z]
 
-        sec_noz_tip_r = np.sqrt(self.sec_nozzle_area / np.pi + sec_noz_hub_r**2)
+        inlet_area = np.pi * (
+            self.secondary_nozzle_kp.inlet_tip_r**2 - self.secondary_nozzle_kp.inlet_hub_r**2
+        )
+        sec_noz_tip_r = np.sqrt(
+            self.sec_nozzle_area_ratio * inlet_area / np.pi + sec_noz_hub_r**2
+        )
         self.secondary_nozzle_kp.exit_tip = np.r_[sec_noz_tip_r, sec_noz_tip_z]
 
         self.sec_nozzle_exit_hub_kp.rz = self.secondary_nozzle_kp.exit_hub

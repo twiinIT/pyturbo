@@ -72,9 +72,7 @@ class TurbineGeom(GenericSimpleGeom):
 
         self.area_in = np.pi * (self.kp.inlet_tip_r**2 - hub_in_r**2)
 
-        self.mean_radius = (
-            (self.kp.inlet_tip_r - hub_in_r / 2.0) + (self.kp.exit_tip_r - hub_out_r / 2.0)
-        ) / 2.0
+        self.mean_radius = (self.kp.inlet_tip_r + hub_in_r + self.kp.exit_tip_r + hub_out_r) / 4.0
 
         self.fp_exit_hub_kp = self.kp.exit_tip * np.r_[self.exit_hubqtip, 1.0]
 

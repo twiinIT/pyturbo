@@ -5,4 +5,5 @@ dependencies:
   - cosapp
   - pyoccad
   - numpy
-  - pythonocc-core==7.5.*
+  - ambiance
+  - pythonocc-core
