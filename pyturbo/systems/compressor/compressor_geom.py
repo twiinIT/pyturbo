@@ -8,8 +8,8 @@ class CompressorGeom(GenericSimpleGeom):
 
     The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit.
     The geometry exposed to aero module is made of:
-      - inlet area
-      - inlet and exit tip radius
+    - inlet area
+    - inlet and exit tip radius
 
     Inputs
     ------

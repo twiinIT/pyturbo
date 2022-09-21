@@ -16,9 +16,9 @@ class CompressorAero(System):
     The methodology is consistent with https://oatao.univ-toulouse.fr/17882
     Binder, Nicolas Aéro-thermodynamique des Turbomachines en Fonctionnement
     Hors-Adaptation. (2016) [HDR]
-      - exit flow is computed from inlet one
-      - polytropic efficiency is constant
-      - aerodynamic load and axial flow velocity are linked using a linear modeling
+    - exit flow is computed from inlet one
+    - polytropic efficiency is constant
+    - aerodynamic load and axial flow velocity are linked using a linear modeling
 
     Parameters
     ----------

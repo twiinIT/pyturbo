@@ -99,7 +99,7 @@ def setup(sphinx):
 
 html_logo = "../assets/twiinIT_grayscale.svg"
 
-html_theme = "pydata_sphinx_theme"
+html_theme = "furo"
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "tango"
