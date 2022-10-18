@@ -29,19 +29,19 @@ class TestTurbine:
     def test_compute_HPT(self):
         sys = HPT("tur")
         run = sys.add_driver(NonLinearSolver("run"))
-        run.add_equation("sh_out.N == 15000.")
+        run.add_equation("sh_out.N == 15000.").add_equation("aero.dhqt == 400.").add_unknown(
+            "fl_in.W"
+        )
 
         sys.run_drivers()
-
-        assert sys.sh_out.power == pytest.approx(27.1e6, rel=1e-2)
         assert sys.aero.Ncqdes == pytest.approx(101.0, rel=1e-2)
 
     def test_compute_LPT(self):
         sys = LPT("tur")
         run = sys.add_driver(NonLinearSolver("run"))
-        run.add_equation("sh_out.N == 5000.")
+        run.add_equation("sh_out.N == 5000.").add_equation("aero.dhqt == 400.").add_unknown(
+            "fl_in.W"
+        )
 
         sys.run_drivers()
-
-        assert sys.sh_out.power == pytest.approx(19.8e6, rel=1e-2)
         assert sys.aero.Ncqdes == pytest.approx(105.0, rel=1e-2)

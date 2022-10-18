@@ -88,7 +88,6 @@ class HPT(Turbine):
         # init aero
         self.aero.eff_poly = 0.9
         self.aero.Ncdes = 40.0
-        self.aero.er = 4.0
 
 
 class LPT(Turbine):
@@ -119,4 +118,3 @@ class LPT(Turbine):
         # init aero
         self.aero.eff_poly = 0.9
         self.aero.Ncdes = 15.0
-        self.aero.er = 4.0

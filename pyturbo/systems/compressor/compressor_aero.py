@@ -97,15 +97,18 @@ class CompressorAero(System):
             0.4,
             desc="axial flow velocity coefficient for zero compressor consumption",
         )
+        self.add_inward("xnd", 10000.0, unit="rpm", desc="Rotational speed at design point")
 
         # functional characteristics
         self.add_outward("utip", 0.0, unit="m/s", desc="tip speed")
         self.add_outward("phi", 0.0, unit="", desc="axial flow velocity coefficient")
-        self.add_outward("psi", 0.0, unit="", desc="load coefficient")
+        self.add_outward("psi", 0.0, unit="", desc="load coefficient per stage")
 
         self.add_outward("pr", 1.0, unit="", desc="total to total pressure ratio")
         self.add_outward("tr", 1.0, unit="", desc="total to total temperature ratio")
         self.add_outward("spec_flow", 1.0, unit="kg/s/m**2", desc="inlet specific flow")
+
+        self.add_outward("pcnr", 100.0, unit="", desc="Percentage of rotational speed vs reference")
 
         # off design
         self.add_outward(
@@ -134,13 +137,14 @@ class CompressorAero(System):
         vm = self.fl_in.W / (rho * self.inlet_area)
         self.phi = vm / self.utip
 
+        # load coefficient
+        self.psi = self.tip_out_r / self.tip_in_r * (1 - self.phi / self.phiP)
+        self.eps_psi = delta_h / (self.stage_count * self.utip**2) - self.psi
+
         self.spec_flow = (
             self.fl_in.W
             * sqrt(self.fl_in.Tt / 288.15)
             / (self.fl_in.Pt / 101325.0)
             / self.inlet_area
         )
-
-        # load coefficient
-        self.psi = self.tip_out_r / self.tip_in_r * (1 - self.phi / self.phiP)
-        self.eps_psi = delta_h / (self.stage_count * self.utip**2) - self.psi
+        self.pcnr = self.sh_in.N / self.xnd * 100.0

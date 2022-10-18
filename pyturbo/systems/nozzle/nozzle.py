@@ -44,7 +44,7 @@ class Nozzle(System, JupyterViewable):
         self.add_child(NozzleAero("aero"), pulling=["fl_in", "pamb", "thrust"])
 
         # connections
-        self.connect(self.geom.outwards, self.aero.inwards, "area")
+        self.connect(self.geom.outwards, self.aero.inwards, ["area", "area_in", "area_exit"])
 
     def _to_occt(self) -> Dict[str, TopoDS_Shape]:
         return self.geom._to_occt()

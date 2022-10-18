@@ -32,11 +32,12 @@ class TestTurbofan:
 
         sys.fl_in.W = 300.0
         sys.fuel_W = 1.0
-        sys.fan_module.splitter_fluid.fluid_fractions[0] = 0.2
+        sys.fan_module.splitter_fluid.fluid_fractions[0] = 0.8
 
         sys.run_once()
 
-        assert sys.core.fl_out.W == pytest.approx(61.0, 1e-3)
+        assert sys.fan_module.fan.fl_out.W == pytest.approx(240.0, 1e-3)
+        assert sys.fan_module.booster.fl_out.W == pytest.approx(60.0, 1e-3)
 
     @pytest.mark.skip("not relevant")
     def test_run_solver(self):

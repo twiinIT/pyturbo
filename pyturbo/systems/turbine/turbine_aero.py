@@ -71,50 +71,41 @@ class TurbineAero(System):
 
         # inwards
         self.add_inward("eff_poly", 0.9, unit="", desc="polytropic efficiency")
-        self.add_inward("er", 5.0, unit="", desc="expansion ratio")
-        # TODO: fix unit
+        self.add_inward("dhqt", 400.0, unit="", desc="enthalpy delta over inlet temperature")
         self.add_inward("Ncdes", 150.0, unit="rpm/K", desc="design corrected speed")
         self.add_inward("Ncqdes", 100.0, unit="", desc="corrected speed over design value ratio")
 
         self.add_inward("area_in", 1.0, unit="m**2", desc="inlet area")
+        self.add_inward("blokage", 4.0, unit="", desc="aero blokage factor")
         self.add_inward("mean_radius", 1.0, unit="m", desc="mean radius")
         self.add_inward("stage_count", 1, unit="", desc="stage count")
 
         # outwards
-        self.add_outward("Wc", unit="kg/s", desc="corrected mass flow")
+        self.add_outward("Wc", unit="kg/s", desc="inlet corrected mass flow")
+        self.add_outward("Wcrit", unit="kg/s", desc="critical inlet corrected mass flow")
         self.add_outward("Tt_ratio", unit="", desc="total temperature ratio")
         self.add_outward("psi", unit="", desc="aerodynamic loading")
 
         # off design
         self.add_unknown("Ncqdes", max_rel_step=0.5)
-
-        # design method
-        self.add_design_method("temperature").add_target("fl_in.Tt")
-        self.add_design_method("speed").add_unknown("Ncdes", lower_bound=0.0)
+        self.add_unknown("dhqt", max_rel_step=0.8)
+        self.add_equation("fl_in.W == Wcrit")
 
     def compute(self):
         # fluid
         self.fl_out.W = self.fl_in.W
-        self.fl_out.Pt = self.fl_in.Pt / self.er
-        self.fl_out.Tt = self.gas.t_from_pr(1.0 / self.er, self.fl_in.Tt, 1.0 / self.eff_poly)
-        self.Tt_ratio = self.fl_out.Tt / self.fl_in.Tt
+        dh = self.dhqt * self.fl_in.Tt
+        self.fl_out.Tt = self.gas.t_from_h(self.gas.h(self.fl_in.Tt) - dh)
+        self.fl_out.Pt = self.gas.pr(self.fl_in.Tt, self.fl_out.Tt, self.eff_poly) * self.fl_in.Pt
 
         # shaft
         N = self.Ncqdes * self.Ncdes / 100.0 * self.fl_in.Tt**0.5
         self.sh_out.N = N * 30.0 / np.pi
-        dh = self.gas.h(self.fl_in.Tt) - self.gas.h(self.fl_out.Tt)
         self.sh_out.power = self.fl_in.W * dh
-
-        # inlet Mach number
-        def Mach_solver(mach):
-            t = self.gas.static_t(self.fl_in.Tt, mach)
-            p = self.gas.pr(self.fl_in.Tt, t, 1.0) * self.fl_in.Pt
-            rho = self.gas.density(p, t)
-            vm = self.fl_in.W / (rho * self.area_in)
-            return mach - vm / self.gas.c(t)
 
         u = self.mean_radius * N
         self.psi = dh / (2.0 * self.stage_count * u**2)
 
         # outwards
-        self.Wc = self.fl_in.W * np.sqrt(self.fl_in.Tt / 288.15) / (self.fl_in.Pt / 101325.0)
+        self.Wc = self.fl_in.Wc
+        self.Wcrit = self.gas.Wqa_crit(self.fl_in.Pt, self.fl_in.Tt) * self.area_in / self.blokage

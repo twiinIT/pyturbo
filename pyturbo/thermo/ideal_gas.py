@@ -269,10 +269,14 @@ class IdealGas:
             ps = pt * self.pr(tt, ts, 1.0)
             return mach * self.c(ts) - q / self.density(ps, ts)
 
-        if subsonic:
-            m = toms748(f, 0.0, 1.0)
-        else:
-            m = toms748(f, 1.0, 10.0)
+        try:
+            if subsonic:
+                m = toms748(f, 0.0, 1.0)
+            else:
+                m = toms748(f, 1.0, 10.0)
+        except ValueError:
+            m = 1.0
+
         return m
 
     def mach_ptpstt(self, pt: float, ps: float, tt: float) -> float:
@@ -331,6 +335,14 @@ class IdealGas:
             speed of sound
         """
         return np.sqrt(self._gamma * self._r * t)
+
+    def Wqa_crit(self, pt, tt):
+        t = self.static_t(tt, 1.0)
+        p = pt * self.pr(tt, t, 1.0)
+        rho = self.density(p, t)
+        c = self.c(t)
+
+        return rho * c
 
 
 class IdealDryAir(IdealGas):
