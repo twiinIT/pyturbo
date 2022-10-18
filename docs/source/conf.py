@@ -43,6 +43,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "nbsphinx",
     "autoapi.extension",
+    "nbsphinx_link",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -97,7 +98,7 @@ def setup(sphinx):
 
 # -- Options for HTML output -------------------------------------------------
 
-html_logo = "../assets/twiinIT_grayscale.svg"
+html_logo = "../assets/twiinIT.png"
 
 html_theme = "furo"
 
