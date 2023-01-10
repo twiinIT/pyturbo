@@ -96,7 +96,9 @@ class TurbineAero(System):
         self.fl_out.W = self.fl_in.W
         dh = self.dhqt * self.fl_in.Tt
         self.fl_out.Tt = self.gas.t_from_h(self.gas.h(self.fl_in.Tt) - dh)
-        self.fl_out.Pt = self.gas.pr(self.fl_in.Tt, self.fl_out.Tt, self.eff_poly) * self.fl_in.Pt
+        self.fl_out.Pt = (
+            self.gas.pr(self.fl_in.Tt, self.fl_out.Tt, 1.0 / self.eff_poly) * self.fl_in.Pt
+        )
 
         # shaft
         N = self.Ncqdes * self.Ncdes / 100.0 * self.fl_in.Tt**0.5
