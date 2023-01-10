@@ -60,8 +60,8 @@ class MixerShaft(System):
         output_shafts: list[str] = ("sh_out",),
     ):
 
-        self.add_property("n_in", len(input_shafts))
-        self.add_property("n_out", len(output_shafts))
+        self.add_inward("n_in", len(input_shafts))
+        self.add_inward("n_out", len(output_shafts))
 
         # inputs
         for p in input_shafts:

@@ -55,7 +55,7 @@ class NozzleAero(System):
 
     def setup(self, FluidLaw=IdealDryAir):
         # properties
-        self.add_property("gas", FluidLaw())
+        self.add_inward("gas", FluidLaw())
 
         # inputs / outputs
         self.add_input(FluidPort, "fl_in")

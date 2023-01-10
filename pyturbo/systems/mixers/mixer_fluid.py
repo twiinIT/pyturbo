@@ -63,8 +63,8 @@ class MixerFluid(System):
         output_fluids: list[str] = ("fl_out",),
     ):
 
-        self.add_property("n_in", len(input_fluids))
-        self.add_property("n_out", len(output_fluids))
+        self.add_inward("n_in", len(input_fluids))
+        self.add_inward("n_out", len(output_fluids))
 
         # inputs
         for p in input_fluids:

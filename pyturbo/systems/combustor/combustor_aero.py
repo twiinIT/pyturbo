@@ -41,7 +41,7 @@ class CombustorAero(System):
 
     def setup(self):
         # properties
-        self.add_property("gas", IdealDryAir())  # not representing fuel/air mix yet
+        self.add_inward("gas", IdealDryAir())  # not representing fuel/air mix yet
 
         # inputs / outputs
         self.add_input(FluidPort, "fl_in")
