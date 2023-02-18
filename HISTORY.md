@@ -1,5 +1,20 @@
 # History
 
+## 0.2.0 (2023-01-10)
+
+### Features
+
+- Add new system `Atmosphere` to ease computing of ambient conditions
+
+### Code quality & packaging
+
+- Add `Compressor` to public API of the `systems.compressor` and `systems` modules
+
+### Bug fix
+
+- Fix `TurbineAero` exit total pressure computation from polytropic efficiency
+- Fix some descriptions, especially related to gas models
+
 ## 0.1.0 (2022-10-18)
 
 ### Features
