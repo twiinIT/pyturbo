@@ -13,10 +13,8 @@ class CombustorAero(System):
 
     Inputs
     ------
-    gas: Class, default is IdealDryAir
-        class provided the characteristics of gas as a simplistic air without fuel
-        gas.h: to get enthalpy from temperature
-        gas.t_from_h: to get temperature from enthapie
+    gas: Gas, default=IdealDryAir()
+        gas model
 
     fl_in: FluidPort
         fluid going into the combustor

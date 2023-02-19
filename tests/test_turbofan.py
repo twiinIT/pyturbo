@@ -13,10 +13,10 @@ class TestTurbofan:
         # default constructor
         sys = self.sys
 
-        data_input = ["fl_in"]
+        data_input = []
         data_output = []
-        data_inward = ["fan_diameter", "pamb", "fuel_W"]
-        data_outward = ["thrust", "bpr", "opr", "sfc"]
+        data_inward = ["fan_diameter", "fuel_W", "altitude", "mach", "dtamb"]
+        data_outward = ["thrust", "pamb", "bpr", "opr", "sfc"]
 
         for data in data_input:
             assert data in sys.inputs
@@ -30,7 +30,7 @@ class TestTurbofan:
     def test_run_once(self):
         sys = self.sys
 
-        sys.fl_in.W = 300.0
+        sys.inlet.fl_in.W = 300.0
         sys.fuel_W = 1.0
         sys.fan_module.splitter_fluid.fluid_fractions[0] = 0.8
 
@@ -47,7 +47,7 @@ class TestTurbofan:
         sys.pamb = 1e5
 
         sys.fan_diameter = 1.8
-        run.add_unknown("fl_in.W")
+        run.add_unknown("inlet.fl_in.W")
 
         sys.run_drivers()
 

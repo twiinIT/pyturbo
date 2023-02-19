@@ -1,8 +1,16 @@
 # Copyright (C) 2022, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
+from pyturbo.systems.atmosphere import Atmosphere
 from pyturbo.systems.combustor import Combustor, CombustorAero
-from pyturbo.systems.compressor import HPC, Booster, CompressorGeom, CompressorMftAero, Fan
+from pyturbo.systems.compressor import (
+    HPC,
+    Booster,
+    Compressor,
+    CompressorGeom,
+    CompressorMftAero,
+    Fan,
+)
 from pyturbo.systems.inlet import Inlet, InletAero, InletGeom
 from pyturbo.systems.nacelle import Nacelle, NacelleGeom, Plug, PlugGeom
 from pyturbo.systems.nozzle import Nozzle, NozzleAero, NozzleGeom
@@ -19,7 +27,9 @@ from pyturbo.systems.turbofan import (  # isort: skip
 
 
 __all__ = [
+    "Atmosphere",
     "Combustor",
+    "Compressor",
     "CombustorAero",
     "CompressorAero",
     "CompressorGeom",
