@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from cosapp.drivers import NonLinearSolver
 
-from pyturbo.systems.compressor.compressor_aero import CompressorAero
+from pyturbo.systems.compressor import CompressorAero
 
 
 class TestCompressorAero:

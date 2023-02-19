@@ -1,10 +1,11 @@
 # History
 
-## 0.2.0 (2023-01-10)
+## 0.2.0 (2023-02-20)
 
 ### Features
 
 - Add new system `Atmosphere` and `TurbofanWithAtm` to ease computing of ambient conditions (from altitude, Mach and delta tamb)
+- Use `pythermo` for gas modeling
 
 ### Code quality & packaging
 

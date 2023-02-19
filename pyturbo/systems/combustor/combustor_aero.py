@@ -57,5 +57,5 @@ class CombustorAero(System):
         self.fl_out.W = self.fl_in.W + self.fuel_W
 
         h_out = self.gas.h(self.fl_in.Tt) + self.fuel_W / self.fl_out.W * self.fhv * self.eff
-        self.Tcomb = self.gas.t_from_h(h_out)
+        self.Tcomb = self.gas.t_f_h(h_out, tol=1e-6)
         self.fl_out.Tt = self.Tcomb

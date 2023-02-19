@@ -58,7 +58,9 @@ class ChannelAero(System):
         self.fl_out.Tt = self.fl_in.Tt
         self.fl_out.Pt = self.fl_in.Pt * (1.0 - self.pressure_loss)
 
-        self.mach_in = self.gas.mach(self.fl_in.Pt, self.fl_in.Tt, self.fl_in.W / self.area_in)
-        self.mach_exit = self.gas.mach(
-            self.fl_out.Pt, self.fl_out.Tt, self.fl_out.W / self.area_exit
+        self.mach_in = self.gas.mach_f_wqa(
+            self.fl_in.Pt, self.fl_in.Tt, self.fl_in.W / self.area_in, tol=1e-6
+        )
+        self.mach_exit = self.gas.mach_f_wqa(
+            self.fl_out.Pt, self.fl_out.Tt, self.fl_out.W / self.area_exit, tol=1e-6
         )
