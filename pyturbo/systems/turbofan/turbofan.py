@@ -24,8 +24,6 @@ class Turbofan(System, JupyterViewable):
 
     Sub-systems
     -----------
-    atmosphere: Atmosphere
-        evaluate Pt and Tt from altitude, mach and dtamb
     inlet: Inlet
         inlet before the fan
     fanmodule: FanModule
@@ -52,16 +50,12 @@ class Turbofan(System, JupyterViewable):
 
     Inputs
     ------
-    altitude[m]: float
-        engine altitude
-    mach[-]: float
-        engine speed
-    dtamb[K]: float
-        atmosphere dtamb
-
+    fl_in: FluidPort
+        inlet flow
+    pamb[Pa]: float
+        ambiant static pressure
     fan_diameter[m]: float
         diameter of the fan
-
     fuel_W[kg/s]: float
         fuel mass flow
 
@@ -91,22 +85,19 @@ class Turbofan(System, JupyterViewable):
     """
 
     def setup(self):
-        # atmosphere
-        self.add_child(Atmosphere("atmosphere"), pulling=["altitude", "mach", "dtamb", "pamb"])
-
         # physics
         self.add_child(TurbofanGeom("geom"), pulling=["fan_diameter", "frd_mount", "aft_mount"])
 
         # component
-        self.add_child(Inlet("inlet"))
+        self.add_child(Inlet("inlet"), pulling=["fl_in", "pamb"])
         self.add_child(FanModule("fan_module"), pulling={"bpr": "bpr", "N": "N1"})
         self.add_child(FanDuct("fan_duct"))
         self.add_child(GasGenerator("core"), pulling={"fuel_W": "fuel_W", "N": "N2"})
         self.add_child(Channel("tcf"))
         self.add_child(LPT("turbine"))
         self.add_child(Channel("trf"))
-        self.add_child(Nozzle("primary_nozzle"))
-        self.add_child(Nozzle("secondary_nozzle"))
+        self.add_child(Nozzle("primary_nozzle"), pulling=["pamb"])
+        self.add_child(Nozzle("secondary_nozzle"), pulling=["pamb"])
         self.add_child(Nacelle("nacelle"))
         self.add_child(Plug("plug"))
         self.add_child(CoreCowl("core_cowl"))
@@ -118,16 +109,10 @@ class Turbofan(System, JupyterViewable):
         )
         self.add_child(TurbofanWeight("weight"), pulling=["ipps_weight"])
 
-        # atmosphere connectors
-        self.connect(self.atmosphere.outwards, self.inlet.inwards, "pamb")
-        self.connect(self.atmosphere.outwards, self.primary_nozzle.inwards, "pamb")
-        self.connect(self.atmosphere.outwards, self.secondary_nozzle.inwards, "pamb")
-        
         # shaft connectors
         self.connect(self.turbine.sh_out, self.fan_module.sh_in)
 
         # fluid connectors
-        self.connect(self.atmosphere.outwards, self.inlet.fl_in, ["Pt", "Tt"])
         self.connect(self.inlet.fl_out, self.fan_module.fl_in)
         self.connect(self.fan_module.fl_bypass, self.fan_duct.fl_in)
         self.connect(self.fan_duct.fl_out, self.secondary_nozzle.fl_in)
@@ -199,7 +184,7 @@ class Turbofan(System, JupyterViewable):
         self.connect(self.geom, self.weight, {"engine_length": "length"})
 
         # solver
-        self.add_unknown("inlet.fl_in.W")
+        self.add_unknown("fl_in.W")
 
         # default value : CFM56-7
 
@@ -320,3 +305,22 @@ class Turbofan(System, JupyterViewable):
             plug=self.plug.geom._to_occt(),
             core_cowl=self.core_cowl._to_occt(),
         )
+
+
+class TurbofanWithAtm(System):
+    """Turbofan assembly system used in atmosphere.
+
+    Sub-systems
+    -----------
+    atm: Atmosphere
+        simplified atmosphere from altitude, Mach and delta ambient temperature
+    tf: Turbofan
+        turbofan
+    """
+
+    def setup(self):
+        self.add_child(Atmosphere("atm"))
+        self.add_child(Turbofan("tf"))
+
+        self.connect(self.atm.outwards, self.tf.fl_in, ["Pt", "Tt"])
+        self.connect(self.atm.outwards, self.tf.inwards, ["pamb"])

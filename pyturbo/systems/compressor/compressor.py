@@ -163,4 +163,4 @@ class Booster(Compressor):
 
         # init aero
         self.aero.eff_poly = 0.9
-        self.aero.phiP = 0.35
+        self.aero.phiP = 0.7

@@ -20,6 +20,7 @@ from pyturbo.systems.fan_module import FanModule  # isort: skip
 from pyturbo.systems.gas_generator import GasGenerator, GasGeneratorGeom  # isort: skip
 from pyturbo.systems.turbofan import (  # isort: skip
     Turbofan,
+    TurbofanWithAtm,
     TurbofanAero,
     TurbofanGeom,
     TurbofanWeight,
@@ -63,4 +64,5 @@ __all__ = [
     "TurbofanGeom",
     "TurbofanWeight",
     "Turbofan",
+    "TurbofanWithAtm",
 ]

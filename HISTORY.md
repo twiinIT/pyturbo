@@ -4,11 +4,12 @@
 
 ### Features
 
-- Add new system `Atmosphere` to ease computing of ambient conditions
+- Add new system `Atmosphere` and `TurbofanWithAtm` to ease computing of ambient conditions (from altitude, Mach and delta tamb)
 
 ### Code quality & packaging
 
 - Add `Compressor` to public API of the `systems.compressor` and `systems` modules
+- Fix demo turbofan notebook to set design target before adding targets to the non-linear solver
 
 ### Bug fix
 
