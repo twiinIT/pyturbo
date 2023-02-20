@@ -70,9 +70,9 @@ class InletAero(System):
 
         pt = self.fl_in.Pt
         tt = self.fl_in.Tt
-        self.mach = self.gas.mach(pt, tt, self.fl_in.W / self.area)
+        self.mach = self.gas.mach_f_wqa(pt, tt, self.fl_in.W / self.area, tol=1e-6)
 
-        self.ps = self.gas.static_p(pt, tt, self.mach)
+        self.ps = self.gas.static_p(pt, tt, self.mach, tol=1e-6)
         self.speed = self.mach * self.gas.c(tt)
 
         self.drag = self.fl_in.W * self.speed + (self.ps - self.pamb) * self.area

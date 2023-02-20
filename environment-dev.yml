@@ -6,6 +6,7 @@ dependencies:
   - pyoccad
   - numpy
   - ambiance
+  - pythermo
   - pythreejs
   - pytest
   - pre-commit

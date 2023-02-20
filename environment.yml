@@ -7,3 +7,4 @@ dependencies:
   - numpy
   - ambiance
   - pythonocc-core
+  - pythermo

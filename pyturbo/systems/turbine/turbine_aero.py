@@ -95,7 +95,7 @@ class TurbineAero(System):
         # fluid
         self.fl_out.W = self.fl_in.W
         dh = self.dhqt * self.fl_in.Tt
-        self.fl_out.Tt = self.gas.t_from_h(self.gas.h(self.fl_in.Tt) - dh)
+        self.fl_out.Tt = self.gas.t_f_h(self.gas.h(self.fl_in.Tt) - dh, tol=1e-6)
         self.fl_out.Pt = (
             self.gas.pr(self.fl_in.Tt, self.fl_out.Tt, 1.0 / self.eff_poly) * self.fl_in.Pt
         )
@@ -110,4 +110,6 @@ class TurbineAero(System):
 
         # outwards
         self.Wc = self.fl_in.Wc
-        self.Wcrit = self.gas.Wqa_crit(self.fl_in.Pt, self.fl_in.Tt) * self.area_in / self.blokage
+        self.Wcrit = (
+            self.gas.wqa_crit(self.fl_in.Pt, self.fl_in.Tt, tol=1e-6) * self.area_in / self.blokage
+        )

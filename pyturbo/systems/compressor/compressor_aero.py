@@ -125,7 +125,7 @@ class CompressorAero(System):
 
         delta_h = self.sh_in.power / self.fl_in.W
         h = self.gas.h(self.fl_in.Tt) + delta_h
-        self.fl_out.Tt = self.gas.t_from_h(h)
+        self.fl_out.Tt = self.gas.t_f_h(h, tol=1e-6)
 
         self.tr = self.fl_out.Tt / self.fl_in.Tt
         self.pr = self.gas.pr(self.fl_in.Tt, self.fl_out.Tt, self.eff_poly)

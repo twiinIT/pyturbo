@@ -85,15 +85,15 @@ class NozzleAero(System):
         self.fl_out.Tt = self.fl_in.Tt
 
         # assumes convergent nozzle (throat at exit)
-        self.mach = self.gas.mach_ptpstt(self.fl_in.Pt, self.pamb, self.fl_in.Tt)
+        self.mach = self.gas.mach_f_ptpstt(self.fl_in.Pt, self.pamb, self.fl_in.Tt, tol=1e-6)
 
-        ts = self.gas.static_t(self.fl_in.Tt, self.mach)
-        self.ps = self.gas.static_p(self.fl_in.Pt, self.fl_in.Tt, self.mach)
+        ts = self.gas.static_t(self.fl_in.Tt, self.mach, tol=1e-6)
+        self.ps = self.gas.static_p(self.fl_in.Pt, self.fl_in.Tt, self.mach, tol=1e-6)
         rho = self.gas.density(self.ps, ts)
         self.speed = self.gas.c(ts) * self.mach
 
         if self.mach > 1.0:
-            self.fl_out.W = self.gas.Wqa_crit(self.fl_in.Pt, self.fl_in.Tt) * self.area
+            self.fl_out.W = self.gas.wqa_crit(self.fl_in.Pt, self.fl_in.Tt, tol=1e-6) * self.area
         else:
             self.fl_out.W = rho * self.speed * self.area
 

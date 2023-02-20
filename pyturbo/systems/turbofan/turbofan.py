@@ -15,7 +15,6 @@ from pyturbo.systems.turbine import LPT
 from pyturbo.systems.turbofan.turbofan_aero import TurbofanAero
 from pyturbo.systems.turbofan.turbofan_geom import TurbofanGeom
 from pyturbo.systems.turbofan.turbofan_weight import TurbofanWeight
-from pyturbo.thermo import IdealDryAir
 from pyturbo.utils import JupyterViewable
 
 

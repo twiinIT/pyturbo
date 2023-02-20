@@ -1,6 +1,3 @@
-import pytest
-from cosapp.drivers import NonLinearSolver
-
 from pyturbo.systems import Atmosphere
 
 
