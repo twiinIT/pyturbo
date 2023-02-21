@@ -1,22 +1,22 @@
 # History
 
-## 0.2.0 (2023-02-20)
+## 0.2.0 (2023-02-21)
 
 ### Features
 
 - Add new system `Atmosphere` and `TurbofanWithAtm` to ease computing of ambient conditions (from altitude, Mach and delta tamb)
 - Use `pythermo` for gas modeling
 
-### Code quality & packaging
+### API
 
 - Add `Compressor` to public API of the `systems.compressor` and `systems` modules
-- Fix demo turbofan notebook to set design target before adding targets to the non-linear solver
 
 ### Bug fix
 
 - Fix `TurbineAero` exit total pressure computation from polytropic efficiency
 - Fix some descriptions, especially related to gas models
 - Fix incorrectly automatic pulling of `fan_duct_core_cowl_slope` in `Turbofan`
+- Fix demo turbofan notebook to set design targets before adding targets to the non-linear solver
 
 ## 0.1.0 (2022-10-18)
 

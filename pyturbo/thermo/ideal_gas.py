@@ -1,5 +1,5 @@
-# Copyright (c) 2023, twiinIT - All Rights Reserved
-# twiinIT proprietary - See licence file packaged with this code
+# Copyright (C) 2022-2023, twiinIT
+# SPDX-License-Identifier: BSD-3-Clause
 
 import numpy as np
 import pythermo

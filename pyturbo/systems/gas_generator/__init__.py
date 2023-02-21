@@ -1,4 +1,4 @@
-# Copyright (C) 2022, twiinIT
+# Copyright (C) 2022-2023, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 from pyturbo.systems.gas_generator.gas_generator_geom import GasGeneratorGeom
