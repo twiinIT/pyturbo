@@ -5,12 +5,14 @@ from cosapp.systems import System
 from OCC.Core.TopoDS import TopoDS_Shape
 
 from pyturbo.systems.atmosphere import Atmosphere
+from pyturbo.systems.channel import Channel
+from pyturbo.systems.duct import FanDuct
 from pyturbo.systems.fan_module import FanModule
 from pyturbo.systems.gas_generator import GasGenerator
 from pyturbo.systems.inlet import Inlet
 from pyturbo.systems.nacelle import Nacelle, Plug
 from pyturbo.systems.nozzle import Nozzle
-from pyturbo.systems.structures import Channel, CoreCowl, FanDuct
+from pyturbo.systems.structures import CoreCowl
 from pyturbo.systems.turbine import LPT
 from pyturbo.systems.turbofan.turbofan_aero import TurbofanAero
 from pyturbo.systems.turbofan.turbofan_geom import TurbofanGeom
@@ -157,7 +159,7 @@ class Turbofan(System, JupyterViewable):
         self.connect(self.trf.kp, self.plug.inwards, {"exit_hub": "trf_exit_hub_kp"})
         self.connect(self.geom.secondary_nozzle_kp, self.fan_duct.kp)
 
-        self.connect(self.geom, self.fan_duct, ["core_cowl_slope"])
+        self.connect(self.geom, self.fan_duct, {"fan_duct_core_cowl_slope": "core_cowl_slope"})
 
         self.connect(
             self.geom,

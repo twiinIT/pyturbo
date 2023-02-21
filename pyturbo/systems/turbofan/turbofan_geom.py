@@ -262,6 +262,7 @@ class TurbofanGeom(System):
         self.add_outward("sec_nozzle_exit_kp", np.ones(2), unit="m")
 
         self.add_outward("sec_nozzle_exit_hub_kp", C1Keypoint())
+        self.add_outward("fan_duct_core_cowl_slope", unit="deg")
 
         self.add_outward("frd_mount", np.r_[0.9, 0.5], desc="forward engine mount")
         self.add_outward("aft_mount", np.r_[0.5, 3.0], desc="aftward engine mount")
@@ -413,6 +414,9 @@ class TurbofanGeom(System):
         # nacelle
         self.turbine_exit_tip_kp = self.turbine_kp.exit_tip
         self.sec_nozzle_exit_kp = self.secondary_nozzle_kp.exit_tip
+
+        # fan_duct
+        self.fan_duct_core_cowl_slope = self.core_cowl_slope
 
         # mounts
         r = self.frd_mount_relative

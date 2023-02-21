@@ -1,8 +1,8 @@
 import numpy as np
 from cosapp.drivers import NonLinearSolver
 
+from pyturbo.systems.channel import Channel
 from pyturbo.systems.structures import IntermediateCasing
-from pyturbo.systems.structures.channel import Channel
 
 
 class TestChannel:

@@ -8,8 +8,6 @@ from OCC.Core.TopoDS import TopoDS_Shape
 from pyoccad.create import CreateAxis, CreateBezier, CreateEdge, CreateRevolution, CreateTopology
 
 from pyturbo.systems.generic import GenericSimpleGeom
-from pyturbo.systems.structures.channel import Channel
-from pyturbo.systems.structures.channel_aero import ChannelAero
 from pyturbo.utils import rz_to_3d, slope_to_3d
 
 
@@ -55,13 +53,3 @@ class FanDuctGeom(GenericSimpleGeom):
         outer_shell = CreateRevolution.surface_from_curve(e2, CreateAxis.oz())
 
         return CreateTopology.make_compound(inner_shell, outer_shell)
-
-
-class FanDuct(Channel):
-    """Fan duct assembly system."""
-
-    def setup(self, geom_class=FanDuctGeom, aero_class=ChannelAero):
-        if geom_class is not None:
-            self.add_child(geom_class("geom"), pulling=["kp", "core_cowl_slope"])
-        if aero_class is not None:
-            self.add_child(aero_class("aero"), pulling=["fl_in", "fl_out"])

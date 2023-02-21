@@ -1,12 +1,12 @@
 import numpy as np
 from cosapp.systems import System
 
+from pyturbo.systems.channel import Channel
 from pyturbo.systems.compressor import Booster, Fan
 from pyturbo.systems.fan_module.fan_module_geom import FanModuleGeom
 from pyturbo.systems.fan_module.spinner import SpinnerGeom
 from pyturbo.systems.mixers import MixerFluid, MixerShaft
 from pyturbo.systems.structures import IntermediateCasing
-from pyturbo.systems.structures.channel import Channel
 from pyturbo.utils import JupyterViewable
 
 

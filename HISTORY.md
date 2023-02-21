@@ -16,6 +16,7 @@
 
 - Fix `TurbineAero` exit total pressure computation from polytropic efficiency
 - Fix some descriptions, especially related to gas models
+- Fix incorrectly automatic pulling of `fan_duct_core_cowl_slope` in `Turbofan`
 
 ## 0.1.0 (2022-10-18)
 

@@ -1,7 +1,6 @@
 from cosapp.systems import System
 
-from pyturbo.systems.structures.channel_aero import ChannelAero
-from pyturbo.systems.structures.channel_geom import ChannelGeom
+from pyturbo.systems.channel import ChannelAero, ChannelGeom
 
 
 class Channel(System):

@@ -1,7 +1,7 @@
 from cosapp.systems import System
 
+from pyturbo.systems.channel import ChannelAero
 from pyturbo.systems.generic import GenericSimpleGeom
-from pyturbo.systems.structures.channel_aero import ChannelAero
 
 
 class IntermediateCasing(System):
