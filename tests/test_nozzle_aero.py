@@ -52,8 +52,29 @@ class TestNozzleAero:
         sys.fl_in.W = 30.0
         sys.run_drivers()
 
-        assert sys.fl_out.Pt == sys.Ps2 - 0.5 * sys.rho_2 * (sys.v2**2)
-        assert (sys.Ts1 / sys.Ts2) ** (sys.gamma / (sys.gamma - 1)) == sys.Ps1 / sys.Ps2
-        assert sys.speed == (
-            ((574 / 0.029) * (sys.gamma / (sys.gamma - 1))) * (sys.Ts1 - sys.Ts2)
-        ) ** (0.5)
+        print("NOMBRE DE MACH À INLET : ", sys.M1)
+        print(
+            "VITESSE FLUIDE INLET",
+            (sys.fl_in.W / (sys.rho_1 * sys.area_in)),
+        )
+        print(
+            "VITESSE DU SON INLET",
+            ((sys.gamma * 287 * sys.Ts1) ** 0.5),
+        )
+        print("TEMPÉRATURE STATIQUE ENTRÉE ISSUE DU SYSTÈME : ", sys.Ts1)
+        print(
+            "TEMPÉRATURE STATIQUE INLET RECALCULÉE",
+            sys.fl_in.Tt
+            + ((1 - sys.gamma) / (2 * sys.gamma * 287)) * (sys.fl_in.W / (sys.rho_1 * sys.area_in)),
+        )
+        print("NOMBRE DE MACH À LA SORTIE : ", sys.M2)
+        print("POUSSÉE EN SORTIE DE TUYÈRE : ", sys.thrust)
+        assert False
+        assert (sys.fl_in.W / (sys.rho_1 * sys.area_in)) / (
+            (sys.gamma * 287 * sys.Ts1) ** 0.5
+        ) == pytest.approx(sys.M1)
+        # assert sys.fl_out.Pt == sys.Ps2 - 0.5 * sys.rho_2 * (sys.v2**2)
+        # assert (sys.Ts1 / sys.Ts2) ** (sys.gamma / (sys.gamma - 1)) == sys.Ps1 / sys.Ps2
+        # assert sys.speed == (
+        #     ((574 / 0.029) * (sys.gamma / (sys.gamma - 1))) * (sys.Ts1 - sys.Ts2)
+        # ) ** (0.5)
