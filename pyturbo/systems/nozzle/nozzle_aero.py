@@ -82,7 +82,8 @@ class NozzleAero(System):
         self.add_outward("Ts2", 0.0, unit="pa", desc="static pressure at outlet")
         self.add_outward("M1", 0.0, unit="", desc="mach at inlet")
         self.add_outward("M2", 0.0, unit="", desc="mach at outlet")
-        self.add_inward("rho_2", 1.2, unit="kg/m**3", desc="Fluid density at outlet")
+        self.add_outward("mach", 0.0, unit="", desc="mach at outlet")
+        self.add_outward("rho_2", 1.2, unit="kg/m**3", desc="Fluid density at outlet")
         self.add_outward("speed", 0.0, unit="m/s", desc="fluid flow speed at outlet")
         self.add_outward("thrust", unit="N")
 
@@ -122,6 +123,7 @@ class NozzleAero(System):
             * ((self.fl_in.W / (2 * self.rho_1 * (self.area_in**2))) + self.Ps1 - self.Ps2)
         )
         self.M2 = self.speed / np.sqrt(self.gamma * 287 * self.Ts2)
+        self.mach = self.M2
         self.fl_out.W = self.rho_2 * self.speed * self.area_exit
         self.thrust = self.fl_out.W * self.speed + self.area_exit * (self.Ps2 - self.pamb)
         # assumes convergent nozzle (throat at exit)

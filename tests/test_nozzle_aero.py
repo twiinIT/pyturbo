@@ -45,7 +45,7 @@ class TestNozzleAero:
         run = sys.add_driver(NonLinearSolver("run"))
 
         # run.add_unknown("area", max_rel_step=0.1)
-        run.add_unknown("pamb", max_rel_step=0.1)
+        run.add_unknown("area_exit", max_rel_step=0.1)
 
         sys.pamb = 1.01e5
         sys.fl_in.Tt = 530.0
@@ -70,6 +70,7 @@ class TestNozzleAero:
         )
         print("NOMBRE DE MACH À LA SORTIE : ", sys.M2)
         print("POUSSÉE EN SORTIE DE TUYÈRE : ", sys.thrust)
+        assert sys.fl_in.W == pytest.approx(sys.fl_out.W)
         assert False
         # assert (sys.fl_in.W / (sys.rho_1 * sys.area_in)) / (
         #     (sys.gamma * 287 * sys.Ts1) ** 0.5
