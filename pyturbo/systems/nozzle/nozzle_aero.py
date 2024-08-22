@@ -67,8 +67,10 @@ class NozzleAero(System):
 
         # geom
         self.add_inward("area_in", 10.0, unit="m**2", desc="inlet aero section")
-        self.add_inward("area_exit", 10.0, unit="m**2", desc="exit aero section")
-        self.add_inward("area", 1.0, unit="m**2", desc="choked/exit area")
+        self.add_inward("area_exit", 8.0, unit="m**2", desc="exit aero section")
+        self.add_inward("area", 8.0, unit="m**2", desc="choked/exit area")
+        self.add_inward("gamma", 1.4, unit="", desc="Heat capacity ratio")
+        self.add_inward("density", 1.2, unit="kg/m**3", desc="Fluid density")
 
         # outwards
         self.add_outward("ps", 0.0, unit="pa", desc="static pressure at throat")
