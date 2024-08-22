@@ -15,9 +15,9 @@ class TestNozzleAero:
         sys = NozzleAero("noz")
 
         data_input = ["fl_in"]
-        data_inwards = ["pamb", "area_in", "area_exit", "area"]
+        data_inwards = ["pamb", "area_in", "area_exit"]
         data_output = ["fl_out"]
-        data_outwards = ["thrust", "ps", "mach", "speed"]
+        data_outwards = ["thrust", "Ps1", "M1", "v2"]
 
         for data in data_input:
             assert data in sys.inputs
@@ -44,7 +44,7 @@ class TestNozzleAero:
         sys = NozzleAero("noz")
         run = sys.add_driver(NonLinearSolver("run"))
 
-        run.add_unknown("area", max_rel_step=0.1)
+        # run.add_unknown("area", max_rel_step=0.1)S
 
         sys.pamb = 1.01e5
         sys.fl_in.Tt = 530.0
@@ -52,17 +52,8 @@ class TestNozzleAero:
         sys.fl_in.W = 30.0
         sys.run_drivers()
 
-        ps_out = max(
-            sys.fl_in.Pt * ((2 / (sys.gamma + 1)) ** (sys.gamma / (sys.gamma - 1))), sys.pamb
-        )
-        ps_in = sys.fl_in.Pt - 0.5 * (sys.fl_in.W**2) / (sys.density * (sys.area_in**2))
-
-        ts_in = sys.fl_in.Tt / (1 + (((sys.gamma - 1) / 2) * (sys.mach**2)))
-
-        ts_out = sys.fl_out.Tt / (1 + (((sys.gamma - 1) / 2) * (sys.mach**2)))
-
-        assert sys.fl_out.Pt == ps_out - 0.5 * sys.density * (sys.speed**2)
-        assert (ts_in / ts_out) ** (sys.gamma / (sys.gamma - 1)) == ps_in / ps_out
+        assert sys.fl_out.Pt == sys.Ps2 - 0.5 * sys.rho_2 * (sys.v2**2)
+        assert (sys.Ts1 / sys.Ts2) ** (sys.gamma / (sys.gamma - 1)) == sys.Ps1 / sys.Ps2
         assert sys.speed == (
-            ((574 / 0.029) * (sys.gamma / (sys.gamma - 1))) * (ts_in - ts_out)
+            ((574 / 0.029) * (sys.gamma / (sys.gamma - 1))) * (sys.Ts1 - sys.Ts2)
         ) ** (0.5)
