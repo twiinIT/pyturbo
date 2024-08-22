@@ -73,10 +73,10 @@ class NozzleAero(System):
         self.add_inward("area", 0.0225 * np.pi, unit="m**2", desc="choked/exit area")
         self.add_inward("gamma", 1.4, unit="", desc="Heat capacity ratio")
         self.add_inward("rho_1", 1.2, unit="kg/m**3", desc="Fluid density at inlet")
+        self.add_inward("Ps2", 1.0e5, unit="pa", desc="static pressure at outlet")
 
         # outwards
         self.add_outward("Ps1", 0.0, unit="pa", desc="static pressure at inlet")
-        self.add_outward("Ps2", 0.0, unit="pa", desc="static pressure at outlet")
         self.add_outward("Ps_crit", 0.0, unit="pa", desc="critical static pressure at throat")
         self.add_outward("Ts1", 0.0, unit="pa", desc="static pressure at inlet")
         self.add_outward("Ts2", 0.0, unit="pa", desc="static pressure at outlet")
@@ -100,7 +100,7 @@ class NozzleAero(System):
 
         self.Ps_crit = ((2 / (self.gamma + 1)) ** (self.gamma / (self.gamma - 1))) * self.fl_out.Pt
         self.Ps1 = self.fl_in.Pt - 0.5 * ((self.fl_in.W**2) / (self.rho_1 * (self.area_in**2)))
-        self.Ps2 = max(self.Ps_crit, self.pamb)
+        # self.Ps2 = max(self.Ps_crit, self.pamb)
 
         self.rho_2 = self.rho_1 * ((self.Ps2 / self.Ps1) ** (-self.gamma))
 
