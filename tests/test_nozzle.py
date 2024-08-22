@@ -46,6 +46,9 @@ class TestNozzle:
 
         run.add_unknown("area", max_rel_step=0.1)
 
+        sys.area_in = 10.0
+        sys.area_exit = 10.0
+        sys.area = 1.0
         sys.pamb = 1.01e5
         sys.fl_in.Tt = 530.0
         sys.fl_in.Pt = 1.405e5

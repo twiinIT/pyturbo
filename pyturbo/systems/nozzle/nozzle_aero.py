@@ -70,7 +70,7 @@ class NozzleAero(System):
         # geom
         self.add_inward("area_in", 0.0625 * np.pi, unit="m**2", desc="inlet aero section")
         self.add_inward("area_exit", 0.0225 * np.pi, unit="m**2", desc="exit aero section")
-        # self.add_inward("area", 8.0, unit="m**2", desc="choked/exit area")
+        self.add_inward("area", 0.0225 * np.pi, unit="m**2", desc="choked/exit area")
         self.add_inward("gamma", 1.4, unit="", desc="Heat capacity ratio")
         self.add_inward("rho_1", 1.2, unit="kg/m**3", desc="Fluid density at inlet")
 
@@ -83,11 +83,11 @@ class NozzleAero(System):
         self.add_outward("M1", 0.0, unit="", desc="mach at inlet")
         self.add_outward("M2", 0.0, unit="", desc="mach at outlet")
         self.add_inward("rho_2", 1.2, unit="kg/m**3", desc="Fluid density at outlet")
-        self.add_outward("v2", 0.0, unit="m/s", desc="fluid flow speed at outlet")
+        self.add_outward("speed", 0.0, unit="m/s", desc="fluid flow speed at outlet")
         self.add_outward("thrust", unit="N")
 
         # off design
-        # self.add_equation("fl_in.W == fl_out.W")
+        self.add_equation("fl_in.W == fl_out.W")
 
         # init
         self.fl_in.W = 100.0
@@ -117,13 +117,13 @@ class NozzleAero(System):
         )
         self.Ts2 = self.Ts1 * ((self.rho_2 / self.rho_1) ** (1 / (1 - self.gamma)))
 
-        self.v2 = np.sqrt(
+        self.speed = np.sqrt(
             (2 / self.rho_2)
             * ((self.fl_in.W / (2 * self.rho_1 * (self.area_in**2))) + self.Ps1 - self.Ps2)
         )
-        self.M2 = self.v2 / np.sqrt(self.gamma * 287 * self.Ts2)
-        self.fl_out.W = self.rho_2 * self.v2 * self.area_exit
-        self.thrust = self.fl_out.W * self.v2 + self.area_exit * (self.Ps2 - self.pamb)
+        self.M2 = self.speed / np.sqrt(self.gamma * 287 * self.Ts2)
+        self.fl_out.W = self.rho_2 * self.speed * self.area_exit
+        self.thrust = self.fl_out.W * self.speed + self.area_exit * (self.Ps2 - self.pamb)
         # assumes convergent nozzle (throat at exit)
         # self.mach = self.gas.mach_f_ptpstt(self.fl_in.Pt, self.pamb, self.fl_in.Tt, tol=1e-6)
 

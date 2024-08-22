@@ -17,7 +17,7 @@ class TestNozzleAero:
         data_input = ["fl_in"]
         data_inwards = ["pamb", "area_in", "area_exit"]
         data_output = ["fl_out"]
-        data_outwards = ["thrust", "Ps1", "M1", "v2"]
+        data_outwards = ["thrust", "Ps1", "M1", "speed"]
 
         for data in data_input:
             assert data in sys.inputs
@@ -44,7 +44,8 @@ class TestNozzleAero:
         sys = NozzleAero("noz")
         run = sys.add_driver(NonLinearSolver("run"))
 
-        # run.add_unknown("area", max_rel_step=0.1)S
+        # run.add_unknown("area", max_rel_step=0.1)
+        run.add_unknown("pamb", max_rel_step=0.1)
 
         sys.pamb = 1.01e5
         sys.fl_in.Tt = 530.0
@@ -70,9 +71,9 @@ class TestNozzleAero:
         print("NOMBRE DE MACH À LA SORTIE : ", sys.M2)
         print("POUSSÉE EN SORTIE DE TUYÈRE : ", sys.thrust)
         assert False
-        assert (sys.fl_in.W / (sys.rho_1 * sys.area_in)) / (
-            (sys.gamma * 287 * sys.Ts1) ** 0.5
-        ) == pytest.approx(sys.M1)
+        # assert (sys.fl_in.W / (sys.rho_1 * sys.area_in)) / (
+        #     (sys.gamma * 287 * sys.Ts1) ** 0.5
+        # ) == pytest.approx(sys.M1)
         # assert sys.fl_out.Pt == sys.Ps2 - 0.5 * sys.rho_2 * (sys.v2**2)
         # assert (sys.Ts1 / sys.Ts2) ** (sys.gamma / (sys.gamma - 1)) == sys.Ps1 / sys.Ps2
         # assert sys.speed == (
