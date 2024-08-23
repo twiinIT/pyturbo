@@ -75,7 +75,7 @@ class NozzleAero(System):
         self.add_inward("rho_2", 1.2, unit="kg/m**3", desc="Fluid density at outlet")
 
         # outwards
-        self.add_outward("M2", 0.0, unit="", desc="mach at outlet")
+        self.add_outward("m2", 0.0, unit="", desc="mach at outlet")
         self.add_outward("mach", 0.0, unit="", desc="mach at outlet")
         self.add_outward("speed", 0.0, unit="m/s", desc="fluid flow speed at outlet")
         self.add_outward("thrust", unit="N")
@@ -91,19 +91,19 @@ class NozzleAero(System):
         self.fl_out.Pt = self.fl_in.Pt
         self.fl_out.Tt = self.fl_in.Tt
 
-        Ps_crit = ((2 / (self.gamma + 1)) ** (self.gamma / (self.gamma - 1))) * self.fl_out.Pt
-        Ps1 = self.fl_in.Pt - 0.5 * ((self.fl_in.W**2) / (self.rho_1 * (self.area_in**2)))
-        Ps2 = max(Ps_crit, self.pamb)
+        ps_crit = ((2 / (self.gamma + 1)) ** (self.gamma / (self.gamma - 1))) * self.fl_out.Pt
+        ps1 = self.fl_in.Pt - 0.5 * ((self.fl_in.W**2) / (self.rho_1 * (self.area_in**2)))
+        ps2 = max(ps_crit, self.pamb)
 
-        Ts1 = self.fl_in.Tt + ((1 - self.gamma) / (2 * self.gamma * 287)) * (
+        ts1 = self.fl_in.Tt + ((1 - self.gamma) / (2 * self.gamma * 287)) * (
             self.fl_in.W / (self.rho_1 * self.area_in)
         )
-        Ts2 = Ts1 * ((self.rho_2 / self.rho_1) ** (1 / (1 - self.gamma)))
+        ts2 = ts1 * ((self.rho_2 / self.rho_1) ** (1 / (1 - self.gamma)))
 
         self.speed = np.sqrt(
-            (2 / self.rho_2) * ((self.fl_in.W / (2 * self.rho_1 * (self.area_in**2))) + Ps1 - Ps2)
+            (2 / self.rho_2) * ((self.fl_in.W / (2 * self.rho_1 * (self.area_in**2))) + ps1 - ps2)
         )
-        self.M2 = self.speed / np.sqrt(self.gamma * 287 * Ts2)
-        self.mach = self.M2
+        self.m2 = self.speed / np.sqrt(self.gamma * 287 * ts2)
+        self.mach = self.m2
         self.fl_out.W = self.rho_2 * self.speed * self.area_exit
-        self.thrust = self.fl_out.W * self.speed + self.area_exit * (Ps2 - self.pamb)
+        self.thrust = self.fl_out.W * self.speed + self.area_exit * (ps2 - self.pamb)
