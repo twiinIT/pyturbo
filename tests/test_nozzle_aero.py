@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import pytest
+import numpy as np
 from cosapp.drivers import NonLinearSolver
 
 from pyturbo.systems.nozzle import NozzleAero
@@ -56,3 +57,32 @@ class TestNozzleAero:
         assert sys.fl_out.Tt == sys.fl_in.Tt
         assert sys.fl_out.Pt == sys.fl_in.Pt
         assert sys.mach <= 1.0
+        assert sys.mach > sys.m1
+
+    def test_run_solver_De_Laval_nozzle(self):
+        # basic run
+        sys = NozzleAero("noz")
+        run = sys.add_driver(NonLinearSolver("run", max_iter=2000, tol=1e-6))
+
+        run.add_unknown("m2", max_rel_step=0.1)
+
+        sys.area_in = 0.0625 * np.pi
+        sys.area_exit = 0.16 * np.pi
+        sys.area = 0.0225 * np.pi
+        sys.pamb = 1.01e5
+        sys.fl_in.Tt = 530.0
+        sys.fl_in.Pt = 1.405e5
+        sys.fl_in.W = 30.0
+        sys.run_drivers()
+
+        assert sys.fl_in.W == pytest.approx(sys.fl_out.W)
+        assert sys.fl_out.Tt == sys.fl_in.Tt
+        assert sys.fl_out.Pt == sys.fl_in.Pt
+
+        if sys.mach == 1:
+            assert sys.m2 > 1.0
+            assert sys.m1 < sys.mach
+
+        elif sys.mach < 1:
+            assert sys.m2 < 1.0
+            assert sys.m2 < sys.mach

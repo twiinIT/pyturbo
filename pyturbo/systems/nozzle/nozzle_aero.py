@@ -75,8 +75,7 @@ class NozzleAero(System):
 
         # outwards
         self.add_outward("m1", 0.3, unit="", desc="mach at inlet")
-
-        self.add_outward("mach", 0.0, unit="", desc="mach at outlet")
+        self.add_outward("mach", 0.0, unit="", desc="mach at throat")
         self.add_outward("speed", 0.0, unit="m/s", desc="fluid flow speed at outlet")
         self.add_outward("thrust", unit="N")
 
