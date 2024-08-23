@@ -42,9 +42,9 @@ class TestNozzle:
     def test_run_solver(self):
         # basic run
         sys = NozzleAero("noz")
-        run = sys.add_driver(NonLinearSolver("run"))
+        run = sys.add_driver(NonLinearSolver("run", max_iter=2000, tol=1.0e-6))
 
-        run.add_unknown("rho_2", max_rel_step=0.1)
+        run.add_unknown("m2", max_rel_step=0.1)
 
         sys.area_in = 10.0
         # sys.area_exit = 10.0
@@ -57,10 +57,10 @@ class TestNozzle:
 
         assert sys.fl_in.W == pytest.approx(sys.fl_out.W)
         # assert sys.speed == pytest.approx(308.3, 0.01)  # Initial way for Nozzle calculation
-        assert sys.speed == pytest.approx(186.1, 0.01)  # New way for Nozzle calculation
+        assert sys.speed == pytest.approx(415.3, 0.01)  # New way for Nozzle calculation
         # assert sys.mach == pytest.approx(0.7, 0.01)  # Initial way for Nozzle calculation
-        assert sys.mach == pytest.approx(0.9, 0.01)  # New way for Nozzle calculation
+        assert sys.mach == pytest.approx(0.98, 0.01)  # New way for Nozzle calculation
         # assert sys.thrust == pytest.approx(9250.0, 0.01)  # Initial way for Nozzle calculation
-        assert sys.thrust == pytest.approx(5583.6, 0.01)  # New way for Nozzle calculation
+        assert sys.thrust == pytest.approx(10669.9, 0.01)  # New way for Nozzle calculation
         # assert sys.area == pytest.approx(0.133, 0.01)  # Initial way for Nozzle calculation
         # assert sys.area_exit == pytest.approx(0.07, 0.01)  # New way for Nozzle calculation

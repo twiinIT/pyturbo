@@ -42,9 +42,9 @@ class TestNozzleAero:
     def test_run_solver_converging_nozzle(self):
         # basic run
         sys = NozzleAero("noz")
-        run = sys.add_driver(NonLinearSolver("run"))
+        run = sys.add_driver(NonLinearSolver("run", max_iter=2000, tol=1e-6))
 
-        run.add_unknown("rho_2", max_rel_step=0.1)
+        run.add_unknown("m2", max_rel_step=0.1)
 
         sys.pamb = 1.01e5
         sys.fl_in.Tt = 530.0

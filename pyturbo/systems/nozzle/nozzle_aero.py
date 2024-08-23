@@ -71,17 +71,19 @@ class NozzleAero(System):
         self.add_inward("area_exit", 0.0225 * np.pi, unit="m**2", desc="exit aero section")
         self.add_inward("area", 0.0225 * np.pi, unit="m**2", desc="choked/exit area")
         self.add_inward("gamma", 1.4, unit="", desc="Heat capacity ratio")
-        self.add_inward("rho_1", 1.2, unit="kg/m**3", desc="Fluid density at inlet")
-        self.add_inward("rho_2", 1.2, unit="kg/m**3", desc="Fluid density at outlet")
+        self.add_inward("m2", 0.3, unit="", desc="mach at outlet")
 
         # outwards
-        self.add_outward("m2", 0.0, unit="", desc="mach at outlet")
+        self.add_outward("m1", 0.3, unit="", desc="mach at inlet")
+
         self.add_outward("mach", 0.0, unit="", desc="mach at outlet")
         self.add_outward("speed", 0.0, unit="m/s", desc="fluid flow speed at outlet")
         self.add_outward("thrust", unit="N")
 
         # off design
-        self.add_equation("fl_in.W == fl_out.W")
+        self.add_equation(
+            "area_exit/area_in == (m1/m2) * (((1 + ((0.4/2)*(m2**2))))/(1 + ((0.4/2)*(m1**2))))**(2.4/0.8)"
+        )
 
         # init
         self.fl_in.W = 100.0
@@ -90,20 +92,16 @@ class NozzleAero(System):
         # outputs
         self.fl_out.Pt = self.fl_in.Pt
         self.fl_out.Tt = self.fl_in.Tt
+        self.fl_out.W = self.fl_in.W
+        rho1 = 1.2
 
-        ps_crit = ((2 / (self.gamma + 1)) ** (self.gamma / (self.gamma - 1))) * self.fl_out.Pt
-        ps1 = self.fl_in.Pt - 0.5 * ((self.fl_in.W**2) / (self.rho_1 * (self.area_in**2)))
-        ps2 = max(ps_crit, self.pamb)
+        ps1 = self.fl_in.Pt - 0.5 * ((self.fl_in.W**2) / (rho1 * (self.area_in**2)))
 
-        ts1 = self.fl_in.Tt + ((1 - self.gamma) / (2 * self.gamma * 287)) * (
-            self.fl_in.W / (self.rho_1 * self.area_in)
-        )
-        ts2 = ts1 * ((self.rho_2 / self.rho_1) ** (1 / (1 - self.gamma)))
+        self.m1 = self.gas.mach_f_ptpstt(self.fl_in.Pt, ps1, self.fl_in.Tt, tol=1e-6)
 
-        self.speed = np.sqrt(
-            (2 / self.rho_2) * ((self.fl_in.W / (2 * self.rho_1 * (self.area_in**2))) + ps1 - ps2)
-        )
-        self.m2 = self.speed / np.sqrt(self.gamma * 287 * ts2)
+        ts2 = self.gas.static_t(self.fl_out.Tt, self.m2, tol=1e-6)
+
+        self.speed = np.sqrt(self.gamma * 287 * ts2) * self.m2
         self.mach = self.m2
-        self.fl_out.W = self.rho_2 * self.speed * self.area_exit
+        ps2 = self.gas.static_p(self.fl_out.Pt, self.fl_out.Tt, self.m2, tol=1e-6)
         self.thrust = self.fl_out.W * self.speed + self.area_exit * (ps2 - self.pamb)
