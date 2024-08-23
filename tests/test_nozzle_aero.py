@@ -5,7 +5,7 @@ import pytest
 import numpy as np
 from cosapp.drivers import NonLinearSolver
 
-from pyturbo.systems.nozzle import NozzleAero
+from pyturbo.systems.nozzle import NozzleAero, Nozzle
 
 
 class TestNozzleAero:
@@ -46,11 +46,15 @@ class TestNozzleAero:
         run = sys.add_driver(NonLinearSolver("run", max_iter=2000, tol=1e-6))
 
         run.add_unknown("m2", max_rel_step=0.1)
+        run.add_unknown("mach", max_rel_step=0.1)
 
+        sys.area_exit = 0.0225 * np.pi
+        sys.area = sys.area_exit  # if throat area = exit area, converging nozzle
+        sys.area_in = 0.0625 * np.pi
         sys.pamb = 1.01e5
         sys.fl_in.Tt = 530.0
         sys.fl_in.Pt = 1.405e5
-        sys.fl_in.W = 40.0
+        sys.fl_in.W = 45.0
         sys.run_drivers()
 
         assert sys.fl_in.W == pytest.approx(sys.fl_out.W)
@@ -65,24 +69,32 @@ class TestNozzleAero:
         run = sys.add_driver(NonLinearSolver("run", max_iter=2000, tol=1e-6))
 
         run.add_unknown("m2", max_rel_step=0.1)
+        run.add_unknown("mach", max_rel_step=0.1)
 
-        sys.area_in = 0.0625 * np.pi
         sys.area_exit = 0.16 * np.pi
         sys.area = 0.0225 * np.pi
+        sys.area_in = 0.0625 * np.pi
         sys.pamb = 1.01e5
-        sys.fl_in.Tt = 530.0
+        sys.fl_in.Tt = 400.0
         sys.fl_in.Pt = 1.405e5
-        sys.fl_in.W = 30.0
+        sys.fl_in.W = 28.19342899746329
+        # sys.fl_in.W = 10
+
         sys.run_drivers()
 
         assert sys.fl_in.W == pytest.approx(sys.fl_out.W)
         assert sys.fl_out.Tt == sys.fl_in.Tt
         assert sys.fl_out.Pt == sys.fl_in.Pt
 
-        if sys.mach == 1:
+        if sys.mach == pytest.approx(1, 0.05):
+            print("ON A UN CHOC SONIQUE AU COL")
             assert sys.m2 > 1.0
             assert sys.m1 < sys.mach
 
         elif sys.mach < 1:
+            print("ON A PAS DE CHOC SONIQUE AU COL")
             assert sys.m2 < 1.0
             assert sys.m2 < sys.mach
+
+        else:
+            assert False
