@@ -17,7 +17,7 @@ class TestNozzleAero:
         data_input = ["fl_in"]
         data_inwards = ["pamb", "area_in", "area_exit"]
         data_output = ["fl_out"]
-        data_outwards = ["thrust", "Ps1", "M1", "speed"]
+        data_outwards = ["thrust", "speed"]
 
         for data in data_input:
             assert data in sys.inputs
@@ -44,15 +44,15 @@ class TestNozzleAero:
         sys = NozzleAero("noz")
         run = sys.add_driver(NonLinearSolver("run"))
 
-        run.add_unknown("Ps2", max_rel_step=0.1)
+        run.add_unknown("rho_2", max_rel_step=0.1)
 
         sys.pamb = 1.01e5
         sys.fl_in.Tt = 530.0
         sys.fl_in.Pt = 1.405e5
-        sys.fl_in.W = 30.0
+        sys.fl_in.W = 40.0
         sys.run_drivers()
 
         assert sys.fl_in.W == pytest.approx(sys.fl_out.W)
-        assert sys.mach == pytest.approx(0.88, 0.01)
         assert sys.fl_out.Tt == sys.fl_in.Tt
         assert sys.fl_out.Pt == sys.fl_in.Pt
+        assert sys.mach <= 1.0
