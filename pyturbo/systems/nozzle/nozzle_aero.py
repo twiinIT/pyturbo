@@ -70,7 +70,6 @@ class NozzleAero(System):
         self.add_inward("area_in", 0.0625 * np.pi, unit="m**2", desc="inlet aero section")
         self.add_inward("area_exit", 0.0225 * np.pi, unit="m**2", desc="exit aero section")
         self.add_inward("area", 0.0225 * np.pi, unit="m**2", desc="choked/exit area")
-        self.add_inward("gamma", 1.4, unit="", desc="Heat capacity ratio")
         self.add_inward("m2", 1.0, unit="", desc="mach at outlet")
         self.add_inward("mach", 1.0, unit="", desc="mach at throat")
 
@@ -95,6 +94,7 @@ class NozzleAero(System):
         self.fl_out.Pt = self.fl_in.Pt
         self.fl_out.Tt = self.fl_in.Tt
         self.fl_out.W = self.fl_in.W
+
         rho1 = 1.2
 
         ps1 = self.fl_in.Pt - 0.5 * ((self.fl_in.W**2) / (rho1 * (self.area_in**2)))
@@ -103,7 +103,8 @@ class NozzleAero(System):
 
         ts2 = self.gas.static_t(self.fl_out.Tt, self.m2, tol=1e-6)
 
-        self.speed = np.sqrt(self.gamma * 287 * ts2) * self.m2
-        # self.mach = self.m2
+        self.speed = np.sqrt(self.gas.gamma(ts2) * 287 * ts2) * self.m2
+
         ps2 = self.gas.static_p(self.fl_out.Pt, self.fl_out.Tt, self.m2, tol=1e-6)
+
         self.thrust = self.fl_out.W * self.speed + self.area_exit * (ps2 - self.pamb)
