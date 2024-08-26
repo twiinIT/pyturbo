@@ -70,7 +70,7 @@ class NozzleAero(System):
         self.add_inward("area_in", 0.0625 * np.pi, unit="m**2", desc="inlet aero section")
         self.add_inward("area_exit", 0.0225 * np.pi, unit="m**2", desc="exit aero section")
         self.add_inward("area", 0.0225 * np.pi, unit="m**2", desc="choked/exit area")
-        self.add_inward("m2", 1.0, unit="", desc="mach at outlet")
+        self.add_inward("m2", 0.990, unit="", desc="mach at outlet")
         self.add_inward("mach", 1.0, unit="", desc="mach at throat")
 
         # outwards
