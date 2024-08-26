@@ -54,127 +54,69 @@ class TestNozzleAero:
 
         assert sys.thrust == pytest.approx(30093.0, 0.1)
 
-    def test_run_solver_converging_nozzle(self):
+    def test_run_solver(self):
+        # basic run
         sys = NozzleAeroAdvConverging("noz")
-        run = sys.add_driver(NonLinearSolver("run", max_iter=2000, tol=1e-6))
+        run = sys.add_driver(NonLinearSolver("run"))
 
-        run.add_unknown("mach_exit_tmp", max_rel_step=0.1)
-        # run.add_unknown("mach", max_rel_step=0.1)
+        run.add_unknown("area_exit", max_rel_step=0.1)
 
-        # sys.area_exit = 0.0225 * np.pi
-        sys.area = sys.area_exit  # if throat area = exit area, converging nozzle
-        sys.area_in = 0.0625 * np.pi
-        sys.area_exit = 0.75 * sys.area_in
         sys.pamb = 1.01e5
         sys.fl_in.Tt = 530.0
         sys.fl_in.Pt = 1.405e5
-        sys.fl_in.W = 40.0
+        sys.fl_in.W = 30.0
         sys.run_drivers()
 
-        # print("MACH ENTRÉE : ", sys.mach_in)
-        # print("MACH SORTIE : ", sys.mach_exit_tmp)
-        # print("MACH GORGE : ", sys.mach)
-        # print("RAPPORT D'AIRES : ", sys.area_exit / sys.area_in)
-        # assert False
+        assert sys.speed == pytest.approx(308.3, 0.01)
+        assert sys.mach == pytest.approx(0.7, 0.01)
+        assert sys.thrust == pytest.approx(9250.0, 0.01)
+        assert sys.area_exit == pytest.approx(0.133, 0.01)
 
-        assert sys.fl_in.W == pytest.approx(sys.fl_out.W)
-        assert sys.fl_out.Tt == sys.fl_in.Tt
-        assert sys.fl_out.Pt == sys.fl_in.Pt
-        assert sys.mach <= 1.0
-        assert sys.mach > sys.mach_in
+    def test_run_simulation(self):
+        # basic run
+        sys = NozzleAeroAdvConverging("noz")
+        run = sys.add_driver(NonLinearSolver("run"))
 
-    # def test_run_solver_converging_diverging_nozzle(self):
-    #     sys = NozzleAeroAdv("noz")
-    #     run = sys.add_driver(NonLinearSolver("run", max_iter=2000, tol=1e-6))
+        run.add_unknown("fl_in.W", max_rel_step=0.1)
 
-    #     run.add_unknown("mach_exit_tmp", max_rel_step=0.1)
-    #     run.add_unknown("mach", max_rel_step=0.1)
+        sys.pamb = 1.01e5
+        sys.area_exit = 0.133
+        sys.fl_in.Tt = 530.0
+        sys.fl_in.Pt = 1.405e5
+        sys.run_drivers()
 
-    #     sys.area_exit = 0.16 * np.pi
-    #     sys.area = 0.0225 * np.pi
-    #     sys.area_in = 0.0625 * np.pi
-    #     sys.pamb = 1.01e5
-    #     sys.fl_in.Tt = 400.0
+        assert sys.speed == pytest.approx(308.3, 0.01)
+        assert sys.mach == pytest.approx(0.7, 0.01)
+        assert sys.thrust == pytest.approx(9250.0, 0.01)
+        assert sys.fl_in.W == pytest.approx(30.0, 0.01)
+
+    def test_run_simulation_choked(self):
+        # basic run
+        sys = NozzleAeroAdvConverging("noz")
+        run = sys.add_driver(NonLinearSolver("run"))
+
+        run.add_unknown("fl_in.W", max_rel_step=0.1)
+
+        sys.pamb = 1.01e2
+        sys.area = 0.133
+        sys.fl_in.Tt = 530.0
+        sys.fl_in.Pt = 1.405e5
+        sys.run_drivers()
+
+        assert sys.mach == pytest.approx(1.0, 0.01)
+
+    # def test_run_transient(self):
+    #     # basic run
+    #     sys = NozzleAeroAdvConverging("noz")
+    #     time_driver = sys.add_driver(EulerExplicit("euler_explicit", dt=0.1, time_interval=(0, 10)))
+    #     run = time_driver.add_driver(NonLinearSolver("run"))
+
+    #     run.add_unknown("fl_in.W", max_rel_step=0.1)
+
+    #     time_driver.set_scenario(value={"pamb": "1.01e5 - 1e4 * time"})
+    #     sys.area = 0.133
+    #     sys.fl_in.Tt = 530.0
     #     sys.fl_in.Pt = 1.405e5
-    #     sys.fl_in.W = 28.19342899746329
-
     #     sys.run_drivers()
 
-    #     assert sys.fl_in.W == pytest.approx(sys.fl_out.W)
-    #     assert sys.fl_out.Tt == sys.fl_in.Tt
-    #     assert sys.fl_out.Pt == sys.fl_in.Pt
-
-    #     if sys.mach == pytest.approx(1, 0.05):
-    #         assert sys.mach_exit_tmp > 1.0
-    #         assert sys.m1 < sys.mach
-
-    #     elif sys.mach < 1:
-    #         assert sys.mach_exit_tmp < 1.0
-    #         assert sys.mach_exit_tmp < sys.mach
-
-    #     else:
-    #         assert False
-
-    # def test_run_solver_converging_diverging_start(self):
-    #     sys = NozzleAeroAdv("noz")
-    #     run = sys.add_driver(NonLinearSolver("run", max_iter=2000, tol=1e-6))
-
-    #     run.add_unknown("mach_exit_tmp", max_rel_step=0.1)
-    #     run.add_unknown("mach", max_rel_step=0.1)
-
-    #     sys.area_exit = 0.16 * np.pi
-    #     sys.area = 0.0225 * np.pi
-    #     sys.area_in = 0.0625 * np.pi
-    #     sys.pamb = 1.01e5
-    #     sys.fl_in.Tt = 400.0
-    #     sys.fl_in.Pt = 1.405e5
-    #     sys.fl_in.W = 10
-
-    #     sys.run_drivers()
-
-    #     assert sys.fl_in.W == pytest.approx(sys.fl_out.W)
-    #     assert sys.fl_out.Tt == sys.fl_in.Tt
-    #     assert sys.fl_out.Pt == sys.fl_in.Pt
-
-    #     if sys.mach == pytest.approx(1, 0.05):
-    #         assert sys.mach_exit_tmp > 1.0
-    #         assert sys.m1 < sys.mach
-
-    #     elif sys.mach < 1:
-    #         assert sys.mach_exit_tmp < 1.0
-    #         assert sys.mach_exit_tmp < sys.mach
-
-    #     else:
-    #         assert False
-
-    # def test_run_solver_converging_diverging_stop(self):
-    #     sys = NozzleAeroAdv("noz")
-    #     run = sys.add_driver(NonLinearSolver("run", max_iter=2000, tol=1e-6))
-
-    #     run.add_unknown("mach_exit_tmp", max_rel_step=0.1)
-    #     run.add_unknown("mach", max_rel_step=0.1)
-
-    #     sys.area_exit = 0.16 * np.pi
-    #     sys.area = 0.0225 * np.pi
-    #     sys.area_in = 0.0625 * np.pi
-    #     sys.pamb = 1.01e5
-    #     sys.fl_in.Tt = 400.0
-    #     sys.fl_in.Pt = 1.405e5
-    #     sys.fl_in.W = 50
-
-    #     sys.run_drivers()
-
-    #     assert sys.fl_in.W == pytest.approx(sys.fl_out.W)
-    #     assert sys.fl_out.Tt == sys.fl_in.Tt
-    #     assert sys.fl_out.Pt == sys.fl_in.Pt
-
-    #     if sys.mach == pytest.approx(1, 0.1):
-    #         assert sys.mach_exit_tmp > 1.0
-    #         assert sys.mach_in < sys.mach
-
-    #     elif sys.mach < 1:
-    #         assert sys.mach_exit_tmp < 1.0
-    #         assert sys.mach_exit_tmp < sys.mach
-
-    #     else:
-    #         assert False
+    #     assert sys.mach == pytest.approx(1.0, 0.01)
