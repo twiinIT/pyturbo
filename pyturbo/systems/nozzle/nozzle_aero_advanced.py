@@ -86,7 +86,9 @@ class NozzleAeroAdvConverging(System):
         # outputs
         self.fl_out.Pt = self.fl_in.Pt
         self.fl_out.Tt = self.fl_in.Tt
-        self.mach = self.gas.mach_f_ptpstt(self.fl_in.Pt, self.pamb, self.fl_in.Tt, tol=1e-6)
+        self.mach = self.gas.mach_f_ptpstt(
+            self.fl_in.Pt, self.pamb, self.fl_in.Tt, tol=1e-6
+        )  # How is this function able to limit the outlet at mach = 1 ?
 
         # Outlet gas flow properties
         ts_exit = self.gas.static_t(self.fl_out.Tt, self.mach, tol=1e-6)
@@ -101,7 +103,8 @@ class NozzleAeroAdvConverging(System):
 
         self.thrust = self.fl_out.W * self.speed + self.area_exit * (ps_exit - self.pamb)
 
-        # missing one unknown and one equation (energy conservation equation with enthalpy and mach_exit_tmp as unknown and remove equation line 89)
+        # missing one unknown and one equation (energy conservation equation with enthalpy
+        # and mach_exit_tmp as unknown and remove equation line 89)
 
 
 class NozzleAeroAdvConvergingDiverging(System):

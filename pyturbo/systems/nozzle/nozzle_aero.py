@@ -100,6 +100,4 @@ class NozzleAero(System):
         else:
             self.fl_out.W = rho * self.speed * self.area
 
-        self.thrust = (
-            self.fl_out.W * self.speed + (self.ps - self.pamb) * self.area
-        )  # Static pressure is calculated using the mach number defined at the inlet and not outlet.
+        self.thrust = self.fl_out.W * self.speed + (self.ps - self.pamb) * self.area

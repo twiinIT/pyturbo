@@ -2,28 +2,28 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import pytest
-import numpy as np
-from cosapp.drivers import NonLinearSolver
+from cosapp.drivers import EulerExplicit, NonLinearSolver
 from cosapp.utils import swap_system
+
+from pyturbo.systems.nozzle import Nozzle
 from pyturbo.systems.nozzle.nozzle_aero_advanced import NozzleAeroAdvConverging
-from pyturbo.systems.nozzle import Nozzle, NozzleAero
 from pyturbo.systems.turbofan import Turbofan
 
 
 class TestNozzleAero:
     """Define tests for the nozzle."""
 
-    # def test_swap(self):
-    #     sys = NozzleAeroAdv("noz")
-    #     tf = Turbofan("tf")
+    def test_swap(self):
+        sys = NozzleAeroAdvConverging("noz")
+        tf = Turbofan("tf")
 
-    #     tf.add_driver(NonLinearSolver("solver"))
-    #     tf.run_drivers()
+        tf.add_driver(NonLinearSolver("solver"))
+        tf.run_drivers()
 
-    #     thrust1 = tf.thrust
-    #     swap_system(tf.primary_nozzle.aero, sys)
-    #     tf.run_drivers()
-    #     assert thrust1 == tf.thrust
+        thrust1 = tf.thrust
+        swap_system(tf.primary_nozzle.aero, sys)
+        tf.run_drivers()
+        assert thrust1 == pytest.approx(tf.thrust, 0.01)
 
     def test_system_setup(self):
         # default constructor
@@ -98,25 +98,25 @@ class TestNozzleAero:
         run.add_unknown("fl_in.W", max_rel_step=0.1)
 
         sys.pamb = 1.01e2
-        sys.area = 0.133
+        sys.area_exit = 0.133
         sys.fl_in.Tt = 530.0
         sys.fl_in.Pt = 1.405e5
         sys.run_drivers()
 
         assert sys.mach == pytest.approx(1.0, 0.01)
 
-    # def test_run_transient(self):
-    #     # basic run
-    #     sys = NozzleAeroAdvConverging("noz")
-    #     time_driver = sys.add_driver(EulerExplicit("euler_explicit", dt=0.1, time_interval=(0, 10)))
-    #     run = time_driver.add_driver(NonLinearSolver("run"))
+    def test_run_transient(self):
+        # basic run
+        sys = NozzleAeroAdvConverging("noz")
+        time_driver = sys.add_driver(EulerExplicit("euler_explicit", dt=0.1, time_interval=(0, 10)))
+        run = time_driver.add_driver(NonLinearSolver("run"))
 
-    #     run.add_unknown("fl_in.W", max_rel_step=0.1)
+        run.add_unknown("fl_in.W", max_rel_step=0.1)
 
-    #     time_driver.set_scenario(value={"pamb": "1.01e5 - 1e4 * time"})
-    #     sys.area = 0.133
-    #     sys.fl_in.Tt = 530.0
-    #     sys.fl_in.Pt = 1.405e5
-    #     sys.run_drivers()
+        time_driver.set_scenario(values={"pamb": "1.01e5 - 1e4 * time"})
+        sys.area = 0.133
+        sys.fl_in.Tt = 530.0
+        sys.fl_in.Pt = 1.405e5
+        sys.run_drivers()
 
-    #     assert sys.mach == pytest.approx(1.0, 0.01)
+        assert sys.mach == pytest.approx(1.0, 0.01)
