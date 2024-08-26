@@ -1,7 +1,6 @@
 # Copyright (C) 2022-2023, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
-import numpy as np
 from cosapp.systems import System
 
 from pyturbo.ports import FluidPort
@@ -67,24 +66,18 @@ class NozzleAero(System):
         self.add_inward("pamb", 101325.0, unit="Pa", desc="ambient static pressure")
 
         # geom
-        self.add_inward("area_in", 0.0625 * np.pi, unit="m**2", desc="inlet aero section")
-        self.add_inward("area_exit", 0.0225 * np.pi, unit="m**2", desc="exit aero section")
-        self.add_inward("area", 0.0225 * np.pi, unit="m**2", desc="choked/exit area")
-        self.add_inward("m2", 0.990, unit="", desc="mach at outlet")
-        self.add_inward("mach", 1.0, unit="", desc="mach at throat")
+        self.add_inward("area_in", 10.0, unit="m**2", desc="inlet aero section")
+        self.add_inward("area_exit", 10.0, unit="m**2", desc="exit aero section")
+        self.add_inward("area", 1.0, unit="m**2", desc="choked/exit area")
 
         # outwards
-        self.add_outward("m1", 0.3, unit="", desc="mach at inlet")
-        self.add_outward("speed", 0.0, unit="m/s", desc="fluid flow speed at outlet")
+        self.add_outward("ps", 0.0, unit="pa", desc="static pressure at throat")
+        self.add_outward("mach", 0.0, unit="", desc="mach at throat")
+        self.add_outward("speed", 0.0, unit="m/s", desc="fluid flow speed at throat")
         self.add_outward("thrust", unit="N")
 
         # off design
-        self.add_equation(
-            "area/area_in == (m1/mach) * (((1 + ((0.4/2)*(mach**2))))/(1 + ((0.4/2)*(m1**2))))**(2.4/0.8)"
-        )
-        self.add_equation(
-            "area_exit/area == (mach/m2) * (((1 + ((0.4/2)*(m2**2))))/(1 + ((0.4/2)*(mach**2))))**(2.4/0.8)"
-        )
+        self.add_equation("fl_in.W == fl_out.W")
 
         # init
         self.fl_in.W = 100.0
@@ -93,18 +86,20 @@ class NozzleAero(System):
         # outputs
         self.fl_out.Pt = self.fl_in.Pt
         self.fl_out.Tt = self.fl_in.Tt
-        self.fl_out.W = self.fl_in.W
 
-        rho1 = 1.2
+        # assumes convergent nozzle (throat at exit)
+        self.mach = self.gas.mach_f_ptpstt(self.fl_in.Pt, self.pamb, self.fl_in.Tt, tol=1e-6)
 
-        ps1 = self.fl_in.Pt - 0.5 * ((self.fl_in.W**2) / (rho1 * (self.area_in**2)))
+        ts = self.gas.static_t(self.fl_in.Tt, self.mach, tol=1e-6)
+        self.ps = self.gas.static_p(self.fl_in.Pt, self.fl_in.Tt, self.mach, tol=1e-6)
+        rho = self.gas.density(self.ps, ts)
+        self.speed = self.gas.c(ts) * self.mach
 
-        self.m1 = self.gas.mach_f_ptpstt(self.fl_in.Pt, ps1, self.fl_in.Tt, tol=1e-6)
+        if self.mach > 1.0:
+            self.fl_out.W = self.gas.wqa_crit(self.fl_in.Pt, self.fl_in.Tt, tol=1e-6) * self.area
+        else:
+            self.fl_out.W = rho * self.speed * self.area
 
-        ts2 = self.gas.static_t(self.fl_out.Tt, self.m2, tol=1e-6)
-
-        self.speed = np.sqrt(self.gas.gamma(ts2) * 287 * ts2) * self.m2
-
-        ps2 = self.gas.static_p(self.fl_out.Pt, self.fl_out.Tt, self.m2, tol=1e-6)
-
-        self.thrust = self.fl_out.W * self.speed + self.area_exit * (ps2 - self.pamb)
+        self.thrust = (
+            self.fl_out.W * self.speed + (self.ps - self.pamb) * self.area
+        )  # Static pressure is calculated using the mach number defined at the inlet and not outlet.
