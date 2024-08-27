@@ -44,7 +44,7 @@ class TestNozzle:
         sys = NozzleAero("noz")
         run = sys.add_driver(NonLinearSolver("run"))
 
-        run.add_unknown("area", max_rel_step=0.1)
+        run.add_unknown("area_exit", max_rel_step=0.1)
 
         sys.pamb = 1.01e5
         sys.fl_in.Tt = 530.0
@@ -55,4 +55,4 @@ class TestNozzle:
         assert sys.speed == pytest.approx(308.3, 0.01)
         assert sys.mach == pytest.approx(0.7, 0.01)
         assert sys.thrust == pytest.approx(9250.0, 0.01)
-        assert sys.area == pytest.approx(0.133, 0.01)
+        assert sys.area_exit == pytest.approx(0.133, 0.01)

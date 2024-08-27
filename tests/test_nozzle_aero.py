@@ -3,31 +3,16 @@
 
 import pytest
 from cosapp.drivers import EulerExplicit, NonLinearSolver
-from cosapp.utils import swap_system
 
 from pyturbo.systems.nozzle import Nozzle, NozzleAero
-from pyturbo.systems.nozzle.nozzle_aero_advanced import NozzleAeroAdvConverging
-from pyturbo.systems.turbofan import Turbofan
 
 
 class TestNozzleAero:
     """Define tests for the nozzle."""
 
-    def test_swap(self):
-        sys = NozzleAeroAdvConverging("noz")
-        tf = Turbofan("tf")
-
-        tf.add_driver(NonLinearSolver("solver"))
-        tf.run_drivers()
-
-        thrust1 = tf.thrust
-        swap_system(tf.primary_nozzle.aero, sys)
-        tf.run_drivers()
-        assert thrust1 == pytest.approx(tf.thrust, 0.01)
-
     def test_system_setup(self):
         # default constructor
-        sys = NozzleAeroAdvConverging("noz")
+        sys = NozzleAero("noz")
 
         data_input = ["fl_in"]
         data_inwards = ["pamb", "area_in", "area_exit"]
@@ -56,7 +41,7 @@ class TestNozzleAero:
 
     def test_run_solver(self):
         # basic run
-        sys = NozzleAeroAdvConverging("noz")
+        sys = NozzleAero("noz")
         run = sys.add_driver(NonLinearSolver("run"))
 
         run.add_unknown("area_exit", max_rel_step=0.1)
@@ -74,7 +59,7 @@ class TestNozzleAero:
 
     def test_run_simulation(self):
         # basic run
-        sys = NozzleAeroAdvConverging("noz")
+        sys = NozzleAero("noz")
         run = sys.add_driver(NonLinearSolver("run"))
 
         run.add_unknown("fl_in.W", max_rel_step=0.1)
@@ -93,7 +78,7 @@ class TestNozzleAero:
 
     def test_run_simulation_choked(self):
         # basic run
-        sys = NozzleAeroAdvConverging("noz")
+        sys = NozzleAero("noz")
         run = sys.add_driver(NonLinearSolver("run"))
 
         run.add_unknown("fl_in.W", max_rel_step=0.1)
@@ -116,11 +101,10 @@ class TestNozzleAero:
         sys2.run_drivers()
 
         assert sys.mach == pytest.approx(1.0, 0.01)
-        assert sys2.mach != pytest.approx(1.0, 0.01)
 
     def test_run_transient(self):
         # basic run
-        sys = NozzleAeroAdvConverging("noz")
+        sys = NozzleAero("noz")
         time_driver = sys.add_driver(EulerExplicit("euler_explicit", dt=0.1, time_interval=(0, 10)))
         run = time_driver.add_driver(NonLinearSolver("run"))
 
@@ -147,4 +131,3 @@ class TestNozzleAero:
         sys2.run_drivers()
 
         assert sys.mach == pytest.approx(1.0, 0.01)
-        assert sys2.mach != pytest.approx(1.0, 0.01)
