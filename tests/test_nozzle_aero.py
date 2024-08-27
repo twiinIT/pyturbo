@@ -5,7 +5,7 @@ import pytest
 from cosapp.drivers import EulerExplicit, NonLinearSolver
 from cosapp.utils import swap_system
 
-from pyturbo.systems.nozzle import Nozzle
+from pyturbo.systems.nozzle import Nozzle, NozzleAero
 from pyturbo.systems.nozzle.nozzle_aero_advanced import NozzleAeroAdvConverging
 from pyturbo.systems.turbofan import Turbofan
 
@@ -80,6 +80,7 @@ class TestNozzleAero:
         run.add_unknown("fl_in.W", max_rel_step=0.1)
 
         sys.pamb = 1.01e5
+        sys.fl_in.W = 30.0
         sys.area_exit = 0.133
         sys.fl_in.Tt = 530.0
         sys.fl_in.Pt = 1.405e5
@@ -98,12 +99,24 @@ class TestNozzleAero:
         run.add_unknown("fl_in.W", max_rel_step=0.1)
 
         sys.pamb = 1.01e2
+        sys.fl_in.W = 30.0
         sys.area_exit = 0.133
         sys.fl_in.Tt = 530.0
         sys.fl_in.Pt = 1.405e5
         sys.run_drivers()
 
+        sys2 = NozzleAero("noz2")
+        run2 = sys2.add_driver(NonLinearSolver("run2"))
+
+        run2.add_unknown("fl_in.W", max_rel_step=0.1)
+
+        sys2.area = 0.133
+        sys2.fl_in.Tt = 530.0
+        sys2.fl_in.Pt = 1.405e5
+        sys2.run_drivers()
+
         assert sys.mach == pytest.approx(1.0, 0.01)
+        assert sys2.mach != pytest.approx(1.0, 0.01)
 
     def test_run_transient(self):
         # basic run
@@ -119,4 +132,19 @@ class TestNozzleAero:
         sys.fl_in.Pt = 1.405e5
         sys.run_drivers()
 
+        sys2 = NozzleAero("noz2")
+        time_driver2 = sys2.add_driver(
+            EulerExplicit("euler_explicit", dt=0.1, time_interval=(0, 10))
+        )
+        run2 = time_driver2.add_driver(NonLinearSolver("run2"))
+
+        run2.add_unknown("fl_in.W", max_rel_step=0.1)
+
+        time_driver2.set_scenario(values={"pamb": "1.01e5 - 1e4 * time"})
+        sys2.area = 0.133
+        sys2.fl_in.Tt = 530.0
+        sys2.fl_in.Pt = 1.405e5
+        sys2.run_drivers()
+
         assert sys.mach == pytest.approx(1.0, 0.01)
+        assert sys2.mach != pytest.approx(1.0, 0.01)

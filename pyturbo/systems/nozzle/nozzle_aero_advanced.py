@@ -70,11 +70,11 @@ class NozzleAeroAdvConverging(System):
         self.add_inward("area_in", 0.0625 * np.pi, unit="m**2", desc="inlet aero section")
         self.add_inward("area_exit", 0.0225 * np.pi, unit="m**2", desc="exit aero section")
         self.add_inward("area", 0.0225 * np.pi, unit="m**2", desc="choked/exit area")
-        self.add_inward("mach", 0.5, unit="", desc="mach at outlet")
 
         # outwards
         self.add_outward("speed", 1.0, unit="m/s", desc="exhaust gas speed")
         self.add_outward("thrust", unit="N")
+        self.add_outward("mach", 0.5, unit="", desc="mach at outlet")
 
         # off design
         self.add_equation("fl_in.W == fl_out.W")
@@ -86,25 +86,21 @@ class NozzleAeroAdvConverging(System):
         # outputs
         self.fl_out.Pt = self.fl_in.Pt
         self.fl_out.Tt = self.fl_in.Tt
-        self.mach = self.gas.mach_f_ptpstt(
-            self.fl_in.Pt, self.pamb, self.fl_in.Tt, tol=1e-6
-        )  # How is this function able to limit the outlet at mach = 1 ?
 
         # Outlet gas flow properties
         ts_exit = self.gas.static_t(self.fl_out.Tt, self.mach, tol=1e-6)
 
-        self.speed = self.gas.c(ts_exit) * self.mach
+        ps_exit = max(self.gas.pcrit_f_pt(self.fl_in.Pt, ts_exit), self.pamb)
 
-        ps_exit = self.gas.static_p(self.fl_out.Pt, self.fl_out.Tt, self.mach, tol=1e-6)
+        self.mach = self.gas.mach_f_ptpstt(self.fl_in.Pt, ps_exit, self.fl_in.Tt, tol=1e-6)
+
+        self.speed = self.gas.c(ts_exit) * self.mach
 
         density_exit = self.gas.density(ps_exit, ts_exit)
 
         self.fl_out.W = density_exit * self.speed * self.area_exit
 
         self.thrust = self.fl_out.W * self.speed + self.area_exit * (ps_exit - self.pamb)
-
-        # missing one unknown and one equation (energy conservation equation with enthalpy
-        # and mach_exit_tmp as unknown and remove equation line 89)
 
 
 class NozzleAeroAdvConvergingDiverging(System):

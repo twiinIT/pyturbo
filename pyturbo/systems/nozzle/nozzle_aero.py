@@ -88,7 +88,9 @@ class NozzleAero(System):
         self.fl_out.Tt = self.fl_in.Tt
 
         # assumes convergent nozzle (throat at exit)
-        self.mach = self.gas.mach_f_ptpstt(self.fl_in.Pt, self.pamb, self.fl_in.Tt, tol=1e-6)
+        self.mach = self.gas.mach_f_ptpstt(
+            self.fl_in.Pt, self.pamb, self.fl_in.Tt, tol=1e-6
+        )  # How is this function able to limit the outlet at mach = 1 ?
 
         ts = self.gas.static_t(self.fl_in.Tt, self.mach, tol=1e-6)
         self.ps = self.gas.static_p(self.fl_in.Pt, self.fl_in.Tt, self.mach, tol=1e-6)
