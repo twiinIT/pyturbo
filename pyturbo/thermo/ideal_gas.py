@@ -136,11 +136,6 @@ class IdealGas(pythermo.IdealGas):
 
         return root(f, 0.5).x[0]
 
-    def pcrit_f_pt(self, pt: float, ts: float) -> float:
-        gamma = self.gamma(ts)
-        pcrit = pt * (2 / (gamma + 1)) ** (gamma / (gamma - 1))
-        return pcrit
-
 
 class IdealDryAir(IdealGas):
     """Dry Air."""

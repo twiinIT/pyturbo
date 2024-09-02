@@ -67,9 +67,9 @@ class NozzleAero(System):
         self.add_inward("pamb", 101325.0, unit="Pa", desc="ambient static pressure")
 
         # geom
-        self.add_inward("area_in", 0.0625 * np.pi, unit="m**2", desc="inlet aero section")
-        self.add_inward("area_exit", 0.0225 * np.pi, unit="m**2", desc="exit aero section")
-        self.add_inward("area", 0.0225 * np.pi, unit="m**2", desc="choked/exit area")
+        self.add_inward("area_in", (0.25**2) * np.pi, unit="m**2", desc="inlet aero section")
+        self.add_inward("area_exit", (0.15**2) * np.pi, unit="m**2", desc="exit aero section")
+        self.add_inward("area", (0.15**2) * np.pi, unit="m**2", desc="choked/exit area")
 
         # outwards
         self.add_outward("speed", 1.0, unit="m/s", desc="exhaust gas speed")
@@ -93,7 +93,11 @@ class NozzleAero(System):
         # Outlet gas flow properties
         ts_exit = self.gas.static_t(self.fl_out.Tt, self.mach_exit, tol=1e-6)
 
-        ps_exit = max(self.gas.pcrit_f_pt(self.fl_in.Pt, ts_exit), self.pamb)
+        ps_crit = self.gas.static_p(
+            self.fl_out.Pt, self.fl_out.Tt, 1, tol=1e-6
+        )  # Static critical pressure is static presure when Mach = 1.0
+
+        ps_exit = max(ps_crit, self.pamb)
 
         self.mach = self.gas.mach_f_ptpstt(self.fl_in.Pt, ps_exit, self.fl_in.Tt, tol=1e-6)
 
