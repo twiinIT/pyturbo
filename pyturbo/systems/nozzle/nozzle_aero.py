@@ -1,6 +1,7 @@
 # Copyright (C) 2022-2023, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
+import numpy as np
 from cosapp.systems import System
 
 from pyturbo.ports import FluidPort
@@ -66,17 +67,19 @@ class NozzleAero(System):
         self.add_inward("pamb", 101325.0, unit="Pa", desc="ambient static pressure")
 
         # geom
-        self.add_inward("area_in", 10.0, unit="m**2", desc="inlet aero section")
-        self.add_inward("area_exit", 10.0, unit="m**2", desc="exit aero section")
-        self.add_inward("area", 1.0, unit="m**2", desc="choked/exit area")
+        self.add_inward("area_in", (0.25**2) * np.pi, unit="m**2", desc="inlet aero section")
+        self.add_inward("area_exit", (0.15**2) * np.pi, unit="m**2", desc="exit aero section")
+        self.add_inward("area", (0.15**2) * np.pi, unit="m**2", desc="choked/exit area")
 
         # outwards
-        self.add_outward("ps", 0.0, unit="pa", desc="static pressure at throat")
-        self.add_outward("mach", 0.0, unit="", desc="mach at throat")
-        self.add_outward("speed", 0.0, unit="m/s", desc="fluid flow speed at throat")
+        self.add_outward("speed", 1.0, unit="m/s", desc="exhaust gas speed")
         self.add_outward("thrust", unit="N")
+        self.add_outward("mach", 0.5, unit="", desc="mach at outlet")
 
         # off design
+        self.add_inward("mach_exit", 0.5)
+        self.add_unknown("mach_exit")
+        self.add_equation("mach == mach_exit")
         self.add_equation("fl_in.W == fl_out.W")
 
         # init
@@ -87,17 +90,21 @@ class NozzleAero(System):
         self.fl_out.Pt = self.fl_in.Pt
         self.fl_out.Tt = self.fl_in.Tt
 
-        # assumes convergent nozzle (throat at exit)
-        self.mach = self.gas.mach_f_ptpstt(self.fl_in.Pt, self.pamb, self.fl_in.Tt, tol=1e-6)
+        # Outlet gas flow properties
+        ts_exit = self.gas.static_t(self.fl_out.Tt, self.mach_exit, tol=1e-6)
 
-        ts = self.gas.static_t(self.fl_in.Tt, self.mach, tol=1e-6)
-        self.ps = self.gas.static_p(self.fl_in.Pt, self.fl_in.Tt, self.mach, tol=1e-6)
-        rho = self.gas.density(self.ps, ts)
-        self.speed = self.gas.c(ts) * self.mach
+        ps_crit = self.gas.static_p(
+            self.fl_out.Pt, self.fl_out.Tt, 1, tol=1e-6
+        )  # Static critical pressure is static presure when Mach = 1.0
 
-        if self.mach > 1.0:
-            self.fl_out.W = self.gas.wqa_crit(self.fl_in.Pt, self.fl_in.Tt, tol=1e-6) * self.area
-        else:
-            self.fl_out.W = rho * self.speed * self.area
+        ps_exit = max(ps_crit, self.pamb)
 
-        self.thrust = self.fl_out.W * self.speed + (self.ps - self.pamb) * self.area
+        self.mach = self.gas.mach_f_ptpstt(self.fl_in.Pt, ps_exit, self.fl_in.Tt, tol=1e-6)
+
+        self.speed = self.gas.c(ts_exit) * self.mach
+
+        density_exit = self.gas.density(ps_exit, ts_exit)
+
+        self.fl_out.W = density_exit * self.speed * self.area_exit
+
+        self.thrust = self.fl_out.W * self.speed + self.area_exit * (ps_exit - self.pamb)
