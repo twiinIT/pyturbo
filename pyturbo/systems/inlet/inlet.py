@@ -46,3 +46,7 @@ class Inlet(System):
 
         # connections
         self.connect(self.geom.outwards, self.aero.inwards, "area")
+
+        # design methods
+        scaling = self.add_design_method("scaling")
+        scaling.extend(self.aero.design_methods["scaling"])

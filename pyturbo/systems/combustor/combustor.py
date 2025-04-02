@@ -42,3 +42,7 @@ class Combustor(System):
         # children
         self.add_child(CombustorAero("aero"), pulling=["fl_in", "fl_out", "fuel_W", "Tcomb"])
         self.add_child(GenericSimpleView("view"), pulling=["kp", "occ_view"])
+
+        # design methods
+        scaling = self.add_design_method("scaling")
+        scaling.extend(self.aero.design_methods["scaling"])

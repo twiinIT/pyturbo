@@ -80,6 +80,21 @@ class Compressor(System):
         )
         self.connect(self.aero.inwards, self.view.inwards, {"stage_count": "n"})
 
+        # design methods
+        # scaling fan
+        scaling = self.add_design_method("scaling_fan")
+        scaling.extend(self.aero.design_methods["scaling"])
+
+        # scaling booster
+        scaling = self.add_design_method("scaling_booster")
+        scaling.extend(self.aero.design_methods["scaling_booster"])
+
+        scaling.add_unknown("geom.blade_hub_to_tip_ratio", lower_bound=1e-5, upper_bound=1.0)
+
+        # scaling hpc
+        scaling = self.add_design_method("scaling_hpc")
+        scaling.extend(self.aero.design_methods["scaling_hpc"])
+
         # init
         if init_file:
             load_from_json(self, init_file)

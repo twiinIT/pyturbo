@@ -55,6 +55,10 @@ class CombustorAero(System):
 
         self.add_outward("Tcomb", 0.0, unit="K", desc="combustion temperature")
 
+        # design methods
+        scaling = self.add_design_method("scaling")
+        scaling.add_target("Tcomb")
+
     def compute(self):
         self.fl_out.Pt = self.fl_in.Pt
         self.fl_out.W = self.fl_in.W + self.fuel_W

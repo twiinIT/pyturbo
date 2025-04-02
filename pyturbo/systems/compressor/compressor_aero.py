@@ -122,6 +122,36 @@ class CompressorAero(System):
         )
         self.add_equation("eps_psi == 0")
 
+        # design methods
+        # generic
+        scaling = self.add_design_method("scaling")
+
+        scaling.add_unknown("xnd", max_rel_step=0.5)
+        scaling.add_unknown("phiP", lower_bound=0.1, upper_bound=1.5)
+
+        scaling.add_equation("pcnr == 95.0")
+        scaling.add_target("utip")
+
+        # scaling booster
+        scaling = self.add_design_method("scaling_booster")
+        scaling.add_unknown("phiP")
+        scaling.add_unknown("xnd", max_rel_step=0.5)
+
+        scaling.add_equation("phi == 0.45")
+        scaling.add_target("psi")
+        scaling.add_equation("pcnr == 95.0")
+
+        # scaling hpc
+        scaling = self.add_design_method("scaling_hpc")
+
+        scaling.add_unknown("xnd", max_rel_step=0.5)
+        scaling.add_unknown("phiP")
+
+        scaling.add_equation("pcnr == 95.0")
+        scaling.add_equation("phi == 0.5")
+        scaling.add_target("utip")
+        scaling.add_target("psi")
+
     def compute(self):
         # fl_out computed from fl_in, enthalpy and mass conservation
         self.fl_out.W = self.fl_in.W

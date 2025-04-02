@@ -77,6 +77,10 @@ class TurbofanAero(System):
             desc="total pressure ratio between seconday nozzle and primary nozzle",
         )
 
+        # design method
+        scaling = self.add_design_method("scaling")
+        scaling.add_target("pr_nozzle")
+
     def compute(self):
         self.thrust = self.primary_nozzle_thrust + self.secondary_nozzle_thrust - self.inlet_drag
         self.sfc = self.fuel_W * 3600 / (self.thrust / 10)

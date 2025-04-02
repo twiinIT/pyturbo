@@ -59,5 +59,15 @@ class Turbine(System):
 
         self.connect(self.aero.inwards, self.view.inwards, {"stage_count": "n"})
 
+        # design methods
+        scaling = self.add_design_method("scaling")
+
+        scaling.add_unknown("geom.blade_height_ratio", lower_bound=0.0, upper_bound=1.0)
+        scaling.add_unknown("aero.Ncdes")
+
+        scaling.add_target("aero.psi")
+        scaling.add_equation("aero.Ncqdes == 100.0")
+
+        # init
         if init_file:
             load_from_json(self, init_file)

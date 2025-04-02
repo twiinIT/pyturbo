@@ -52,7 +52,7 @@ class TurbofanGeom(System):
     shaft_radius_ratio[-]: float, default=0.1
         shaft radius relative to fan radius
 
-    tcf_exit_radius_ratio[-]: float, default=1.2
+    tcf_exit_radius_ratio[-]: float, default=1.4
         turbine center frame exit radius relative to inlet one
     tcf_length_ratio[-]: float, default=0.15
         turbine center frame length relative its inlet tip radius
@@ -236,7 +236,7 @@ class TurbofanGeom(System):
             "pri_nozzle_area_ratio", 0.9, unit="", desc="primary nozzle exit area ratio"
         )
         self.add_inward(
-            "sec_nozzle_area_ratio", 0.9, unit="", desc="secondary nozzle exit area ratio"
+            "sec_nozzle_area_ratio", 0.6, unit="", desc="secondary nozzle exit area ratio"
         )
 
         # outwards
@@ -266,6 +266,14 @@ class TurbofanGeom(System):
         self.add_outward(
             "engine_length", 1.0, unit="m", desc="engine length from fan module to trf"
         )
+
+        # design methods
+        scaling = self.add_design_method("scaling")
+
+        scaling.add_unknown("turbine_radius_ratio")
+        scaling.add_unknown("core_exit_radius_ratio", max_rel_step=0.8)
+        scaling.add_unknown("pri_nozzle_area_ratio", lower_bound=0.05)
+        scaling.add_unknown("sec_nozzle_area_ratio", upper_bound=1.0)
 
     def compute(self):
         # compute radius and lengths

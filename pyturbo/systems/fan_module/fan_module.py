@@ -135,6 +135,12 @@ class FanModule(System):
         self.add_outward("fan_pr", 1.0, unit="", desc="fan pressure ratio")
         self.add_outward("booster_pr", 1.0, unit="", desc="booster pressure ratio")
 
+        # design methods
+        scaling = self.add_design_method("scaling")
+
+        scaling.extend(self.fan.design_methods["scaling_fan"])
+        scaling.extend(self.booster.design_methods["scaling_booster"])
+
         # init
         load_from_json(self.fan, Path(cmp_data.__file__).parent / "fan.json")
         load_from_json(self.booster, Path(cmp_data.__file__).parent / "booster.json")

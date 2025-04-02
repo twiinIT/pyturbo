@@ -187,70 +187,29 @@ class Turbofan(System):
             self.connect(self[name], self.view, {"occ_view": f"{name}_view"})
 
         # solver
-        self.add_unknown("fl_in.W")
+        self.add_unknown("fl_in.W", max_rel_step=0.5)
 
         # design method
-        design = self.add_design_method("scaling")
-        design.add_unknown("fan_diameter")
+        scaling = self.add_design_method("scaling")
 
-        # inlet
-        design.add_target("inlet.aero.mach")
+        scaling.add_unknown("fuel_W")
 
-        # fan
-        design.add_unknown("fan_module.fan.aero.xnd", max_rel_step=0.5)
-        design.add_unknown("fan_module.fan.aero.phiP", lower_bound=0.1, upper_bound=1.5)
+        scaling.extend(self.geom.design_methods["scaling"])
+        scaling.extend(self.inlet.design_methods["scaling"])
+        scaling.extend(self.fan_module.design_methods["scaling"])
+        scaling.extend(self.turbine.design_methods["scaling"])
+        scaling.extend(self.core.design_methods["scaling"])
+        scaling.extend(self.aero.design_methods["scaling"])
 
-        design.add_target("fan_module.fan.aero.pcnr")
-        design.add_target("fan_module.fan.aero.utip")
-        design.add_target("bpr")
+        # tuning thrust
+        tuning = self.add_design_method("tuning_thrust")
+        tuning.add_unknown("fan_diameter", max_rel_step=0.5)
+        tuning.add_target("thrust")
 
-        # booster
-        design.add_unknown("fan_module.geom.booster_radius_ratio")
-        design.add_unknown(
-            "fan_module.booster.geom.blade_hub_to_tip_ratio", lower_bound=1e-5, upper_bound=1.0
-        )
-        design.add_unknown("fan_module.booster.aero.phiP")
-        design.add_unknown("fan_module.booster.aero.xnd", max_rel_step=0.5)
-
-        design.add_target("fan_module.booster.aero.phi")
-        design.add_target("fan_module.booster.aero.psi")
-        design.add_target("fan_module.booster.aero.spec_flow")
-        design.add_target("fan_module.booster.aero.pcnr")
-
-        # lpt
-        design.add_unknown("geom.turbine_radius_ratio")
-        design.add_unknown("turbine.geom.blade_height_ratio", lower_bound=0.0, upper_bound=1.0)
-        design.add_unknown("turbine.aero.Ncdes")
-
-        design.add_target("turbine.aero.psi")
-        design.add_target("turbine.aero.Ncqdes")
-
-        # hpc
-        design.add_unknown("geom.core_inlet_radius_ratio", max_rel_step=0.8)
-        design.add_unknown("core.compressor.aero.xnd", max_rel_step=0.5)
-        design.add_unknown("core.compressor.aero.phiP")
-
-        design.add_target("core.compressor.aero.pcnr")
-        design.add_target("core.compressor.aero.phi")
-        design.add_target("core.compressor.aero.utip")
-        design.add_target("core.compressor.aero.pr")
-
-        # combustor
-        design.add_target("core.combustor.aero.Tcomb")
-
-        # hpt
-        design.add_unknown("geom.core_exit_radius_ratio", max_rel_step=0.8)
-        design.add_unknown("core.turbine.geom.blade_height_ratio", lower_bound=0.0, upper_bound=1.0)
-        design.add_unknown("core.turbine.aero.Ncdes")
-
-        design.add_target("core.turbine.aero.psi")
-        design.add_target("core.turbine.aero.Ncqdes")
-
-        # nozzle
-        design.add_unknown("geom.pri_nozzle_area_ratio", lower_bound=0.05)
-        design.add_unknown("geom.sec_nozzle_area_ratio", upper_bound=1.0)
-
-        design.add_target("pr_nozzle")
+        # tuning bpr
+        tuning = self.add_design_method("tuning_bpr")
+        tuning.add_unknown("geom.core_inlet_radius_ratio", max_rel_step=0.8)
+        tuning.add_target("bpr")
 
         # init
         load_from_json(self.turbine, Path(trb_data.__file__).parent / "lpt.json")

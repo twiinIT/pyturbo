@@ -86,6 +86,13 @@ class GasGenerator(System):
         self.connect(self.compressor.fl_out, self.combustor.fl_in)
         self.connect(self.combustor.fl_out, self.turbine.fl_in)
 
+        # design methods
+        scaling = self.add_design_method("scaling")
+
+        scaling.extend(self.compressor.design_methods["scaling_hpc"])
+        scaling.extend(self.combustor.design_methods["scaling"])
+        scaling.extend(self.turbine.design_methods["scaling"])
+
         # init
         load_from_json(self.compressor, Path(cmp_data.__file__).parent / "hpc.json")
         load_from_json(self.turbine, Path(trb_data.__file__).parent / "hpt.json")

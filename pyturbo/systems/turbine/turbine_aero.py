@@ -52,7 +52,7 @@ class TurbineAero(System):
     Tt_ratio[-]: float
         total temperature ratio
     psi[-]: float
-        aerodynamic loading
+        aerodynamic loading by stage
 
     Design methods
     --------------

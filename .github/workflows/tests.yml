@@ -33,4 +33,5 @@ jobs:
         shell: bash -l -eo pipefail {0}
         run: |
           micromamba activate test_env
+          pip install .
           pytest ./tests/ -v -s

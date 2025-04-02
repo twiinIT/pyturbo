@@ -1,0 +1,10 @@
+{
+  "core.compressor.geom.blade_hub_to_tip_ratio": 0.7,
+  "core.compressor.stage_count": 9,
+  "core.turbine.stage_count": 1,
+  "fan_diameter": 1.549,
+  "fan_module.booster.stage_count": 3,
+  "fan_module.fan.geom.blade_hub_to_tip_ratio": 0.3,
+  "geom.core_inlet_radius_ratio": 0.35,
+  "turbine.stage_count": 4
+}
