@@ -22,7 +22,7 @@ class CompressorMftAero(System):
     fl_in: FluidPort
         fluid going into the compressor
 
-    pcnr[%]: float, default=90.0
+    pcnr[]: float, default=90.0
         percentage of the reduced shaft speed
     gh[J/kg]: float, default=0.0
         enthalpy minimum loss delta
@@ -45,7 +45,7 @@ class CompressorMftAero(System):
         self.add_input(FluidPort, "fl_in")
         self.add_output(FluidPort, "fl_out")
 
-        self.add_inward("pcnr", 90.0, unit="%", desc="percentage of the reduced shaft speed")
+        self.add_inward("pcnr", 90.0, unit="", desc="percentage of the reduced shaft speed")
         self.add_inward("gh", 0.0, unit="J/kg", desc="enthalpy minimum loss delta")
         self.add_inward("cmp_model", SimplifiedMftCompressor())
 
