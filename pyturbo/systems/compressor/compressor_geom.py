@@ -47,7 +47,6 @@ class CompressorGeom(System):
             unit="",
             desc="blade hub-to-tip radius ratio",
         )
-        # self.add_inward("length", 1.0, unit="m", desc="length of the compressor")
 
         # blade geometric properties
         self.add_outward("inlet_area", 1.0, unit="m**2", desc="inlet area")

@@ -40,8 +40,11 @@ class TurbofanWeight(System):
     """
 
     def setup(self):
-        # data
-        self.add_inward("param", [1900.0, 0.5, 0.01, 1.006])
+        # ref
+        self.add_inward("weight_ref", 1900.0, unit="kg")
+        self.add_inward("c_fan_diameter", 0.5, unit="")
+        self.add_inward("c_length", 0.01, unit="")
+        self.add_inward("c_eis", 1.006, unit="")
 
         # inward / outward
         self.add_inward("fan_diameter", 1.0, unit="m", desc="fan diameter")
@@ -51,12 +54,11 @@ class TurbofanWeight(System):
         self.add_outward("weight", 0.0, unit="kg")
 
     def compute(self):
-        param = self.param
         self.weight = (
-            param[0]
-            * self.fan_diameter ** param[1]
-            * self.length ** param[2]
-            * param[3] ** (self.eis - 2000)
+            self.weight_ref
+            * self.fan_diameter**self.c_fan_diameter
+            * self.length**self.c_length
+            * self.c_eis ** (self.eis - 2000)
         )
 
         """Param are estimated to minimize error on:
