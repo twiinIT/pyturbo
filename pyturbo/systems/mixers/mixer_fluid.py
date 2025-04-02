@@ -1,10 +1,10 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 import numpy as np
 from cosapp.systems import System
 
-from pyturbo.ports.fluidport import FluidPort
+from pyturbo.ports.fluid_port import FluidPort
 
 
 class MixerFluid(System):
@@ -93,17 +93,17 @@ class MixerFluid(System):
         if self.n_out > 1:
             self.add_unknown("fluid_fractions", max_rel_step=0.1)
 
-    def compute(self):
+    def compute(self):  # noqa: TWI002
 
         # input flows
-        fluid_in_ports = [p for p in self.inputs.values() if type(p) == FluidPort]
+        fluid_in_ports = [p for p in self.inputs.values() if isinstance(p, FluidPort)]
 
         self.W = np.sum([p.W for p in fluid_in_ports])
         self.Pt = np.mean([p.Pt for p in fluid_in_ports])
         self.Tt = np.mean([p.W * p.Tt for p in fluid_in_ports]) / self.W
 
         # output flows
-        fluid_out_ports = [p for p in self.outputs.values() if type(p) == FluidPort]
+        fluid_out_ports = [p for p in self.outputs.values() if isinstance(p, FluidPort)]
 
         W = 0.0
         for i, p in enumerate(fluid_out_ports):

@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 import numpy as np
@@ -89,16 +89,16 @@ class MixerShaft(System):
         if self.n_out > 1:
             self.add_unknown("power_fractions")
 
-    def compute(self):
+    def compute(self):  # noqa: TWI002
 
         # input shafts
-        shaft_in_ports = [p for p in self.inputs.values() if type(p) == ShaftPort]
+        shaft_in_ports = [p for p in self.inputs.values() if isinstance(p, ShaftPort)]
 
         self.power = np.sum([p.power for p in shaft_in_ports])
         self.N = np.mean([p.N for p in shaft_in_ports])
 
         # output shafts
-        shaft_out_ports = [p for p in self.outputs.values() if type(p) == ShaftPort]
+        shaft_out_ports = [p for p in self.outputs.values() if isinstance(p, ShaftPort)]
 
         power = 0.0
         for i, p in enumerate(shaft_out_ports):

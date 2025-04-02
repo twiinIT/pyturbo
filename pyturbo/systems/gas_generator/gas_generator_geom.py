@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 import numpy as np
@@ -47,6 +47,7 @@ class GasGeneratorGeom(System):
     def setup(self):
         # inputs/outputs
         self.add_input(KeypointsPort, "kp")
+
         for subsystem in ["compressor", "combustor", "turbine"]:
             self.add_output(KeypointsPort, f"{subsystem}_kp")
 
@@ -64,7 +65,7 @@ class GasGeneratorGeom(System):
 
     def compute(self):
         # compute lengths
-        length = self.turbine_kp.exit_hub_z - self.compressor_kp.inlet_hub_z
+        length = self.kp.exit_hub_z - self.kp.inlet_hub_z
         cmp_length = length * self.compressor_length_ratio
         trb_length = length * self.turbine_length_ratio
 

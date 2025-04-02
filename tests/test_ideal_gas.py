@@ -4,7 +4,7 @@
 import numpy as np
 import pytest
 
-from pyturbo.thermo.ideal_gas import IdealDryAir, IdealGas
+from pyturbo.thermo import IdealDryAir, IdealGas
 
 
 class TestIdealGas:

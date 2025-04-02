@@ -1,19 +1,18 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 from cosapp.systems import System
 
-from pyturbo.systems.nacelle.nacelle_geom import NacelleGeom
-from pyturbo.utils.jupyter_view import JupyterViewable
+from pyturbo.systems.nacelle.nacelle_view import NacelleView
 
 
-class Nacelle(System, JupyterViewable):
+class Nacelle(System):
     """Nacelle simple assembly model.
 
     Sub-systems
     -----------
-    geom: NacelleGeom
-        provide the geometry for visualisation
+    view: NacelleView
+        compute visualisation
 
     Inputs
     ------
@@ -21,17 +20,6 @@ class Nacelle(System, JupyterViewable):
         nacelle geometrical envelop
     """
 
-    def setup(self):
+    def setup(self):  # noqa: TWI009
         # children
-        self.add_child(
-            NacelleGeom("geom"),
-            pulling=[
-                "hilite_kp",
-                "ogv_exit_tip_kp",
-                "sec_nozzle_exit_kp",
-                "fan_diameter",
-            ],
-        )
-
-    def _to_occt(self):
-        return self.geom._to_occt()
+        self.add_child(NacelleView("view"), pulling=["occ_view", "kp"])

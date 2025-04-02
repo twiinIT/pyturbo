@@ -135,10 +135,3 @@ class IdealGas(pythermo.IdealGas):
             return ps - ps_it
 
         return root(f, 0.5).x[0]
-
-
-class IdealDryAir(IdealGas):
-    """Dry Air."""
-
-    def __init__(self) -> None:
-        super().__init__(287.058, 1004.0)

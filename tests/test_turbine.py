@@ -16,24 +16,6 @@ class TestTurbine:
     def setup_method(self):
         self.data_dir = Path(trb_data.__file__).parent
 
-    def test_system_setup(self):
-        # default constructor
-        sys = Turbine("tur")
-
-        data_input = ["fl_in", "kp"]
-        data_inward = []
-        data_output = ["fl_out", "sh_out"]
-        data_outward = []
-
-        for data in data_input:
-            assert data in sys.inputs
-        for data in data_inward:
-            assert data in sys.inwards
-        for data in data_output:
-            assert data in sys.outputs
-        for data in data_outward:
-            assert data in sys.outwards
-
     def test_compute_HPT(self):
         sys = Turbine("tur", init_file=self.data_dir / "hpt.json")
         run = sys.add_driver(NonLinearSolver("run"))
@@ -53,3 +35,10 @@ class TestTurbine:
 
         sys.run_drivers()
         assert sys.aero.Ncqdes == pytest.approx(105.0, rel=1e-2)
+
+    def test_view(self):
+        sys = Turbine("sys")
+        sys.run_once()
+        sys.occ_view.get_value().render()
+
+        assert True

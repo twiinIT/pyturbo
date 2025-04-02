@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 from pathlib import Path
@@ -9,12 +9,13 @@ import pyturbo.systems.compressor.data as cmp_data
 import pyturbo.systems.turbine.data as trb_data
 from pyturbo.systems.combustor import Combustor
 from pyturbo.systems.compressor import Compressor
-from pyturbo.systems.gas_generator.gas_generator_geom import GasGeneratorGeom
+from pyturbo.systems.gas_generator import GasGeneratorGeom
+from pyturbo.systems.generic import GenericSystemView
 from pyturbo.systems.turbine import Turbine
-from pyturbo.utils import JupyterViewable, load_from_json
+from pyturbo.utils import load_from_json
 
 
-class GasGenerator(System, JupyterViewable):
+class GasGenerator(System):
     """A simple gas generator model.
 
     This model includes a compressor, a combustor and a turbine. The power transmission
@@ -22,15 +23,17 @@ class GasGenerator(System, JupyterViewable):
 
     Sub-systems
     -----------
-    hpc: HPC
+    hpc: Compressor(HPC)
         high pressure compressor
     combustor: Combustor
         combustor
-    hpt: HPT
+    hpt: Turbine(HPT)
         high pressure turbine
 
     geom: GasGeneratorGeom
-        provide the sub-elemnts geometrical envelops
+        sub systems key points generated from the core envelop
+    view: GenericSystemView
+        compute visualisation
 
     Inputs
     ------
@@ -47,7 +50,7 @@ class GasGenerator(System, JupyterViewable):
     fl_out: FluidPort
         gas leaving the gas generator
 
-    opr[-]: float
+    pr[-]: float
         compressor pressure ration
     N[rpm]: float
         shaft speed rotation
@@ -59,22 +62,22 @@ class GasGenerator(System, JupyterViewable):
     """
 
     def setup(self):
+        # properties
+        children_name = ["compressor", "combustor", "turbine"]
+
         # children
-        geom = self.add_child(GasGeneratorGeom("geom"), pulling=["kp"])
+        self.add_child(GasGeneratorGeom("geom"), pulling=["kp"])
 
-        cmp = self.add_child(
-            Compressor("compressor"), pulling={"fl_in": "fl_in", "pr": "opr", "N": "N"}
-        )
-        cmb = self.add_child(Combustor("combustor"), pulling=["fuel_W"])
-        trb = self.add_child(Turbine("turbine"), pulling=["fl_out"])
+        self.add_child(Compressor("compressor"), pulling=["fl_in", "pr", "N"])
+        self.add_child(Combustor("combustor"), pulling=["fuel_W"])
+        self.add_child(Turbine("turbine"), pulling=["fl_out"])
 
-        load_from_json(cmp, Path(cmp_data.__file__).parent / "hpc.json")
-        load_from_json(trb, Path(trb_data.__file__).parent / "hpt.json")
+        self.add_child(GenericSystemView("view", children_name=children_name), pulling=["occ_view"])
 
         # connection geom
-        self.connect(geom.compressor_kp, cmp.kp)
-        self.connect(geom.combustor_kp, cmb.kp)
-        self.connect(geom.turbine_kp, trb.kp)
+        for name in children_name:
+            self.connect(self.geom[f"{name}_kp"], self[name].kp)
+            self.connect(self[name], self.view, {"occ_view": f"{name}_view"})
 
         # connection shaft
         self.connect(self.turbine.sh_out, self.compressor.sh_in)
@@ -83,9 +86,6 @@ class GasGenerator(System, JupyterViewable):
         self.connect(self.compressor.fl_out, self.combustor.fl_in)
         self.connect(self.combustor.fl_out, self.turbine.fl_in)
 
-    def _to_occt(self):
-        return dict(
-            compressor=self.compressor.geom._to_occt(),
-            combustor=self.combustor.geom._to_occt(),
-            turbine=self.turbine.geom._to_occt(),
-        )
+        # init
+        load_from_json(self.compressor, Path(cmp_data.__file__).parent / "hpc.json")
+        load_from_json(self.turbine, Path(trb_data.__file__).parent / "hpt.json")

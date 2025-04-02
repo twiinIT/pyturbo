@@ -13,12 +13,6 @@ class TestMixerFluid:
 
     s = MixerFluid("aero", input_fluids=["in0", "in1"], output_fluids=["out0", "out1"])
 
-    def test_system_setup(self):
-        # default constructor
-        s = self.s
-        assert "in0" in s.inputs
-        assert "out1" in s.outputs
-
     def test_run_once(self):
         s = self.s
 

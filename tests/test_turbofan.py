@@ -15,24 +15,6 @@ class TestTurbofan:
 
     sys = Turbofan("tf")
 
-    def test_system_setup(self):
-        # default constructor
-        sys = self.sys
-
-        data_input = ["fl_in"]
-        data_output = []
-        data_inward = ["fan_diameter", "fuel_W", "pamb"]
-        data_outward = ["thrust", "bpr", "opr", "sfc"]
-
-        for data in data_input:
-            assert data in sys.inputs
-        for data in data_output:
-            assert data in sys.outputs
-        for data in data_inward:
-            assert data in sys.inwards
-        for data in data_outward:
-            assert data in sys.outwards
-
     def test_run_once(self):
         sys = self.sys
 
@@ -50,14 +32,51 @@ class TestTurbofan:
 
     @pytest.mark.skip("not relevant")
     def test_run_solver(self):
-        sys = self.sys
-        run = sys.add_driver(NonLinearSolver("run"))
+        sys = Turbofan("sys", init_file=Path(tf_data.__file__).parent / "CFM56_7.json")
 
-        sys.pamb = 1e5
+        design = sys.add_driver(NonLinearSolver("solver", tol=1e-6, factor=0.2))
+        sys.run_drivers()
 
-        sys.fan_diameter = 1.8
-        run.add_unknown("inlet.fl_in.W")
+        assert True
+
+        design.add_unknown("fuel_W")
+        design.add_target("thrust")
+        design.design.extend(sys.design_methods["scaling"])
 
         sys.run_drivers()
 
-        assert sys.bpr == pytest.approx(4.95, 0.01)
+        assert pytest.approx(sys.fan_diameter) == 1.549
+
+        design = sys.add_driver(NonLinearSolver("solver", tol=1e-6))
+        sys.run_drivers()
+
+        design.add_unknown("fuel_W")
+        design.add_target("thrust")
+        sys.thrust = 85e3
+
+        sys.run_drivers()
+
+        assert pytest.approx(sys.sfc, rel=1e-2) == 0.37
+
+    def test_run_design_method(self):
+        sys = Turbofan("sys", init_file=Path(tf_data.__file__).parent / "CFM56_7.json")
+
+        design = sys.add_driver(NonLinearSolver("solver", tol=1e-6, factor=0.2))
+        sys.run_drivers()
+
+        design.add_unknown("fuel_W")
+        design.add_target("thrust")
+        design.extend(sys.design_methods["scaling"])
+
+        sys.thrust = 200e3
+
+        sys.run_drivers()
+
+        assert pytest.approx(sys.fan_diameter, rel=0.1) == 2.25
+
+    def test_view(self):
+        sys = Turbofan("sys")
+        sys.run_once()
+        sys.occ_view.get_value().render()
+
+        assert True

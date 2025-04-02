@@ -1,7 +1,7 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
-from pyturbo.systems.generic.cowl import Cowl
-from pyturbo.systems.generic.generic_simple_geom import GenericSimpleGeom
+from pyturbo.systems.generic.generic_simple_view import GenericSimpleView
+from pyturbo.systems.generic.generic_system_view import GenericSystemView
 
-__all__ = ["GenericSimpleGeom", "Cowl"]
+__all__ = ["GenericSimpleView", "GenericSystemView"]

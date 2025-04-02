@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 from pathlib import Path
@@ -7,16 +7,15 @@ import numpy as np
 from cosapp.systems import System
 
 import pyturbo.systems.compressor.data as cmp_data
-from pyturbo.systems.channel import Channel
 from pyturbo.systems.compressor import Compressor
-from pyturbo.systems.fan_module.fan_module_geom import FanModuleGeom
-from pyturbo.systems.fan_module.spinner_geom import SpinnerGeom
+from pyturbo.systems.fan_module import FanModuleGeom
+from pyturbo.systems.generic import GenericSimpleView, GenericSystemView
 from pyturbo.systems.mixers import MixerFluid, MixerShaft
-from pyturbo.systems.structures import IntermediateCasing
-from pyturbo.utils import JupyterViewable, load_from_json
+from pyturbo.systems.structures import Channel, IntermediateCasing
+from pyturbo.utils import load_from_json
 
 
-class FanModule(System, JupyterViewable):
+class FanModule(System):
     """Fan assembly model.
 
     The Fan assembly model is made of:
@@ -37,13 +36,15 @@ class FanModule(System, JupyterViewable):
     ic: IntermediateCasing
         intermediate casing suports lp shaft front bearings, and forward mounts
 
-    geom: FanModuleGeom
-        component kp from fan module kp
-
     splitter_shaft: MixerShaft
         split power from LP shaft toward booster and fan shaft
     splitter_fluid: MixerFluid
         split fluid flow from fan toward booster and ogv
+
+    geom: FanModuleGeom
+        sub systems key points generated from the fan module envelop
+    view: FanModuleView
+        compute visualisation
 
     Inputs
     ------
@@ -75,15 +76,15 @@ class FanModule(System, JupyterViewable):
     """
 
     def setup(self):
+        # properties
+        children_name = ["spinner", "fan", "ogv", "booster", "ic"]
+
         # component
         self.add_child(Compressor("fan"), pulling=["N"])
         self.add_child(Compressor("booster"))
         self.add_child(Channel("ogv"))
         self.add_child(IntermediateCasing("ic"), pulling=["fl_core", "fl_bypass"])
-        self.add_child(SpinnerGeom("spinner"))
-
-        load_from_json(self.fan, Path(cmp_data.__file__).parent / "fan.json")
-        load_from_json(self.booster, Path(cmp_data.__file__).parent / "booster.json")
+        self.add_child(GenericSimpleView("spinner"))
 
         # physics
         self.add_child(FanModuleGeom("geom"), pulling=["fan_diameter", "length"])
@@ -108,6 +109,8 @@ class FanModule(System, JupyterViewable):
             "spinner",
         ]
 
+        self.add_child(GenericSystemView("view", children_name=children_name), pulling=["occ_view"])
+
         # Fluid ports connectors
         self.connect(self.splitter_fluid.fl_fan, self.fan.fl_in)
         self.connect(self.splitter_fluid.fl_booster, self.booster.fl_in)
@@ -122,19 +125,10 @@ class FanModule(System, JupyterViewable):
         self.connect(self.splitter_shaft.sh_booster, self.booster.sh_in)
 
         # geometry connectors
-        self.connect(self.geom.fan_kp, self.fan.kp)
-        self.connect(self.geom.booster_kp, self.booster.kp)
-        self.connect(self.geom.ogv_kp, self.ogv.kp)
-        self.connect(self.geom.ic_kp, self.ic.kp)
-        self.connect(
-            self.geom,
-            self.spinner,
-            {
-                "fan_hub_kp": "fan_hub_kp",
-                "spinner_apex_kp": "apex_kp",
-                "spinner_angle": "mean_angle",
-            },
-        )
+        # connection geom
+        for name in children_name:
+            self.connect(self.geom[f"{name}_kp"], self[name].kp)
+            self.connect(self[name], self.view, {"occ_view": f"{name}_view"})
 
         # inwards/outwards
         self.add_outward("bpr", 1.0, unit="", desc="By pass ratio")
@@ -142,6 +136,11 @@ class FanModule(System, JupyterViewable):
         self.add_outward("booster_pr", 1.0, unit="", desc="booster pressure ratio")
 
         # init
+        load_from_json(self.fan, Path(cmp_data.__file__).parent / "fan.json")
+        load_from_json(self.booster, Path(cmp_data.__file__).parent / "booster.json")
+
+        self.booster.stage_count = 4
+
         self.sh_in.power = 20e6
         self.sh_in.N = 5100.0
         self.fl_in.W = 350.0
@@ -153,12 +152,3 @@ class FanModule(System, JupyterViewable):
         self.bpr = self.splitter_fluid.fl_fan.W / self.splitter_fluid.fl_booster.W
         self.fan_pr = self.fan.pr
         self.booster_pr = self.booster.pr
-
-    def _to_occt(self):
-        return dict(
-            spinner=self.spinner._to_occt(),
-            fan=self.fan.geom._to_occt(),
-            booster=self.booster.geom._to_occt(),
-            ogv=self.ogv.geom._to_occt(),
-            ic=self.ic.geom._to_occt(),
-        )

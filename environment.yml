@@ -6,5 +6,7 @@ dependencies:
   - pyoccad
   - numpy
   - ambiance
-  - pythonocc-core
   - pythermo
+  - pythreejs
+  - pytest
+  - pythonocc-core

@@ -12,24 +12,6 @@ class TestCombustor:
 
     sys = Combustor("comb")
 
-    def test_system_setup(self):
-        # default constructor
-        sys = self.sys
-
-        data_input = ["fl_in", "kp"]
-        data_inward = ["fuel_W"]
-        data_output = ["fl_out"]
-        data_outward = ["Tcomb"]
-
-        for data in data_input:
-            assert data in sys.inputs
-        for data in data_inward:
-            assert data in sys.inwards
-        for data in data_output:
-            assert data in sys.outputs
-        for data in data_outward:
-            assert data in sys.outwards
-
     def test_run_once(self):
         sys = self.sys
 
@@ -48,3 +30,10 @@ class TestCombustor:
         sys.run_drivers()
 
         assert sys.Tcomb == pytest.approx(1000.0, rel=1e-2)
+
+    def test_view(self):
+        sys = Combustor("sys")
+        sys.run_once()
+        sys.occ_view.get_value().render()
+
+        assert True

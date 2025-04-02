@@ -1,16 +1,16 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 from pathlib import Path
 
 from cosapp.systems import System
 
-from pyturbo.systems.compressor.compressor_aero import CompressorAero
-from pyturbo.systems.compressor.compressor_geom import CompressorGeom
-from pyturbo.utils import JupyterViewable, load_from_json
+from pyturbo.systems.compressor import CompressorAero, CompressorGeom
+from pyturbo.systems.generic import GenericSimpleView
+from pyturbo.utils import load_from_json
 
 
-class Compressor(System, JupyterViewable):
+class Compressor(System):
     """Compressor assembly model.
 
     Sub-systems
@@ -19,6 +19,8 @@ class Compressor(System, JupyterViewable):
         geometry value from envelop
     aero: CompressorAero
         performance characteristics
+    view: GenericSimpleView
+        compute visualisation
 
     Inputs
     ------
@@ -61,6 +63,14 @@ class Compressor(System, JupyterViewable):
         self.add_child(
             CompressorAero("aero"), pulling=["fl_in", "fl_out", "sh_in", "pr", "stage_count"]
         )
+        self.add_child(
+            GenericSimpleView("view"),
+            pulling=["occ_view", "kp"],
+        )
+
+        # outwards
+        # TODO check how to avoid this standard copy
+        self.add_outward("N", 1.0, unit="rpm", desc="shaft speed rotation")
 
         # connections
         self.connect(
@@ -68,16 +78,11 @@ class Compressor(System, JupyterViewable):
             self.aero.inwards,
             ["tip_in_r", "tip_out_r", "inlet_area"],
         )
+        self.connect(self.aero.inwards, self.view.inwards, {"stage_count": "n"})
 
-        # outwards
-        # TODO check how to avoid this standard copy
-        self.add_outward("N", 1.0, unit="rpm", desc="shaft speed rotation")
-
+        # init
         if init_file:
             load_from_json(self, init_file)
 
     def compute(self):
         self.N = self.sh_in.N
-
-    def _to_occt(self):
-        return dict(geom=self.geom._to_occt())

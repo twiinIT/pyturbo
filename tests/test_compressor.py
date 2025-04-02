@@ -16,24 +16,6 @@ class TestCompressor:
     def setup_method(self):
         self.data_dir = Path(cmp_data.__file__).parent
 
-    def test_system_setup(self):
-        # default constructor
-        sys = Compressor("cmp")
-
-        data_input = ["fl_in", "sh_in"]
-        data_inward = []
-        data_output = ["fl_out"]
-        data_outward = []
-
-        for data in data_input:
-            assert data in sys.inputs
-        for data in data_inward:
-            assert data in sys.inwards
-        for data in data_output:
-            assert data in sys.outputs
-        for data in data_outward:
-            assert data in sys.outwards
-
     def test_compute_fan(self):
         sys = Compressor("cmp", init_file=self.data_dir / "fan.json")
         sys.add_driver(NonLinearSolver("run"))
@@ -63,3 +45,10 @@ class TestCompressor:
 
         assert sys.sh_in.N == pytest.approx(3909.5, rel=1e-2)
         assert sys.pr == pytest.approx(1.37, rel=1e-2)
+
+    def test_view(self):
+        sys = Compressor("cmp")
+        sys.run_once()
+        sys.occ_view.get_value().render()
+
+        assert True

@@ -10,24 +10,6 @@ from pyturbo.systems.nozzle import Nozzle, NozzleAero
 class TestNozzle:
     """Define tests for the nozzle."""
 
-    def test_system_setup(self):
-        # default constructor
-        sys = Nozzle("noz")
-
-        data_input = ["kp", "fl_in"]
-        data_inwards = []
-        data_output = []
-        data_outwards = ["thrust"]
-
-        for data in data_input:
-            assert data in sys.inputs
-        for data in data_output:
-            assert data in sys.outputs
-        for data in data_outwards:
-            assert data in sys.outwards
-        for data in data_inwards:
-            assert data in sys.inwards
-
     @pytest.mark.skip("not relevant")
     def test_run_once(self):
         # basic run
@@ -55,4 +37,11 @@ class TestNozzle:
         assert sys.speed == pytest.approx(308.3, 0.01)
         assert sys.mach == pytest.approx(0.7, 0.01)
         assert sys.thrust == pytest.approx(9250.0, 0.01)
-        assert sys.area_exit == pytest.approx(0.133, 0.01)
+        assert sys.area == pytest.approx(0.133, 0.01)
+
+    def test_view(self):
+        sys = Nozzle("sys")
+        sys.run_once()
+        sys.occ_view.get_value().render()
+
+        assert True

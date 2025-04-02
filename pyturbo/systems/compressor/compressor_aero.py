@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 from math import sqrt
@@ -81,9 +81,11 @@ class CompressorAero(System):
 
         # inputs/outputs
         self.add_input(FluidPort, "fl_in")
-        self.add_output(FluidPort, "fl_out")
         self.add_input(ShaftPort, "sh_in")
 
+        self.add_output(FluidPort, "fl_out")
+
+        # inwards
         # geom characteristics
         self.add_inward("stage_count", 1, unit="", desc="number of stages")
         self.add_inward("tip_in_r", 1.0, unit="m", desc="inlet tip radius")
@@ -99,6 +101,7 @@ class CompressorAero(System):
         )
         self.add_inward("xnd", 10000.0, unit="rpm", desc="Rotational speed at design point")
 
+        # outwards
         # functional characteristics
         self.add_outward("utip", 0.0, unit="m/s", desc="tip speed")
         self.add_outward("phi", 0.0, unit="", desc="axial flow velocity coefficient")
@@ -141,10 +144,6 @@ class CompressorAero(System):
         self.psi = self.tip_out_r / self.tip_in_r * (1 - self.phi / self.phiP)
         self.eps_psi = delta_h / (self.stage_count * self.utip**2) - self.psi
 
-        self.spec_flow = (
-            self.fl_in.W
-            * sqrt(self.fl_in.Tt / 288.15)
-            / (self.fl_in.Pt / 101325.0)
-            / self.inlet_area
-        )
+        Wc = (self.fl_in.Pt / 101325.0) / sqrt(self.fl_in.Tt / 288.15)
+        self.spec_flow = self.fl_in.W / Wc / self.inlet_area
         self.pcnr = self.sh_in.N / self.xnd * 100.0

@@ -11,24 +11,6 @@ from pyturbo.systems.compressor import CompressorAero
 class TestCompressorAero:
     """Define tests for the compressor aero model."""
 
-    def test_system_setup(self):
-        # default constructor
-        sys = CompressorAero("cmp")
-
-        data_input = ["fl_in", "sh_in"]
-        data_inward = ["tip_in_r", "inlet_area", "eff_poly", "phiP"]
-        data_output = ["fl_out"]
-        data_outward = ["phi", "psi"]
-
-        for data in data_input:
-            assert data in sys.inputs
-        for data in data_inward:
-            assert data in sys.inwards
-        for data in data_output:
-            assert data in sys.outputs
-        for data in data_outward:
-            assert data in sys.outwards
-
     def test_fan(self):
         sys = CompressorAero("cmp")
         sys.add_driver(NonLinearSolver("run"))

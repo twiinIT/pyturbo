@@ -1,4 +1,4 @@
-name: pyturbo
+name: pyturbo-demos
 channels:
   - conda-forge
 dependencies:
@@ -22,3 +22,5 @@ dependencies:
   - ambiance
   - furo
   - nbsphinx-link
+  - jupyter
+  - jupyterlab
