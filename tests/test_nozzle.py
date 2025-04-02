@@ -37,7 +37,7 @@ class TestNozzle:
         assert sys.speed == pytest.approx(308.3, 0.01)
         assert sys.mach == pytest.approx(0.7, 0.01)
         assert sys.thrust == pytest.approx(9250.0, 0.01)
-        assert sys.area == pytest.approx(0.133, 0.01)
+        assert sys.area_exit == pytest.approx(0.133, 0.01)
 
     def test_view(self):
         sys = Nozzle("sys")
