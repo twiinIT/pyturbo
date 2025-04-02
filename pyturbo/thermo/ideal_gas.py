@@ -129,9 +129,11 @@ class IdealGas(pythermo.IdealGas):
             numerical precision
         """
 
-        def f(mach):
+        def f(mach: np.ndarray) -> float:
+            mach = mach.item()
             ts = self.static_t(tt, mach, tol)
             ps_it = pt * self.pr(tt, ts, 1.0)
             return ps - ps_it
 
-        return root(f, 0.5).x[0]
+        solution = root(f, x0=[0.5], method="hybr")
+        return solution.x.item()
