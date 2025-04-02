@@ -12,9 +12,8 @@ class TestFanModuleGeom:
 
     sys = FanModuleGeom("fm")
 
-    @classmethod
-    def setup(cls):
-        sys = cls.sys
+    def setup_method(self):
+        sys = self.sys
 
         sys.length = 3.0
         sys.fan_diameter = 1.35

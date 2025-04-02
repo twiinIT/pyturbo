@@ -4,6 +4,6 @@
 from pyturbo.systems.turbine.turbine_aero import TurbineAero
 from pyturbo.systems.turbine.turbine_geom import TurbineGeom
 
-from pyturbo.systems.turbine.turbine import Turbine, HPT, LPT  # isort: skip
+from pyturbo.systems.turbine.turbine import Turbine  # isort: skip
 
-__all__ = ["TurbineAero", "TurbineGeom", "Turbine", "HPT", "LPT"]
+__all__ = ["TurbineAero", "TurbineGeom", "Turbine"]

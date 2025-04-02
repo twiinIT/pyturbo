@@ -1,0 +1,25 @@
+{
+  "aero.Ncdes": 15.0,
+  "aero.eff_poly": 0.9,
+  "fl_in.Pt": 800000.0,
+  "fl_in.Tt": 1100.0,
+  "fl_in.W": 60,
+  "geom.blade_height_ratio": 0.4,
+  "kp.exit_hub": [
+    0.0,
+    0.4
+  ],
+  "kp.exit_tip": [
+    0.6,
+    0.4
+  ],
+  "kp.inlet_hub": [
+    0.0,
+    0.0
+  ],
+  "kp.inlet_tip": [
+    0.4,
+    0.0
+  ],
+  "stage_count": 5
+}

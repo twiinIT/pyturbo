@@ -1,0 +1,25 @@
+{
+  "fl_in.Pt": 101325.0,
+  "fl_in.Tt": 288.15,
+  "fl_in.W": 350,
+  "geom.blade_hub_to_tip_ratio": 0.3,
+  "kp.exit_hub": [
+    0.2,
+    0.5
+  ],
+  "kp.exit_tip": [
+    0.85,
+    0.5
+  ],
+  "kp.inlet_hub": [
+    0.0,
+    0.0
+  ],
+  "kp.inlet_tip": [
+    0.85,
+    0.0
+  ],
+  "sh_in.N": 5500,
+  "sh_in.power": 18000000.0,
+  "stage_count": 1
+}

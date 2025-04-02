@@ -1,9 +1,12 @@
 # Copyright (C) 2022-2023, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
+from pathlib import Path
+
 import pytest
 from cosapp.drivers import NonLinearSolver
 
+import pyturbo.systems.turbofan.data as tf_data
 from pyturbo.systems.turbofan import Turbofan
 
 
@@ -41,6 +44,9 @@ class TestTurbofan:
 
         assert sys.fan_module.fan.fl_out.W == pytest.approx(240.0, 1e-3)
         assert sys.fan_module.booster.fl_out.W == pytest.approx(60.0, 1e-3)
+
+    def test_run_CFM(self):
+        assert Turbofan("sys", init_file=Path(tf_data.__file__).parent / "CFM56_7.json")
 
     @pytest.mark.skip("not relevant")
     def test_run_solver(self):

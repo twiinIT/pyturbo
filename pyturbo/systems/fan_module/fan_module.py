@@ -1,16 +1,19 @@
 # Copyright (C) 2022-2023, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
+from pathlib import Path
+
 import numpy as np
 from cosapp.systems import System
 
+import pyturbo.systems.compressor.data as cmp_data
 from pyturbo.systems.channel import Channel
-from pyturbo.systems.compressor import Booster, Fan
+from pyturbo.systems.compressor import Compressor
 from pyturbo.systems.fan_module.fan_module_geom import FanModuleGeom
-from pyturbo.systems.fan_module.spinner import SpinnerGeom
+from pyturbo.systems.fan_module.spinner_geom import SpinnerGeom
 from pyturbo.systems.mixers import MixerFluid, MixerShaft
 from pyturbo.systems.structures import IntermediateCasing
-from pyturbo.utils import JupyterViewable
+from pyturbo.utils import JupyterViewable, load_from_json
 
 
 class FanModule(System, JupyterViewable):
@@ -73,11 +76,14 @@ class FanModule(System, JupyterViewable):
 
     def setup(self):
         # component
-        self.add_child(Fan("fan"), pulling=["N"])
-        self.add_child(Booster("booster"))
+        self.add_child(Compressor("fan"), pulling=["N"])
+        self.add_child(Compressor("booster"))
         self.add_child(Channel("ogv"))
         self.add_child(IntermediateCasing("ic"), pulling=["fl_core", "fl_bypass"])
         self.add_child(SpinnerGeom("spinner"))
+
+        load_from_json(self.fan, Path(cmp_data.__file__).parent / "fan.json")
+        load_from_json(self.booster, Path(cmp_data.__file__).parent / "booster.json")
 
         # physics
         self.add_child(FanModuleGeom("geom"), pulling=["fan_diameter", "length"])

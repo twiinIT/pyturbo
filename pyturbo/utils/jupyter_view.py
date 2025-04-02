@@ -1,3 +1,6 @@
+# Copyright (C) 2022-2023, twiinIT
+# SPDX-License-Identifier: BSD-3-Clause
+
 from typing import Any, Dict, Iterable, Union
 
 import numpy as np

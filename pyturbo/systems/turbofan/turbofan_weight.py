@@ -10,7 +10,7 @@ class TurbofanWeight(System):
     Weight is evaluated from diameter and length
     coef are computed from CFM family value
 
-    ipps_weight_EIS = ipps_weight_ref * (
+    weight_EIS = weight_ref * (
         fan_diameter/fan_diameter_ref)**c1 *
         (length/length_ref)**c2 *
         (EIS-EIS_ref)**c3
@@ -20,15 +20,11 @@ class TurbofanWeight(System):
     c1, c2, c3[-]: float, default= -1.1, 4.3, 0.95
         constant coefficient
 
-    ipps_weight_ref[m]: float, default=1.0
-        CFM56-7 ipps weight
+    weight_ref[m]: float, default=2370.0
 
     fan_diameter_ref[m]: float, default=1.0
-        CFM56-7 fan diameter
     length_ref[m]: float, default=3.451
-        CFM56-7 length
     EIS_ref[year]: float, default=1997
-        CFM56-7 entry into service year
 
     fan_diameter[m]: float, default=1.0
         fan diameter
@@ -39,34 +35,36 @@ class TurbofanWeight(System):
 
     Outputs
     -------
-    ipps_weight[kg]: float, default=1.0
-        ipps weight
+    weight[kg]: float
+        weight
     """
 
     def setup(self):
-        # coef - evaluated from CFM family
-        self.add_inward("c1", -1.1)
-        self.add_inward("c2", 4.3)
-        self.add_inward("c3", 0.95)
-
-        # reference
-        self.add_inward("fan_diameter_ref", 1.549, unit="m", desc="CFM56-7 fan diameter")
-        self.add_inward("length_ref", 3.461, unit="m", desc="CFM56-7 length")
-        self.add_inward("ipps_weight_ref", 1.0, unit="kg", desc="CFM56-7 ipps weight")
-        self.add_inward("EIS_ref", 1997.0, unit="", desc="CFM56-7 entry into service year")
+        # data
+        self.add_inward("param", [1900.0, 0.5, 0.01, 1.006])
 
         # inward / outward
         self.add_inward("fan_diameter", 1.0, unit="m", desc="fan diameter")
         self.add_inward("length", 1.0, unit="m", desc="length")
-        self.add_inward("EIS", 2022, unit="", desc="Entry into service")
+        self.add_inward("eis", 2022, unit="", desc="Entry into service")
 
-        self.add_outward("ipps_weight", 1.0, unit="kg")
+        self.add_outward("weight", 0.0, unit="kg")
 
     def compute(self):
-
-        self.ipps_weight = (
-            self.ipps_weight_ref
-            * (self.fan_diameter / self.fan_diameter_ref) ** self.c1
-            * (self.length / self.length_ref) ** self.c2
-            * self.c3 ** (self.EIS - self.EIS_ref)
+        param = self.param
+        self.weight = (
+            param[0]
+            * self.fan_diameter ** param[1]
+            * self.length ** param[2]
+            * param[3] ** (self.eis - 2000)
         )
+
+        """Param are estimated to minimize error on:
+
+                     ['weight', 'diameter', 'length', 'eis'])
+        ['LEAP1A'] = [2990., 1.98, 3.328, 2015]
+        ['LEAP1B'] = [2780., 1.76, 3.147, 2016]
+        ['CFM56-5A'] = [2331., 1.734, 2.422, 1987]
+        ['CFM56-7B'] = [2386., 1.549, 2.508, 1997]
+        ['V2500'] = [2404., 1.682, 3.201, 1993]
+        """

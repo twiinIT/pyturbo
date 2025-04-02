@@ -1,6 +1,8 @@
 # Copyright (C) 2022-2023, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
+import pytest
+
 from pyturbo.systems.turbofan import TurbofanWeight
 
 
@@ -12,10 +14,11 @@ class TestTurbofanWeight:
     def test_ref(self):
 
         tfw = self.tfw
-        tfw.fan_diameter = tfw.fan_diameter_ref
-        tfw.length = tfw.length_ref
-        tfw.EIS = tfw.EIS_ref
+
+        tfw.fan_diameter = 1.98
+        tfw.eis = 2015
+        tfw.length = 3.328
 
         tfw.run_once()
 
-        assert tfw.ipps_weight == tfw.ipps_weight_ref
+        assert pytest.approx(tfw.weight, rel=5e-2) == 2990.0

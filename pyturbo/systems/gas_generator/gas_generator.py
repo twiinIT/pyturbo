@@ -1,13 +1,17 @@
 # Copyright (C) 2022-2023, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
+from pathlib import Path
+
 from cosapp.systems import System
 
+import pyturbo.systems.compressor.data as cmp_data
+import pyturbo.systems.turbine.data as trb_data
 from pyturbo.systems.combustor import Combustor
-from pyturbo.systems.compressor import HPC
+from pyturbo.systems.compressor import Compressor
 from pyturbo.systems.gas_generator.gas_generator_geom import GasGeneratorGeom
-from pyturbo.systems.turbine import HPT
-from pyturbo.utils.jupyter_view import JupyterViewable
+from pyturbo.systems.turbine import Turbine
+from pyturbo.utils import JupyterViewable, load_from_json
 
 
 class GasGenerator(System, JupyterViewable):
@@ -58,9 +62,14 @@ class GasGenerator(System, JupyterViewable):
         # children
         geom = self.add_child(GasGeneratorGeom("geom"), pulling=["kp"])
 
-        cmp = self.add_child(HPC("compressor"), pulling={"fl_in": "fl_in", "pr": "opr", "N": "N"})
+        cmp = self.add_child(
+            Compressor("compressor"), pulling={"fl_in": "fl_in", "pr": "opr", "N": "N"}
+        )
         cmb = self.add_child(Combustor("combustor"), pulling=["fuel_W"])
-        trb = self.add_child(HPT("turbine"), pulling=["fl_out"])
+        trb = self.add_child(Turbine("turbine"), pulling=["fl_out"])
+
+        load_from_json(cmp, Path(cmp_data.__file__).parent / "hpc.json")
+        load_from_json(trb, Path(trb_data.__file__).parent / "hpt.json")
 
         # connection geom
         self.connect(geom.compressor_kp, cmp.kp)

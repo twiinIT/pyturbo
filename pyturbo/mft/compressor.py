@@ -38,6 +38,7 @@ class SimplifiedMftCompressor:
             * vlsl
             * (1 - vlsl**2 / (2 * self._cp * self.Tstd)) ** (1 / (self._gamma - 1))
         )
+
         return wr
 
     def pr(self, pcnr, gh):

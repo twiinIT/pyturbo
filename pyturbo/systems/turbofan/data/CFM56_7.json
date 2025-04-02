@@ -1,0 +1,29 @@
+{
+  "core.compressor.geom.blade_hub_to_tip_ratio": 0.7,
+  "core.compressor.sh_in.power": 30000000.0,
+  "core.compressor.stage_count": 9,
+  "core.turbine.aero.Ncqdes": 100.0,
+  "core.turbine.sh_out.N": 15000.0,
+  "core.turbine.sh_out.power": 30000000.0,
+  "core.turbine.stage_count": 1,
+  "fan_diameter": 1.549,
+  "fan_module.booster.stage_count": 3,
+  "fan_module.fan.geom.blade_hub_to_tip_ratio": 0.3,
+  "fan_module.sh_in.power": 30000000.0,
+  "fan_module.splitter_fluid.fluid_fractions": [
+    0.8
+  ],
+  "fan_module.splitter_shaft.power_fractions": [
+    0.8
+  ],
+  "geom.core_inlet_radius_ratio": 0.35,
+  "geom.pri_nozzle_area_ratio": 0.9,
+  "geom.sec_nozzle_area_ratio": 0.6,
+  "geom.tcf_exit_radius_ratio": 1.4,
+  "geom.tcf_length_ratio": 0.5,
+  "inlet.fl_in.W": 300.0,
+  "turbine.aero.Ncqdes": 100.0,
+  "turbine.sh_out.N": 5000.0,
+  "turbine.sh_out.power": 30000000.0,
+  "turbine.stage_count": 4
+}
