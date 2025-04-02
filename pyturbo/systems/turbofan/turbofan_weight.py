@@ -41,10 +41,10 @@ class TurbofanWeight(System):
 
     def setup(self):
         # ref
-        self.add_inward("weight_ref", 1900.0, unit="kg")
-        self.add_inward("c_fan_diameter", 0.5, unit="")
-        self.add_inward("c_length", 0.01, unit="")
-        self.add_inward("c_eis", 1.006, unit="")
+        self.add_inward("c_weight", 1900.0, unit="", desc="Coef to minimize error on weight")
+        self.add_inward("c_fan_diameter", 0.5, unit="", desc="Fan diameter geometrical influence")
+        self.add_inward("c_length", 0.01, unit="", desc="Length geometrical influence")
+        self.add_inward("c_eis", 0.6, unit="", desc="Yearly weight increase in %")
 
         # inward / outward
         self.add_inward("fan_diameter", 1.0, unit="m", desc="fan diameter")
@@ -55,13 +55,13 @@ class TurbofanWeight(System):
 
     def compute(self):
         self.weight = (
-            self.weight_ref
+            self.c_weight
             * self.fan_diameter**self.c_fan_diameter
             * self.length**self.c_length
-            * self.c_eis ** (self.eis - 2000)
+            * (1 + self.c_eis / 100) ** (self.eis - 2000)
         )
 
-        """Param are estimated to minimize error on:
+        """Coefficients are estimated to minimize error on:
 
                      ['weight', 'diameter', 'length', 'eis'])
         ['LEAP1A'] = [2990., 1.98, 3.328, 2015]
