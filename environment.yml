@@ -8,5 +8,3 @@ dependencies:
   - ambiance
   - pythermo
   - pythreejs
-  - pytest
-  - pythonocc-core

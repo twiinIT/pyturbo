@@ -1,4 +1,4 @@
-name: pyturbo-demos
+name: pyturbo-dev
 channels:
   - conda-forge
 dependencies:
@@ -18,7 +18,6 @@ dependencies:
   - sphinx-autoapi
   - nbsphinx
   - sphinx_rtd_theme
-  - pythonocc-core
   - ambiance
   - furo
   - nbsphinx-link
