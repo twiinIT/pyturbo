@@ -2,11 +2,13 @@ name: pyturbo-dev
 channels:
   - conda-forge
 dependencies:
+  - python==3.9
   - cosapp
-  - pyoccad
   - numpy
   - ambiance
-  - pythermo
+  - jupyter
+  - jupyterlab
+  - pyoccad
   - pythreejs
   - pytest
   - pre-commit
@@ -18,8 +20,10 @@ dependencies:
   - sphinx-autoapi
   - nbsphinx
   - sphinx_rtd_theme
-  - ambiance
   - furo
   - nbsphinx-link
-  - jupyter
-  - jupyterlab
+  - pip
+  - pip:
+    - -e .
+  - pythonocc-core==7.5.1
+  - pythermo
