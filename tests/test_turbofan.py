@@ -85,15 +85,9 @@ class TestTurbofan:
         # Create a new turbofan system
         sys = Turbofan("sys")
         solver = sys.add_driver(NonLinearSolver("nls", tol=1e-6))
+        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_geom.json")
+        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_design_data.json")
 
-        # engine topology
-        sys.fan_module.booster.geom.stage_count = 3
-        sys.core.compressor.geom.stage_count = 9
-        sys.core.turbine.geom.stage_count = 1
-        sys.turbine.geom.stage_count = 4
-
-        # engine dimension
-        sys.fan_diameter = 1.549
         sys.run_drivers()
 
         # engine functional requirements
