@@ -42,5 +42,5 @@ class InletGeom(System):
         self.add_outward("area", 1.0, unit="m**2", desc="throat area")
 
     def compute(self):
-        radius = self.kp.inlet_tip[0]
+        radius = self.kp.exit_tip[0]
         self.area = np.pi * radius**2
