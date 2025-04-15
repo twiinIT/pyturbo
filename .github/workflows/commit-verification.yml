@@ -1,0 +1,41 @@
+name: Commit check
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+
+defaults:
+  run:
+    # micromamba activation
+    shell: bash -l -eo pipefail {0}
+
+jobs:
+  files-check:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Create build environment
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: ./environment-dev.yml
+          environment-name: test_env
+      - name: Run precommit
+        run: |
+          pre-commit run --all-files
+
+  run-test:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Create build environment
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: ./environment-dev.yml
+          environment-name: test_env
+      - name: Test with pytest
+        run: |
+          python -m pytest
