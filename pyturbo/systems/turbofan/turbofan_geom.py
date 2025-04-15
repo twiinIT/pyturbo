@@ -296,6 +296,7 @@ class TurbofanGeom(System):
         trf_length = turbine_radius * self.trf_length_ratio
 
         primary_nozzle_length = turbine_radius * self.primary_nozzle_length_ratio
+        secondary_nozzle_length = fan_radius * self.secondary_nozzle_length_ratio
 
         self.engine_length = fan_module_length + core_length + turbine_length + trf_length
 
@@ -368,10 +369,9 @@ class TurbofanGeom(System):
         self.fan_duct_kp.exit_hub = np.r_[self.ogv_exit_hub_kp[0], z_exit]
         self.fan_duct_kp.exit_tip = np.r_[self.ogv_exit_tip_kp[0], z_exit]
 
-        # nozzles
+        # primary nozzle
         z_exit = self.trf_kp.exit_tip[1] + primary_nozzle_length
 
-        # primary nozzle
         self.primary_nozzle_kp.inlet_hub = self.trf_kp.exit_hub
         self.primary_nozzle_kp.inlet_tip = self.trf_kp.exit_tip
 
@@ -387,6 +387,8 @@ class TurbofanGeom(System):
         self.primary_nozzle_kp.exit_tip = np.r_[r_exit_tip, z_exit]
 
         # secondary nozzle
+        z_exit = self.trf_kp.exit_tip[1] + secondary_nozzle_length
+
         self.secondary_nozzle_kp.inlet_hub = self.fan_duct_kp.exit_hub
         self.secondary_nozzle_kp.inlet_tip = self.fan_duct_kp.exit_tip
 
