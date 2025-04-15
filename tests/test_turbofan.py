@@ -94,11 +94,6 @@ class TestTurbofan:
 
         # engine dimension
         sys.fan_diameter = 1.549
-
-        # init
-        sys.fan_diameter = 1.6
-        sys.turbine.aero.blokage = 2.0
-
         sys.run_drivers()
 
         # engine functional requirements

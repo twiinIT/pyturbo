@@ -174,6 +174,7 @@ class CompressorAero(System):
         self.psi = self.tip_out_r / self.tip_in_r * (1 - self.phi / self.phiP)
         self.eps_psi = delta_h / (self.stage_count * self.utip**2) - self.psi
 
-        Wc = (self.fl_in.Pt / 101325.0) / sqrt(self.fl_in.Tt / 288.15)
-        self.spec_flow = self.fl_in.W / Wc / self.inlet_area
+        Wc = self.fl_in.W * sqrt(self.fl_in.Tt / 288.15) / (self.fl_in.Pt / 101325.0)
+
+        self.spec_flow = Wc / self.inlet_area
         self.pcnr = self.sh_in.N / self.xnd * 100.0
