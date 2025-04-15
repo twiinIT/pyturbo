@@ -1,4 +1,6 @@
 {
+  "geom.primary_nozzle_length_ratio" : 0.5,
+  "geom.core_cowl_slope" : -10,
   "core.compressor.geom.blade_hub_to_tip_ratio": 0.7,
   "core.compressor.stage_count": 9,
   "core.turbine.stage_count": 1,
