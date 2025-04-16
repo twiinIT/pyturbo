@@ -6,6 +6,7 @@ from pathlib import Path
 from cosapp.systems import System
 
 import pyturbo.systems.turbine.data as trb_data
+from pyturbo.systems import Atmosphere
 from pyturbo.systems.fan_module import FanModule
 from pyturbo.systems.gas_generator import GasGenerator
 from pyturbo.systems.generic import GenericSystemView
@@ -15,6 +16,7 @@ from pyturbo.systems.nozzle import Nozzle
 from pyturbo.systems.structures import Channel
 from pyturbo.systems.turbine import Turbine
 from pyturbo.systems.turbofan import TurbofanAero, TurbofanGeom, TurbofanWeight
+from pyturbo.thermo import IdealDryAir
 from pyturbo.utils import load_from_json
 
 
@@ -216,3 +218,14 @@ class Turbofan(System):
 
         if init_file:
             load_from_json(self, init_file)
+
+    def init_environment(self, alt, mach, dtamb):
+        """Init fluid data with mission values."""
+        gas = IdealDryAir()
+        atm = Atmosphere(alt)
+        pamb = atm.pressure[0]
+        tamb = atm.temperature[0] + dtamb
+
+        self.pamb = pamb
+        self.fl_in.Tt = gas.total_t(tamb, mach)
+        self.fl_in.Pt = gas.total_p(pamb, tamb, self.fl_in.Tt)
