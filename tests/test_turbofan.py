@@ -122,3 +122,40 @@ class TestTurbofan:
         sys.run_drivers()
 
         assert np.linalg.norm(solver.problem.residue_vector()) < 1e-6
+
+    def test_cfm56_init_env(self):
+        """Calibration of CMF56-7 turbofan."""
+        # Create a new turbofan system
+        sys = Turbofan("sys")
+        solver = sys.add_driver(NonLinearSolver("nls", tol=1e-6))
+
+        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_geom.json")
+        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_design_data.json")
+
+        init_environment(sys, mach=0.0, dtamb=15.0, alt=0.0)
+
+        sys.run_drivers()
+
+        # engine functional requirements
+        solver.add_equation("thrust == 90e3")
+        solver.add_equation("fan_module.fan.aero.pr == 1.6")
+        solver.add_equation("bpr == 5.0")
+        solver.add_equation("opr == 25.0")
+        solver.add_equation("N2 == 15000.")
+        solver.add_equation("N1 == 5000.")
+        solver.add_equation("fan_module.booster.aero.pr == 1.8")
+        solver.add_equation("turbine.fl_in.Tt == 1300.")
+
+        # design
+        solver.add_unknown("fuel_W")
+        solver.add_unknown("geom.sec_nozzle_area_ratio")
+        solver.add_unknown("geom.pri_nozzle_area_ratio", max_rel_step=0.9)
+        solver.add_unknown("core.turbine.geom.blade_height_ratio")
+        solver.add_unknown("core.compressor.aero.phiP", max_rel_step=0.9)
+        solver.add_unknown("fan_module.fan.aero.phiP", max_rel_step=0.9)
+        solver.add_unknown("fan_module.booster.aero.phiP", max_rel_step=0.9)
+        solver.add_unknown("turbine.geom.blade_height_ratio")
+
+        sys.run_drivers()
+
+        assert np.linalg.norm(solver.problem.residue_vector()) < 1e-6
