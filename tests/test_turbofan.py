@@ -9,6 +9,7 @@ from cosapp.drivers import NonLinearSolver
 
 import pyturbo.systems.turbofan.data as tf_data
 from pyturbo.systems.turbofan import Turbofan
+from pyturbo.thermo import init_environment
 from pyturbo.utils import load_from_json
 
 
@@ -28,6 +29,14 @@ class TestTurbofan:
 
         assert sys.fan_module.fan.fl_out.W == pytest.approx(240.0, 1e-3)
         assert sys.fan_module.booster.fl_out.W == pytest.approx(60.0, 1e-3)
+
+    def test_init_environment(self):
+        sys = self.sys
+        sys.pamb = 1e5
+
+        init_environment(sys, mach=0.0, dtamb=0.0, alt=0.0)
+
+        assert sys.pamb == 101325.0
 
     def test_run_CFM(self):
         sys = Turbofan("sys")
