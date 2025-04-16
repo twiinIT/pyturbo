@@ -3,9 +3,18 @@
 
 """The setup script."""
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 with open("requirements.txt") as requirements_file:
     requirements = [package.strip() for package in requirements_file.readlines()]
 
-setup(install_requires=requirements)
+packages = find_packages()
+package_root = packages[0]
+
+setup(
+    install_requires=requirements,
+    package_data={
+        package_root: ["**/data/*.json"],
+    },
+    include_package_data=True,
+)

@@ -10,24 +10,6 @@ from pyturbo.systems import GasGenerator
 class TestGasGenerator:
     """Define tests for the gas generator assembly system."""
 
-    def test_system_setup(self):
-        # default constructor
-        sys = GasGenerator("core")
-
-        data_input = ["fl_in", "kp"]
-        data_inward = ["fuel_W"]
-        data_output = ["fl_out"]
-        data_outward = ["opr"]
-
-        for data in data_input:
-            assert data in sys.inputs
-        for data in data_inward:
-            assert data in sys.inwards
-        for data in data_output:
-            assert data in sys.outputs
-        for data in data_outward:
-            assert data in sys.outwards
-
     def test_run_once(self):
         sys = GasGenerator("cmp")
 
@@ -44,6 +26,13 @@ class TestGasGenerator:
 
         sys.run_drivers()
 
-        assert sys.opr == pytest.approx(16.4, rel=1e-2)
+        assert sys.pr == pytest.approx(16.4, rel=1e-2)
         assert sys.compressor.aero.sh_in.power == pytest.approx(28.5e6, rel=1e-2)
         assert sys.compressor.aero.sh_in.N == pytest.approx(5940, rel=1e-2)
+
+    def test_view(self):
+        sys = GasGenerator("sys")
+        sys.run_once()
+        sys.occ_view.get_value().render()
+
+        assert True

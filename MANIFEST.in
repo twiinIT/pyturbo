@@ -1,0 +1,13 @@
+include AUTHORS.md
+include CONTRIBUTING.md
+include HISTORY.md
+include LICENSE.rst
+include README.md
+
+recursive-include *.ipynb *.svg *.pyn data/*.json
+recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif *.svg *.ipynb *.py
+
+recursive-exclude * *.py[co]
+recursive-exclude * .ipynb_checkpoints/* *.egg-infon*.html
+
+prune docs/_build

@@ -1,6 +1,7 @@
-import numpy as np
+# Copyright (C) 2022-2023, twiinIT
+# SPDX-License-Identifier: BSD-3-Clause
 
-from pyturbo.ports import C1Keypoint
+import numpy as np
 
 
 def rz_to_3d(rz):
@@ -17,8 +18,3 @@ def slope_to_drdz(slope: float) -> np.ndarray:
 def slope_to_3d(slope: float) -> np.ndarray:
     """Compute the slope from ..."""
     return rz_to_3d(slope_to_drdz(slope))
-
-
-def derivative_slope(kp: C1Keypoint) -> float:
-    """Compute the derivate of slope."""
-    return np.arctan(kp.dr / kp.dz)

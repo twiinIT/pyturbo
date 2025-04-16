@@ -1,0 +1,12 @@
+{
+  "core.combustor.aero.Tcomb": 1700.0,
+  "core.compressor.aero.psi": 0.2,
+  "core.compressor.aero.utip": 420.0,
+  "core.turbine.aero.psi": 1.2,
+  "fan_module.booster.aero.psi": 0.35,
+  "fan_module.booster.aero.spec_flow": 180.0,
+  "fan_module.fan.aero.utip": 420.0,
+  "inlet.aero.mach": 0.5,
+  "pr_nozzle": 1.1,
+  "turbine.aero.psi": 1.25
+}

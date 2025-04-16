@@ -9,18 +9,22 @@ on:
   pull_request:
     branches:
       - master
+defaults:
+  run:
+    # micromamba activation
+    shell: bash -l -eo pipefail {0}
 
 jobs:
-  build:
+  files-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Install dependencies
-        uses: mamba-org/provision-with-micromamba@main
+      - uses: actions/checkout@v4
+      - name: Setup environment
+        uses: mamba-org/setup-micromamba@v1
         with:
           environment-file: ./environment-dev.yml
           environment-name: test_env
-          cache-env: true
+          micromamba-version: 2.0.2-2
       - name: Run all linters
         shell: bash -l -eo pipefail {0}
         run: |

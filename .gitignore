@@ -249,5 +249,10 @@ $RECYCLE.BIN/
 
 # cosapp systems representations
 *.html
+*.log.*
+*.log
+
+# cosapp logs
+cosapp_trace.log*
 
 # End of https://www.gitignore.io/api/git,linux,macos,python,windows,pycharm,jupyternotebook

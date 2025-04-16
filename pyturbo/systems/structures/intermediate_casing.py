@@ -1,10 +1,10 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 from cosapp.systems import System
 
-from pyturbo.systems.channel import ChannelAero
-from pyturbo.systems.generic import GenericSimpleGeom
+from pyturbo.systems.generic import GenericSimpleView
+from pyturbo.systems.structures import ChannelAero
 
 
 class IntermediateCasing(System):
@@ -18,6 +18,8 @@ class IntermediateCasing(System):
         compute primary flow aero performances
     secondary_aero: ChannelAero
         compute secondary flow aero performances
+    view: GenericSimpleView
+        compute visualisation
 
     Inputs
     ------
@@ -38,9 +40,6 @@ class IntermediateCasing(System):
     """
 
     def setup(self):
-        # geom
-        self.add_child(GenericSimpleGeom("geom"), pulling="kp")
-
         # aero
         self.add_child(
             ChannelAero("primary_aero"), pulling={"fl_in": "fl_booster", "fl_out": "fl_core"}
@@ -48,3 +47,6 @@ class IntermediateCasing(System):
         self.add_child(
             ChannelAero("secondary_aero"), pulling={"fl_in": "fl_ogv", "fl_out": "fl_bypass"}
         )
+
+        # view
+        self.add_child(GenericSimpleView("view"), pulling=["kp", "occ_view"])

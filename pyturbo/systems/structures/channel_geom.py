@@ -1,12 +1,13 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 import numpy as np
+from cosapp.systems import System
 
-from pyturbo.systems.generic.generic_simple_geom import GenericSimpleGeom
+from pyturbo.ports import KeypointsPort
 
 
-class ChannelGeom(GenericSimpleGeom):
+class ChannelGeom(System):
     """Channel geometry model.
 
     The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit.
@@ -25,7 +26,8 @@ class ChannelGeom(GenericSimpleGeom):
     """
 
     def setup(self):
-        super().setup()
+        # inputs
+        self.add_input(KeypointsPort, "kp")
 
         # aero
         self.add_outward("area_in", 1.0, unit="m**2", desc="inlet area")

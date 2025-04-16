@@ -1,12 +1,13 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 import numpy as np
+from cosapp.base import System
 
-from pyturbo.systems.generic.generic_simple_geom import GenericSimpleGeom
+from pyturbo.ports import KeypointsPort
 
 
-class CompressorGeom(GenericSimpleGeom):
+class CompressorGeom(System):
     """Compressor geometry.
 
     The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit.
@@ -36,7 +37,8 @@ class CompressorGeom(GenericSimpleGeom):
     """
 
     def setup(self):
-        super().setup()
+        # inputs
+        self.add_input(KeypointsPort, "kp")
 
         self.add_inward("stage_count", 1, unit="", desc="number of stages")
         self.add_inward(
@@ -52,8 +54,6 @@ class CompressorGeom(GenericSimpleGeom):
         self.add_outward("tip_out_r", 1.0, unit="m", desc="exit tip radius")
 
     def compute(self):
-        super().compute()
-
         # Compute blade hub radial position
         hub_in_r = self.kp.inlet_tip_r * self.blade_hub_to_tip_ratio
 

@@ -2,9 +2,13 @@ name: pyturbo
 channels:
   - conda-forge
 dependencies:
+  - python
   - cosapp
-  - pyoccad
   - numpy
   - ambiance
-  - pythonocc-core
+  - pythonocc-core<7.9.0
   - pythermo
+  - jupyter
+  - jupyterlab
+  - pyoccad
+  - pythreejs

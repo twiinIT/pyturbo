@@ -3,6 +3,7 @@
 
 import numpy as np
 from cosapp.ports import Port
+from pyoccad.create import CreateAxis, CreateRevolution, CreateWire
 
 
 class KeypointsPort(Port):
@@ -65,67 +66,25 @@ class KeypointsPort(Port):
     def mean_radius(self):
         return np.mean((self.inlet_hub, self.inlet_tip, self.exit_hub, self.exit_tip), axis=0)[0]
 
+    def view(self, shell=False):
+        from pyturbo.utils import rz_to_3d
 
-class C1Keypoint:
-    """A keypoint class including C1-continuity info.
+        if shell:
+            inner = CreateWire.from_points((rz_to_3d(self.inlet_hub), rz_to_3d(self.exit_hub)))
+            outer = CreateWire.from_points((rz_to_3d(self.inlet_tip), rz_to_3d(self.exit_tip)))
+            w = (inner, outer)
 
-    A C1 keypoint contains both position `pos` and first order derivate `der`.
+            return CreateRevolution.surface_from_curve(inner, CreateAxis.oz())
 
-    The geometry is assumed to be revolution around x-axis and keypoint
-    is defined in {r, z} coordinates.
-    """
+        else:
+            w = CreateWire.from_points(
+                (
+                    rz_to_3d(self.inlet_hub),
+                    rz_to_3d(self.exit_hub),
+                    rz_to_3d(self.exit_tip),
+                    rz_to_3d(self.inlet_tip),
+                ),
+                auto_close=True,
+            )
 
-    default_pos = np.ones(2)
-    default_der = np.ones(2)
-
-    def __init__(self, pos=default_pos, der=default_der):
-        self.pos = pos
-        self.der = der
-
-    @property
-    def rz(self):
-        return self.pos
-
-    @rz.setter
-    def rz(self, rz: np.ndarray):
-        self.pos = rz
-
-    @property
-    def r(self):
-        return self.pos[0]
-
-    @r.setter
-    def r(self, val: float):
-        self.pos[0] = val
-
-    @property
-    def z(self):
-        return self.pos[1]
-
-    @z.setter
-    def z(self, val: float):
-        self.pos[1] = val
-
-    @property
-    def drdz(self):
-        return self.der
-
-    @drdz.setter
-    def drdz(self, drdz: np.ndarray):
-        self.der = drdz
-
-    @property
-    def dr(self):
-        return self.der[0]
-
-    @dr.setter
-    def dr(self, val: float):
-        self.der[0] = val
-
-    @property
-    def dz(self):
-        return self.der[1]
-
-    @dz.setter
-    def dz(self, val: float):
-        self.der[1] = val
+            return CreateRevolution.surface_from_curve(w, CreateAxis.oz())

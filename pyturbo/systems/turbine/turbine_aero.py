@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 import numpy as np
@@ -52,7 +52,7 @@ class TurbineAero(System):
     Tt_ratio[-]: float
         total temperature ratio
     psi[-]: float
-        aerodynamic loading
+        aerodynamic loading by stage
 
     Design methods
     --------------
@@ -109,7 +109,9 @@ class TurbineAero(System):
         self.psi = dh / (2.0 * self.stage_count * u**2)
 
         # outwards
-        self.Wc = self.fl_in.Wc
+        self.Wc = self.fl_in.W * np.sqrt(self.fl_in.Tt / 288.15) / (self.fl_in.Pt / 101325.0)
+
         self.Wcrit = (
             self.gas.wqa_crit(self.fl_in.Pt, self.fl_in.Tt, tol=1e-6) * self.area_in / self.blokage
         )
+        self.Tt_ratio = self.fl_out.Tt / self.fl_in.Tt

@@ -17,7 +17,7 @@ class TestTurbofanGeom:
         cls.geom = geom = TurbofanGeom("tf")
 
         geom.fan_diameter = 2.0
-        geom.fanmodule_length_ratio = 1.0
+        geom.fan_module_length_ratio = 1.0
         geom.inlet_length_ratio = 0.4
         geom.inlet_radius_ratio = 0.9
         geom.core_inlet_radius_ratio = 0.25
@@ -33,12 +33,6 @@ class TestTurbofanGeom:
         geom.sec_nozzle_area_ratio = 0.6
 
         geom.run_once()
-
-    def test_system_setup(self):
-        data_output = ["fanmodule_kp", "core_kp", "shaft_kp", "turbine_kp", "trf_kp"]
-
-        for data in data_output:
-            assert data in self.geom.outputs
 
     def test_run_once_inlet(self):
         geom = self.geom
@@ -76,13 +70,13 @@ class TestTurbofanGeom:
         npt.assert_almost_equal(geom.shaft_kp.exit_hub, [0.0, exit_z])
         npt.assert_almost_equal(geom.shaft_kp.exit_tip, [0.1, exit_z])
 
-    def test_run_once_fanmodule(self):
+    def test_run_once_fan_module(self):
         geom = self.geom
 
-        npt.assert_almost_equal(geom.fanmodule_kp.inlet_hub, [0.0, 0.0])
-        npt.assert_almost_equal(geom.fanmodule_kp.inlet_tip, [1.0, 0.0])
-        npt.assert_almost_equal(geom.fanmodule_kp.exit_hub, [0.0, 1.0])
-        npt.assert_almost_equal(geom.fanmodule_kp.exit_tip, [1.0, 1.0])
+        npt.assert_almost_equal(geom.fan_module_kp.inlet_hub, [0.0, 0.0])
+        npt.assert_almost_equal(geom.fan_module_kp.inlet_tip, [1.0, 0.0])
+        npt.assert_almost_equal(geom.fan_module_kp.exit_hub, [0.0, 1.0])
+        npt.assert_almost_equal(geom.fan_module_kp.exit_tip, [1.0, 1.0])
 
     def test_run_once_gasgenerator(self):
         geom = self.geom

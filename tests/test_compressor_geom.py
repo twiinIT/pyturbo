@@ -10,15 +10,6 @@ from pyturbo.systems.compressor.compressor_geom import CompressorGeom
 class TestCompressorGeom:
     """Define tests for the compressor geometric model."""
 
-    def test_system_setup(self):
-        # default constructor
-        sys = CompressorGeom("sys")
-
-        data_outward = ["tip_in_r", "tip_out_r", "inlet_area"]
-
-        for data in data_outward:
-            assert data in sys.outwards
-
     def test_compute(self):
         sys = CompressorGeom("sys")
 

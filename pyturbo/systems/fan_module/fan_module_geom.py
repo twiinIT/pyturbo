@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 import numpy as np
@@ -71,6 +71,15 @@ class FanModuleGeom(System):
     """
 
     def setup(self):
+        # inputs/outputs
+        self.add_output(KeypointsPort, "spinner_kp")
+        self.add_output(KeypointsPort, "fan_kp")
+        self.add_output(KeypointsPort, "ogv_kp")
+        self.add_output(KeypointsPort, "booster_kp")
+        self.add_output(KeypointsPort, "ic_kp")
+        self.add_output(KeypointsPort, "shaft_kp")
+
+        # inwards/outwards
         self.add_inward("length", 0.8, unit="m", desc="fan module length")
         self.add_inward("fan_diameter", 1.0, unit="m", desc="fan module diameter")
         self.add_inward(
@@ -97,24 +106,13 @@ class FanModuleGeom(System):
             unit="",
             desc="shaft radius relative to fan module tip radius",
         )
-        self.add_inward(
-            "spinner_angle",
-            40.0,
-            unit="deg",
-            desc="fan spinner angle",
-        )
+        self.add_inward("spinner_angle", 40.0, unit="deg", desc="fan spinner angle")
         self.add_inward(
             "fan_to_splitter_axial_gap",
             0.02,
             unit="",
             desc="fan to splitter axial gap as a ratio of fan diameter",
         )
-
-        self.add_output(KeypointsPort, "fan_kp")
-        self.add_output(KeypointsPort, "ogv_kp")
-        self.add_output(KeypointsPort, "booster_kp")
-        self.add_output(KeypointsPort, "ic_kp")
-        self.add_output(KeypointsPort, "shaft_kp")
 
         self.add_outward("fan_hub_kp", np.ones(2), unit="m", desc="fan inlet hub position")
         self.add_outward("spinner_apex_kp", np.ones(2), unit="m", desc="spinner inlet hub position")
@@ -138,7 +136,6 @@ class FanModuleGeom(System):
         self.fan_kp.inlet_tip = np.r_[radius, 0.0]
         self.fan_kp.exit_hub = np.r_[0.0, booster_inlet_z]
         self.fan_kp.exit_tip = np.r_[radius, booster_inlet_z]
-        self.fan_inlet_hub_kp = np.r_[radius * self.fan_hub_radius_ratio, 0.0]
 
         # shaft
         self.shaft_kp.inlet_hub = self.fan_kp.exit_hub
@@ -169,8 +166,11 @@ class FanModuleGeom(System):
         self.ic_kp.exit_tip = np.r_[radius, length]
 
         # spinner
-        self.fan_hub_kp = self.fan_inlet_hub_kp
-        fan_hub_r, fan_hub_z = self.fan_inlet_hub_kp
-        self.spinner_apex_kp = np.r_[
-            0.0, fan_hub_z - fan_hub_r / np.tan(np.radians(self.spinner_angle))
-        ]
+        r = radius * self.fan_hub_radius_ratio
+        z = r / np.tan(np.radians(self.spinner_angle))
+
+        self.spinner_kp.inlet_hub = np.r_[0.0, -z]
+        self.spinner_kp.inlet_tip = np.r_[0.0, -z]
+
+        self.spinner_kp.exit_hub = np.r_[0.0, 0.0]
+        self.spinner_kp.exit_tip = np.r_[r, 0.0]

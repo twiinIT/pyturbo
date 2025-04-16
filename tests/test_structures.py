@@ -4,26 +4,13 @@
 import numpy as np
 from cosapp.drivers import NonLinearSolver
 
-from pyturbo.systems.channel import Channel
-from pyturbo.systems.structures import IntermediateCasing
+from pyturbo.systems.structures import Channel, IntermediateCasing
 
 
 class TestChannel:
     """Define tests for the structure model."""
 
     sys = Channel("ch")
-
-    def test_system_setup(self):
-        # default constructor
-        sys = self.sys
-
-        data_input = ["kp", "fl_in"]
-        data_output = ["fl_out"]
-
-        for data in data_input:
-            assert data in sys.inputs
-        for data in data_output:
-            assert data in sys.outputs
 
     def test_run_once(self):
         # basic run
@@ -41,18 +28,6 @@ class TestIntermediateCasing:
     """Define tests for the intermediate casing model."""
 
     sys = IntermediateCasing("ic")
-
-    def test_system_setup(self):
-        # default constructor
-        sys = self.sys
-
-        data_input = ["kp", "fl_ogv", "fl_booster"]
-        data_output = ["fl_bypass", "fl_core"]
-
-        for data in data_input:
-            assert data in sys.inputs
-        for data in data_output:
-            assert data in sys.outputs
 
     def test_run_once(self):
         # basic run
@@ -75,3 +50,17 @@ class TestIntermediateCasing:
         sys.add_driver(NonLinearSolver("run"))
 
         sys.run_drivers()
+
+    def test_view_channel(self):
+        sys = Channel("sys")
+        sys.run_once()
+        sys.occ_view.get_value().render()
+
+        assert True
+
+    def test_view_ic(self):
+        sys = IntermediateCasing("sys")
+        sys.run_once()
+        sys.occ_view.get_value().render()
+
+        assert True

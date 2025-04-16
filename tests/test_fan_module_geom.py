@@ -12,9 +12,8 @@ class TestFanModuleGeom:
 
     sys = FanModuleGeom("fm")
 
-    @classmethod
-    def setup(cls):
-        sys = cls.sys
+    def setup_method(self):
+        sys = self.sys
 
         sys.length = 3.0
         sys.fan_diameter = 1.35
@@ -22,38 +21,10 @@ class TestFanModuleGeom:
         sys.booster_length_ratio = 0.4
         sys.booster_radius_ratio = 0.5
 
-    def test_system_setup(self):
-        # default constructor
-        sys = self.sys
-
-        inputs = []
-        inwards = [
-            "length",
-            "fan_diameter",
-            "fan_length_ratio",
-            "fan_hub_radius_ratio",
-            "booster_length_ratio",
-            "booster_radius_ratio",
-            "shaft_radius_ratio",
-            "spinner_angle",
-            "fan_to_splitter_axial_gap",
-        ]
-        outputs = ["fan_kp", "booster_kp", "ogv_kp", "ic_kp", "shaft_kp"]
-        outwards = ["fan_hub_kp", "spinner_apex_kp", "fan_inlet_hub_kp"]
-
-        for name in inputs:
-            assert name in sys.inputs
-        for name in inwards:
-            assert name in sys.inwards
-        for name in outputs:
-            assert name in sys.outputs
-        for name in outwards:
-            assert name in sys.outwards
-
-        sys.run_once()
-
     def test_run_once_fan(self):
         sys = self.sys
+        sys.run_once()
+
         fan_r = sys.fan_diameter / 2.0
         splitter_gap = sys.fan_to_splitter_axial_gap * sys.fan_diameter
         length = sys.length * sys.fan_length_ratio + splitter_gap

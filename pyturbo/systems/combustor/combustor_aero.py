@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 from cosapp.systems import System
@@ -54,6 +54,10 @@ class CombustorAero(System):
         self.add_inward("eff", 0.99, unit="", desc="combustion efficiency")
 
         self.add_outward("Tcomb", 0.0, unit="K", desc="combustion temperature")
+
+        # design methods
+        scaling = self.add_design_method("scaling")
+        scaling.add_target("Tcomb")
 
     def compute(self):
         self.fl_out.Pt = self.fl_in.Pt

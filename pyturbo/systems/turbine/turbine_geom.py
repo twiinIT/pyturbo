@@ -1,17 +1,13 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
-from typing import Dict
-
 import numpy as np
-from OCC.Core.TopoDS import TopoDS_Shape
-from pyoccad.create import CreateAxis, CreateBezier, CreateRevolution, CreateTopology, CreateWire
+from cosapp.base import System
 
-from pyturbo.systems.generic.generic_simple_geom import GenericSimpleGeom
-from pyturbo.utils import rz_to_3d
+from pyturbo.ports import KeypointsPort
 
 
-class TurbineGeom(GenericSimpleGeom):
+class TurbineGeom(System):
     """Turbine geometry.
 
     The geometrical envelop is a trapezoidal revolution with fully radial inlet and exit.
@@ -43,8 +39,10 @@ class TurbineGeom(GenericSimpleGeom):
     """
 
     def setup(self):
-        super().setup()
+        # inputs
+        self.add_input(KeypointsPort, "kp")
 
+        # inwards
         self.add_inward("stage_count", 1)
         self.add_inward(
             "blade_height_ratio",
@@ -64,39 +62,18 @@ class TurbineGeom(GenericSimpleGeom):
         self.add_outward("mean_radius", 1.0, unit="m", desc="mean radius")
         self.add_outward("fp_exit_hub_kp", np.ones(2), unit="m", desc="flowpath exit hub keypoint")
 
+        self.add_outward("hub_in_r", 1.0, unit="m", desc="inlet radius")
+        self.add_outward("hub_out_r", 1.0, unit="m", desc="outlet radius")
+
     def compute(self):
-        super().compute()
 
-        hub_in_r = self.kp.inlet_tip_r * (1 - self.blade_height_ratio)
-        hub_out_r = self.kp.exit_tip_r * (1 - self.blade_height_ratio)
+        self.hub_in_r = self.kp.inlet_tip_r * (1 - self.blade_height_ratio)
+        self.hub_out_r = self.kp.exit_tip_r * (1 - self.blade_height_ratio)
 
-        self.area_in = np.pi * (self.kp.inlet_tip_r**2 - hub_in_r**2)
+        self.area_in = np.pi * (self.kp.inlet_tip_r**2 - self.hub_in_r**2)
 
-        self.mean_radius = (self.kp.inlet_tip_r + hub_in_r + self.kp.exit_tip_r + hub_out_r) / 4.0
+        self.mean_radius = (
+            self.kp.inlet_tip_r + self.hub_in_r + self.kp.exit_tip_r + self.hub_out_r
+        ) / 4.0
 
         self.fp_exit_hub_kp = self.kp.exit_tip * np.r_[self.exit_hubqtip, 1.0]
-
-    def _to_occt(self) -> Dict[str, TopoDS_Shape]:
-        external_edge = CreateBezier.g1_relative_tension(
-            rz_to_3d(self.kp.inlet_tip),
-            rz_to_3d(self.kp.exit_tip),
-            (0.0, 0.0, 1.0),
-            (0.0, 0.0, 1.0),
-            0.2,
-            1.5,
-        )
-        other_edges = CreateWire.from_points(
-            (
-                rz_to_3d(self.kp.inlet_tip),
-                rz_to_3d(self.kp.inlet_hub),
-                rz_to_3d(self.kp.exit_hub),
-                rz_to_3d(self.kp.exit_tip),
-            )
-        )
-
-        w = CreateWire.from_elements(
-            (external_edge, other_edges),
-        )
-
-        shell = CreateRevolution.surface_from_curve(w, CreateAxis.oz())
-        return dict(geom=CreateTopology.make_compound(shell))

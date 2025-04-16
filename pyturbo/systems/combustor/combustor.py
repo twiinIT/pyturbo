@@ -1,10 +1,10 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 from cosapp.systems import System
 
 from pyturbo.systems.combustor.combustor_aero import CombustorAero
-from pyturbo.systems.generic import GenericSimpleGeom
+from pyturbo.systems.generic import GenericSimpleView
 
 
 class Combustor(System):
@@ -12,10 +12,10 @@ class Combustor(System):
 
     Sub-systems
     -----------
-    geom: GenericSimpleGeom
-        geometry is generated from the keypoints
     aero: CombustorAero
         combustion is performed from fluid flow and fuel flow
+    view: GenericSimpleView
+        compute visualisation
 
     Inputs
     ------
@@ -31,6 +31,8 @@ class Combustor(System):
     -------
     fl_out: FluidPort
         fluid leaving the combustor
+    occ_view: ViewPort
+        occ view of the combustor
 
     Tcomb[K]: float
         combustion temperature
@@ -38,5 +40,9 @@ class Combustor(System):
 
     def setup(self):
         # children
-        self.add_child(GenericSimpleGeom("geom"), pulling="kp")
         self.add_child(CombustorAero("aero"), pulling=["fl_in", "fl_out", "fuel_W", "Tcomb"])
+        self.add_child(GenericSimpleView("view"), pulling=["kp", "occ_view"])
+
+        # design methods
+        scaling = self.add_design_method("scaling")
+        scaling.extend(self.aero.design_methods["scaling"])

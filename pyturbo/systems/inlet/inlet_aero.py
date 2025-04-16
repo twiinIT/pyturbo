@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 from cosapp.systems import System
@@ -65,6 +65,10 @@ class InletAero(System):
         self.add_outward("mach", 0.0, unit="", desc="mach at throat")
         self.add_outward("speed", 0.0, unit="m/s", desc="fluid flow speed at throat")
         self.add_outward("drag", 0.0, unit="N", desc="drag")
+
+        # design methods
+        scaling = self.add_design_method("scaling")
+        scaling.add_target("mach")
 
     def compute(self):
         self.fl_out.Tt = self.fl_in.Tt

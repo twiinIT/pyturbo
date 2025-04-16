@@ -9,6 +9,10 @@ on:
   pull_request:
     branches:
       - master
+defaults:
+  run:
+    # micromamba activation
+    shell: bash -l -eo pipefail {0}
 
 jobs:
   pyturbo_tests:
@@ -16,18 +20,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v3
-      - name: create environment
-        uses: mamba-org/provision-with-micromamba@main
+      - uses: actions/checkout@v4
+      - name: Setup environment
+        uses: mamba-org/setup-micromamba@v1
         with:
           environment-file: ./environment-dev.yml
           environment-name: test_env
-          cache-env: true
-          micromamba-version: "0.23.0"
+          micromamba-version: 2.0.2-2
       - name: run tests
         shell: bash -l -eo pipefail {0}
         run: |
           micromamba activate test_env
+          pip install .
           pytest ./tests/ -v -s

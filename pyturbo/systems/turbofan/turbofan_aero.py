@@ -1,4 +1,4 @@
-# Copyright (C) 2022-2023, twiinIT
+# Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
 from cosapp.systems import System
@@ -76,6 +76,10 @@ class TurbofanAero(System):
             unit="",
             desc="total pressure ratio between seconday nozzle and primary nozzle",
         )
+
+        # design method
+        scaling = self.add_design_method("scaling")
+        scaling.add_target("pr_nozzle")
 
     def compute(self):
         self.thrust = self.primary_nozzle_thrust + self.secondary_nozzle_thrust - self.inlet_drag
