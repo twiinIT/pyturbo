@@ -103,7 +103,7 @@ class Turbofan(System):
         self.add_child(Inlet("inlet"), pulling=["fl_in", "pamb"])
         self.add_child(
             FanModule("fan_module"),
-            pulling={"bpr": "bpr", "N": "N1", "fan_diameter": "fan_diameter"},
+            pulling={"bpr": "bpr", "N": "N1"},
         )
         self.add_child(Channel("fan_duct"))
         self.add_child(GasGenerator("core"), pulling={"fuel_W": "fuel_W", "N": "N2"})
