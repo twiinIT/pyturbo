@@ -87,7 +87,7 @@ class FanModule(System):
         self.add_child(GenericSimpleView("spinner"))
 
         # physics
-        self.add_child(FanModuleGeom("geom"), pulling=["fan_diameter", "length"])
+        self.add_child(FanModuleGeom("geom"), pulling=["fan_diameter", "kp"])
 
         # numerics
         self.add_child(

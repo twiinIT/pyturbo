@@ -1,6 +1,7 @@
 # Copyright (C) 2022-2023, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
+import numpy as np
 import numpy.testing as npt
 from cosapp.drivers import NonLinearSolver
 
@@ -11,23 +12,27 @@ class TestFanModuleGeom:
     """Define tests for the fan geometric model."""
 
     sys = FanModuleGeom("fm")
+    radius = 2 * 1.35
+    length = 0.5
 
-    def setup_method(self):
-        sys = self.sys
+    sys.kp.inlet_tip[0] = radius
+    sys.kp.exit_hub[1] = length
+    sys.kp.exit_tip = np.r_[radius, length]
 
-        sys.length = 3.0
-        sys.fan_diameter = 1.35
-        sys.fan_length_ratio = 0.4
-        sys.booster_length_ratio = 0.4
-        sys.booster_radius_ratio = 0.5
+    sys.fan_length_ratio = 0.4
+    sys.booster_length_ratio = 0.4
+    sys.booster_radius_ratio = 0.5
+    sys.shaft_radius_ratio = 0.1
+
+    sys.run_once()
 
     def test_run_once_fan(self):
         sys = self.sys
-        sys.run_once()
 
-        fan_r = sys.fan_diameter / 2.0
-        splitter_gap = sys.fan_to_splitter_axial_gap * sys.fan_diameter
-        length = sys.length * sys.fan_length_ratio + splitter_gap
+        fan_r = self.radius
+
+        splitter_gap = sys.fan_to_splitter_axial_gap * self.radius * 2
+        length = self.length * sys.fan_length_ratio + splitter_gap
 
         npt.assert_almost_equal(sys.fan_kp.inlet_hub, [0.0, 0.0])
         npt.assert_almost_equal(sys.fan_kp.inlet_tip, [fan_r, 0.0])
@@ -37,12 +42,13 @@ class TestFanModuleGeom:
     def test_run_once_shaft(self):
         sys = self.sys
         inlet_z = sys.fan_kp.exit_hub_z
-        shaft_r = sys.fan_diameter / 2.0 * sys.shaft_radius_ratio
+        shaft_r = self.radius * sys.shaft_radius_ratio
+        length = self.length
 
         npt.assert_almost_equal(sys.shaft_kp.inlet_hub, [0.0, inlet_z])
         npt.assert_almost_equal(sys.shaft_kp.inlet_tip, [shaft_r, inlet_z])
-        npt.assert_almost_equal(sys.shaft_kp.exit_hub, [0.0, 3.0])
-        npt.assert_almost_equal(sys.shaft_kp.exit_tip, [shaft_r, 3.0])
+        npt.assert_almost_equal(sys.shaft_kp.exit_hub, [0.0, length])
+        npt.assert_almost_equal(sys.shaft_kp.exit_tip, [shaft_r, length])
 
     def test_run_once_booster(self):
         sys = self.sys
