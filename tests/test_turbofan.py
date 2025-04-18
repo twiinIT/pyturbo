@@ -43,11 +43,12 @@ class TestTurbofan:
         load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_geom.json")
         load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_design_data.json")
 
-        sys.add_driver(NonLinearSolver("solver", tol=1e-6))
+        solver = sys.add_driver(NonLinearSolver("solver", tol=1e-6))
 
         # run solver
         sys.run_drivers()
 
+        assert np.linalg.norm(solver.problem.residue_vector()) < 1e-6
         assert pytest.approx(sys.sfc, rel=0.1) == 0.4
 
     def test_run_design_method(self):
@@ -57,10 +58,12 @@ class TestTurbofan:
 
         # run solver
         sys.run_drivers()
+        assert np.linalg.norm(design.problem.residue_vector()) < 1e-6
 
         # pure scaling
         design.extend(sys.design_methods["scaling"])
         sys.run_drivers()
+        assert np.linalg.norm(design.problem.residue_vector()) < 1e-6
 
         # tuning bpr
         design.extend(sys.design_methods["tuning_bpr"])
@@ -68,7 +71,7 @@ class TestTurbofan:
         sys.bpr = bpr = 5.0
 
         sys.run_drivers()
-
+        assert np.linalg.norm(design.problem.residue_vector()) < 1e-6
         assert pytest.approx(sys.bpr) == bpr
 
         # tuning thrust
@@ -77,7 +80,7 @@ class TestTurbofan:
         sys.thrust = thrust = 100e3
 
         sys.run_drivers()
-
+        assert np.linalg.norm(design.problem.residue_vector()) < 1e-6
         assert pytest.approx(sys.thrust) == thrust
         assert pytest.approx(sys.bpr) == bpr
         assert pytest.approx(sys.fan_diameter, rel=0.1) == 1.65
@@ -98,6 +101,7 @@ class TestTurbofan:
         load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_design_data.json")
 
         sys.run_drivers()
+        assert np.linalg.norm(solver.problem.residue_vector()) < 1e-6
 
         # engine functional requirements
         solver.add_equation("thrust == 90e3")
@@ -135,6 +139,7 @@ class TestTurbofan:
         init_environment(sys, mach=0.0, dtamb=15.0, alt=0.0)
 
         sys.run_drivers()
+        assert np.linalg.norm(solver.problem.residue_vector()) < 1e-6
 
         # engine functional requirements
         solver.add_equation("thrust == 90e3")
