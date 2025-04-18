@@ -1,7 +1,7 @@
 # Copyright (C) 2022-2023, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
-import pytest
+import numpy as np
 from cosapp.drivers import NonLinearSolver
 
 from pyturbo.systems import GasGenerator
@@ -19,16 +19,13 @@ class TestGasGenerator:
 
         assert sys.fl_out.W == 80.1
 
-    @pytest.mark.skip("not relevant")
     def test_solver(self):
         sys = GasGenerator("core")
-        sys.add_driver(NonLinearSolver("run"))
+        solver = sys.add_driver(NonLinearSolver("run"))
 
         sys.run_drivers()
 
-        assert sys.pr == pytest.approx(16.4, rel=1e-2)
-        assert sys.compressor.aero.sh_in.power == pytest.approx(28.5e6, rel=1e-2)
-        assert sys.compressor.aero.sh_in.N == pytest.approx(5940, rel=1e-2)
+        assert np.linalg.norm(solver.problem.residue_vector()) < 1e-6
 
     def test_view(self):
         sys = GasGenerator("sys")
