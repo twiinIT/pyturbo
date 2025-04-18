@@ -103,7 +103,7 @@ class Turbofan(System):
         self.add_child(Inlet("inlet"), pulling=["fl_in", "pamb"])
         self.add_child(
             FanModule("fan_module"),
-            pulling={"bpr": "bpr", "N": "N1", "fan_diameter": "fan_diameter"},
+            pulling={"bpr": "bpr", "N": "N1"},
         )
         self.add_child(Channel("fan_duct"))
         self.add_child(GasGenerator("core"), pulling={"fuel_W": "fuel_W", "N": "N2"})
@@ -151,11 +151,7 @@ class Turbofan(System):
         self.connect(self.trf.fl_out, self.primary_nozzle.fl_in)
 
         # geometry connectors
-        self.connect(
-            self.geom,
-            self.fan_module,
-            {"fan_module_length": "length"},
-        )
+        self.connect(self.geom.fan_module_kp, self.fan_module.kp)
         self.connect(self.geom.inlet_kp, self.inlet.kp)
         self.connect(self.geom.core_kp, self.core.kp)
         self.connect(self.geom.tcf_kp, self.tcf.kp)

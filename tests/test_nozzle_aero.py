@@ -1,10 +1,11 @@
 # Copyright (C) 2022-2023, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
+import numpy as np
 import pytest
 from cosapp.drivers import EulerExplicit, NonLinearSolver
 
-from pyturbo.systems.nozzle import Nozzle, NozzleAero
+from pyturbo.systems.nozzle import NozzleAero
 
 
 class TestNozzleAero:
@@ -28,17 +29,6 @@ class TestNozzleAero:
         for data in data_inwards:
             assert data in sys.inwards
 
-    @pytest.mark.skip("not relevant")
-    def test_run_once(self):
-        # basic run
-        sys = Nozzle("noz")
-
-        sys.fl_in.W = 400.0
-        sys.pamb = 1e5
-        sys.run_once()
-
-        assert sys.thrust == pytest.approx(30093.0, 0.1)
-
     def test_run_solver(self):
         # basic run
         sys = NozzleAero("noz")
@@ -52,6 +42,7 @@ class TestNozzleAero:
         sys.fl_in.W = 30.0
         sys.run_drivers()
 
+        assert np.linalg.norm(run.problem.residue_vector()) < 1e-6
         assert sys.speed == pytest.approx(308.3, 0.01)
         assert sys.mach == pytest.approx(0.7, 0.01)
         assert sys.thrust == pytest.approx(9250.0, 0.01)

@@ -22,12 +22,6 @@ class FanModuleGeom(System):
     kp: KeypointsPort
         fan module geometrical envelop
 
-    length[m]: float, default=0.8
-        fan module length
-
-    fan_diameter[m]: float, default=1.0
-        fan module length
-
     fan_length_ratio[-]: float, default=0.3
         fan length relative to fan module length
 
@@ -71,6 +65,9 @@ class FanModuleGeom(System):
     """
 
     def setup(self):
+        # inputs
+        self.add_input(KeypointsPort, "kp")
+
         # inputs/outputs
         self.add_output(KeypointsPort, "spinner_kp")
         self.add_output(KeypointsPort, "fan_kp")
@@ -80,8 +77,6 @@ class FanModuleGeom(System):
         self.add_output(KeypointsPort, "shaft_kp")
 
         # inwards/outwards
-        self.add_inward("length", 0.8, unit="m", desc="fan module length")
-        self.add_inward("fan_diameter", 1.0, unit="m", desc="fan module diameter")
         self.add_inward(
             "fan_length_ratio", 0.3, unit="", desc="fan length relative to fan module length"
         )
@@ -120,11 +115,11 @@ class FanModuleGeom(System):
 
     def compute(self):
         # set keypoints to internal components
-        length = self.length
-        radius = self.fan_diameter / 2.0
+        length = self.kp.exit_hub[1] - self.kp.inlet_hub[1]
+        radius = self.kp.inlet_tip[0]
 
         fan_exit_z = self.fan_length_ratio * length
-        splitter_gap = self.fan_to_splitter_axial_gap * self.fan_diameter
+        splitter_gap = self.fan_to_splitter_axial_gap * 2 * radius
         booster_inlet_z = fan_exit_z + splitter_gap
         booster_exit_z = booster_inlet_z + self.booster_length_ratio * length
 

@@ -19,60 +19,60 @@ class FanModule(System):
     """Fan assembly model.
 
     The Fan assembly model is made of:
-    - spinner,
-    - fan,
-    - ogv (outlet guided vanes),
-    - booster,
-    - ic (intermediate casing),
+        - spinner,
+        - fan,
+        - ogv (outlet guided vanes),
+        - booster,
+        - ic (intermediate casing),
 
-    Sub-systems
-    -----------
-    fan: Fan
-        rotor
-    ogv: Stator
-        outlet guided vane in the secondary flow
-    booster: Booster
-        multi stage compressor link to the LP shaft
-    ic: IntermediateCasing
-        intermediate casing suports lp shaft front bearings, and forward mounts
+        Sub-systems
+        -----------
+        fan: Fan
+            rotor
+        ogv: Stator
+            outlet guided vane in the secondary flow
+        booster: Booster
+            multi stage compressor link to the LP shaft
+        ic: IntermediateCasing
+            intermediate casing suports lp shaft front bearings, and forward mounts
 
-    splitter_shaft: MixerShaft
-        split power from LP shaft toward booster and fan shaft
-    splitter_fluid: MixerFluid
-        split fluid flow from fan toward booster and ogv
+        splitter_shaft: MixerShaft
+            split power from LP shaft toward booster and fan shaft
+        splitter_fluid: MixerFluid
+            split fluid flow from fan toward booster and ogv
 
-    geom: FanModuleGeom
-        sub systems key points generated from the fan module envelop
-    view: FanModuleView
-        compute visualisation
+        geom: FanModuleGeom
+            sub systems key points generated from the fan module envelop
+        view: FanModuleView
+            compute visualisation
 
-    Inputs
-    ------
-    kp: KeypointsPort
-        fan module geometrical envelop
-    fl_in: FluidPort
-        fluid going into the fan madule
-    sh_in: FluidShaft
-        shaft driving the fan madule
+        Inputs
+        ------
+        kp: KeypointsPort
+            fan module geometrical envelop
+        fl_in: FluidPort
+            fluid going into the fan madule
+        sh_in: FluidShaft
+            shaft driving the fan madule
 
-    Outputs
-    -------
-    fl_booster: FluidPort
-        fluid leaving the booster
-    fl_ogv: FluidPort
-        fluid leaving the ogv
+        Outputs
+        -------
+        fl_booster: FluidPort
+            fluid leaving the booster
+        fl_ogv: FluidPort
+            fluid leaving the ogv
 
-    bpr[-]: float, default=1.0
-        by pass ratio = secondary flow / primary flow
-    pr[-]: float, default=1.0
-        pressure ration = fan.pr * booster.pr
+        bpr[-]: float, default=1.0
+            by pass ratio = secondary flow / primary flow
+        pr[-]: float, default=1.0
+            pressure ration = fan.pr * booster.pr
 
-    Good practice
-    -------------
-    1:
-        init mass flow split between booster and fan at the good level of magnitude
-    2:
-        init mass flow split between booster shaft and fan shaft at the good level of magnitude
+        Good practice
+        -------------
+        1:
+            init mass flow split between booster and fan at the good level of magnitude
+        2:
+            init mass flow split between booster shaft and fan shaft at the good level of magnitude
     """
 
     def setup(self):
@@ -87,7 +87,7 @@ class FanModule(System):
         self.add_child(GenericSimpleView("spinner"))
 
         # physics
-        self.add_child(FanModuleGeom("geom"), pulling=["fan_diameter", "length"])
+        self.add_child(FanModuleGeom("geom"), pulling=["kp"])
 
         # numerics
         self.add_child(
