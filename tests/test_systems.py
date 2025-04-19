@@ -13,6 +13,9 @@ from cosapp.base import System
 from cosapp.drivers import NonLinearSolver
 
 
+directory_path = os.path.join(os.path.dirname(__file__), "..", "pyturbo", "systems")
+
+
 def get_all_system_classes_from_directory(directory_path):
     cls_list = []
 
@@ -48,7 +51,19 @@ def get_all_system_classes_from_directory(directory_path):
     return unique_cls_list
 
 
-directory_path = os.path.join(os.path.dirname(__file__), "..", "pyturbo", "systems")
+def pytest_generate_tests(metafunc):
+    class_name_filter = metafunc.config.getoption("class_name")
+    all_classes = get_all_system_classes_from_directory(directory_path)
+
+    if class_name_filter:
+        all_classes = [
+            cls for cls in all_classes
+            if cls.__name__ == class_name_filter
+        ]
+
+    metafunc.parametrize("cls", all_classes, scope="module")
+
+
 cls_list = get_all_system_classes_from_directory(directory_path)
 
 
@@ -59,18 +74,19 @@ def system(request):
     return cls("sys")
 
 
-def test_setup(system):
-    assert system is not None
+def test_setup(cls):
+    assert cls('sys') is not None
 
 
-def test_run_once(system):
-    system.run_once()
+def test_run_once(cls):
+    print(cls)
+    cls('sys').run_once()
 
 
-def test_run_design_methods(system):
-    for name in system.design_methods.keys():
+def test_run_design_methods(cls):
+    for name in cls('sys').design_methods.keys():
         print(f"Design method: {name}")
-        sys = type(system)("sys")
+        sys = cls("sys")
         nls = sys.add_driver(NonLinearSolver('nls', tol=1e-6))
         nls.extend(sys.design_methods[name])
 
