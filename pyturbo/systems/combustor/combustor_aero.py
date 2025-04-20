@@ -53,10 +53,11 @@ class CombustorAero(System):
         self.add_inward("fhv", 46.2e6, unit="J/kg", desc="Fuel Heating Value")
         self.add_inward("eff", 0.99, unit="", desc="combustion efficiency")
 
-        self.add_outward("Tcomb", 0.0, unit="K", desc="combustion temperature")
+        self.add_outward("Tcomb", 600.0, unit="K", desc="combustion temperature")
 
         # design methods
         scaling = self.add_design_method("scaling")
+        scaling.add_unknown("fuel_W")
         scaling.add_target("Tcomb")
 
     def compute(self):
