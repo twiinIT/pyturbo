@@ -83,13 +83,18 @@ class TurbineAero(System):
         # outwards
         self.add_outward("Wc", unit="kg/s", desc="inlet corrected mass flow")
         self.add_outward("Wcrit", unit="kg/s", desc="critical inlet corrected mass flow")
-        self.add_outward("Tt_ratio", unit="", desc="total temperature ratio")
+        self.add_outward("Tt_ratio", 0.6, unit="", desc="total temperature ratio")
         self.add_outward("psi", unit="", desc="aerodynamic loading")
 
         # off design
         self.add_unknown("Ncqdes", max_rel_step=0.5)
         self.add_unknown("dhqt", max_rel_step=0.8)
+        self.add_unknown("fl_in.W")
         self.add_equation("fl_in.W == Wcrit")
+
+        off_design = self.add_design_method("off_design")
+        off_design.add_target("sh_out.N")
+        off_design.add_target("sh_out.power")
 
     def compute(self):
         # fluid

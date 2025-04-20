@@ -103,7 +103,7 @@ class CompressorAero(System):
 
         # outwards
         # functional characteristics
-        self.add_outward("utip", 0.0, unit="m/s", desc="tip speed")
+        self.add_outward("utip", 300.0, unit="m/s", desc="tip speed")
         self.add_outward("phi", 0.0, unit="", desc="axial flow velocity coefficient")
         self.add_outward("psi", 0.0, unit="", desc="load coefficient per stage")
 
@@ -121,20 +121,20 @@ class CompressorAero(System):
             desc="difference between psi from caracteristics and from enthalpy",
         )
         self.add_equation("eps_psi == 0")
+        self.add_unknown("sh_in.N")
 
         # design methods
         # generic
         scaling = self.add_design_method("scaling")
-
         scaling.add_unknown("xnd", max_rel_step=0.5)
-        scaling.add_unknown("phiP", lower_bound=0.1, upper_bound=1.5)
+        scaling.add_unknown("phiP", lower_bound=0.1, max_rel_step=0.5)
 
         scaling.add_equation("pcnr == 95.0")
         scaling.add_target("utip")
 
         # scaling booster
         scaling = self.add_design_method("scaling_booster")
-        scaling.add_unknown("phiP")
+        scaling.add_unknown("phiP", max_rel_step=0.5)
         scaling.add_unknown("xnd", max_rel_step=0.5)
 
         scaling.add_equation("phi == 0.45")
@@ -151,6 +151,8 @@ class CompressorAero(System):
         scaling.add_equation("phi == 0.5")
         scaling.add_target("utip")
         scaling.add_target("psi")
+
+        self.sh_in.power = 1e6
 
     def compute(self):
         # fl_out computed from fl_in, enthalpy and mass conservation
@@ -178,3 +180,5 @@ class CompressorAero(System):
 
         self.spec_flow = Wc / self.inlet_area
         self.pcnr = self.sh_in.N / self.xnd * 100.0
+
+        print(self.sh_in.N, self.xnd, self.phiP)

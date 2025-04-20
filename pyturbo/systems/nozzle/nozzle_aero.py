@@ -79,6 +79,7 @@ class NozzleAero(System):
         # off design
         self.add_inward("mach_exit", 0.5)
         self.add_unknown("mach_exit")
+        self.add_unknown("fl_in.W")
         self.add_equation("mach == mach_exit")
         self.add_equation("fl_in.W == fl_out.W")
 

@@ -59,6 +59,13 @@ class Turbine(System):
 
         self.connect(self.aero.inwards, self.view.inwards, {"stage_count": "n"})
 
+        # off design
+        self.add_unknown("fl_in.W")
+
+        off_design = self.add_design_method("off_design")
+        off_design.add_target("sh_out.N")
+        off_design.add_target("sh_out.power")
+
         # design methods
         scaling = self.add_design_method("scaling")
 
