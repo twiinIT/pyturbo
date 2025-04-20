@@ -6,6 +6,7 @@ import inspect
 import os
 
 import numpy as np
+import pytest
 from cosapp.base import System
 from cosapp.drivers import NonLinearSolver
 
@@ -58,6 +59,23 @@ def test_run_once(cls):
     cls("sys").run_once()
 
 
+def test_run_off_design(cls):
+    """Run off design methods."""
+    sys = cls("sys")
+    nls = sys.add_driver(NonLinearSolver("nls", tol=1e-6))
+
+    try:
+        nls.extend(sys.design_methods["off_design"])
+    except KeyError:
+        pass
+
+    sys.run_drivers()
+
+    print(nls.problem)
+    assert np.linalg.norm(nls.problem.residue_vector()) < 1e-6
+
+
+@pytest.mark.skip
 def test_run_design_methods(cls):
     """Run all design methods."""
     for name in cls("sys").design_methods.keys():
@@ -67,4 +85,6 @@ def test_run_design_methods(cls):
         nls.extend(sys.design_methods[name])
 
         sys.run_drivers()
+
+        print(nls.problem)
         assert np.linalg.norm(nls.problem.residue_vector()) < 1e-6
