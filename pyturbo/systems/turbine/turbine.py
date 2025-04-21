@@ -6,8 +6,8 @@ from pathlib import Path
 from cosapp.systems import System
 
 from pyturbo.systems.generic import GenericSimpleView
-from pyturbo.systems.turbine.turbine_aero import TurbineAero
-from pyturbo.systems.turbine.turbine_geom import TurbineGeom
+from pyturbo.systems.turbine.physics.turbine_aero import TurbineAero
+from pyturbo.systems.turbine.physics.turbine_geom import TurbineGeom
 from pyturbo.utils import load_from_json
 
 

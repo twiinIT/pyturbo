@@ -52,6 +52,35 @@ def get_all_design_methods(classes):
     return pairs
 
 
+def get_all_data_files(classes):
+    """Get all .json data files in the 'data' folder adjacent to each class file.
+    If no data is found, still return (cls, None) to allow a basic test.
+    """
+    pairs = []
+
+    for cls in classes:
+        try:
+            module_file = inspect.getfile(cls)
+            class_dir = os.path.dirname(module_file)
+            data_dir = os.path.join(class_dir, "data")
+
+            found = False
+            if os.path.isdir(data_dir):
+                for file in os.listdir(data_dir):
+                    if file.endswith(".json"):
+                        found = True
+                        file_path = os.path.join(data_dir, file)
+                        pairs.append((cls, file_path))
+
+            if not found:
+                pairs.append((cls, None))
+
+        except Exception:
+            continue
+
+    return pairs
+
+
 def pytest_addoption(parser):
     """Manage option in pytest."""
     parser.addoption(
@@ -76,4 +105,9 @@ def pytest_generate_tests(metafunc):
     if "cls_and_method" in metafunc.fixturenames:
         metafunc.parametrize(
             "cls_and_method", get_all_design_methods(all_classes), scope="function"
+        )
+
+    if "cls_and_data" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "cls_and_data", get_all_data_files(all_classes), scope="function"
         )

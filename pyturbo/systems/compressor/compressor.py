@@ -5,7 +5,7 @@ from pathlib import Path
 
 from cosapp.systems import System
 
-from pyturbo.systems.compressor import CompressorAero, CompressorGeom
+from pyturbo.systems.compressor.physics import CompressorAero, CompressorGeom
 from pyturbo.systems.generic import GenericSimpleView
 from pyturbo.utils import load_from_json
 

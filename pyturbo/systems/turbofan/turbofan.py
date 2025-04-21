@@ -14,7 +14,7 @@ from pyturbo.systems.nacelle import Nacelle
 from pyturbo.systems.nozzle import Nozzle
 from pyturbo.systems.structures import Channel
 from pyturbo.systems.turbine import Turbine
-from pyturbo.systems.turbofan import TurbofanAero, TurbofanGeom, TurbofanWeight
+from pyturbo.systems.turbofan.physics import TurbofanAero, TurbofanGeom, TurbofanWeight
 from pyturbo.utils import load_from_json
 
 
