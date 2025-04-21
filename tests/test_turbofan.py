@@ -93,7 +93,7 @@ class TestTurbofan:
         sys.run_drivers()
         assert np.linalg.norm(solver.problem.residue_vector()) < 1e-6
 
-        # cfm 
+        # cfm
         load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")
 
         # engine functional requirements
@@ -131,7 +131,7 @@ class TestTurbofan:
 
         assert np.linalg.norm(solver.problem.residue_vector()) < 1e-6
 
-        # cfm 
+        # cfm
         load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")
 
         # engine functional requirements

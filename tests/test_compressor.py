@@ -17,7 +17,7 @@ class TestCompressor:
         sys.add_unknown("sh_in.N")
 
         sys.run_drivers()
-        
+
         assert sys.sh_in.N == pytest.approx(5146.4, rel=1e-2)
         assert sys.pr == pytest.approx(1.69, rel=1e-2)
 

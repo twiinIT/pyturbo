@@ -1,8 +1,8 @@
 # Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
-from pathlib import Path
 import inspect
+from pathlib import Path
 
 from cosapp.systems import System
 

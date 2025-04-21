@@ -12,7 +12,6 @@ from pyturbo.systems.nozzle import Nozzle
 from pyturbo.systems.structures import Channel
 from pyturbo.systems.turbine import Turbine
 from pyturbo.systems.turbofan.physics import TurbofanAero, TurbofanGeom, TurbofanWeight
-from pyturbo.utils import load_from_json
 
 
 class Turbofan(System):
@@ -186,6 +185,8 @@ class Turbofan(System):
         scaling = self.add_design_method("scaling")
 
         scaling.add_unknown("fuel_W")
+        scaling.add_unknown("fan_diameter", max_rel_step=0.5)
+        scaling.add_target("thrust")
 
         scaling.extend(self.geom.design_methods["scaling"])
         scaling.extend(self.inlet.design_methods["scaling"])
@@ -193,13 +194,3 @@ class Turbofan(System):
         scaling.extend(self.turbine.design_methods["scaling"])
         scaling.extend(self.core.design_methods["scaling"])
         scaling.extend(self.aero.design_methods["scaling"])
-
-        # tuning thrust
-        tuning = self.add_design_method("tuning_thrust")
-        tuning.add_unknown("fan_diameter", max_rel_step=0.5)
-        tuning.add_target("thrust")
-
-        # tuning bpr
-        tuning = self.add_design_method("tuning_bpr")
-        tuning.add_unknown("geom.core_inlet_radius_ratio", max_rel_step=0.8)
-        tuning.add_target("bpr")

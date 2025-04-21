@@ -76,8 +76,8 @@ class FanModule(System):
         children_name = ["spinner", "fan", "ogv", "booster", "ic"]
 
         # component
-        self.add_child(Compressor("fan", config="fan"), pulling={"N" : "N", "pr" : "fan_pr"})
-        self.add_child(Compressor("booster", config="booster"), pulling={'pr' : 'booster_pr'})
+        self.add_child(Compressor("fan", config="fan"), pulling={"N": "N", "pr": "fan_pr"})
+        self.add_child(Compressor("booster", config="booster"), pulling={"pr": "booster_pr"})
         self.add_child(Channel("ogv"))
         self.add_child(IntermediateCasing("ic"), pulling=["fl_core", "fl_bypass"])
         self.add_child(GenericSimpleView("spinner"))
