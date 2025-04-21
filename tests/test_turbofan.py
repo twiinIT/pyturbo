@@ -40,8 +40,7 @@ class TestTurbofan:
 
     def test_run_CFM(self):
         sys = Turbofan("sys")
-        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_geom.json")
-        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_design_data.json")
+        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")
 
         solver = sys.add_driver(NonLinearSolver("solver", tol=1e-6))
 
@@ -90,11 +89,12 @@ class TestTurbofan:
         # Create a new turbofan system
         sys = Turbofan("sys")
         solver = sys.add_driver(NonLinearSolver("nls", tol=1e-6))
-        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_geom.json")
-        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_design_data.json")
 
         sys.run_drivers()
         assert np.linalg.norm(solver.problem.residue_vector()) < 1e-6
+
+        # cfm 
+        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")
 
         # engine functional requirements
         solver.add_equation("thrust == 90e3")
@@ -125,14 +125,14 @@ class TestTurbofan:
         # Create a new turbofan system
         sys = Turbofan("sys")
         solver = sys.add_driver(NonLinearSolver("nls", tol=1e-6))
-
-        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_geom.json")
-        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7_design_data.json")
-
         init_environment(sys, mach=0.0, dtamb=15.0, alt=0.0)
 
         sys.run_drivers()
+
         assert np.linalg.norm(solver.problem.residue_vector()) < 1e-6
+
+        # cfm 
+        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")
 
         # engine functional requirements
         solver.add_equation("thrust == 90e3")

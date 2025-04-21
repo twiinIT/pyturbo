@@ -79,5 +79,5 @@ class Turbine(System):
         # init
         if config:
             class_dir = Path(inspect.getfile(self.__class__)).parent
-            data_path = class_dir / "data" / f"{config}.json"
+            data_path = class_dir / "config" / f"{config}.json"
             load_from_json(self, data_path)

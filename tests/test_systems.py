@@ -50,13 +50,18 @@ def test_run_design_method(cls_and_method):
     print(f"\nSystem: {cls.__name__} | Method: {method}")
     sys = cls("sys")
     nls = sys.add_driver(NonLinearSolver("nls", tol=1e-6))
+
+    sys.run_drivers()
+    print('coucou1', nls.problem)
     nls.extend(sys.design_methods[method])
 
     try:
         sys.run_drivers()
         print("Problem: ", nls.problem)
         residue = np.linalg.norm(nls.problem.residue_vector())
+        print('coucou2', nls.problem)
         if residue >= 1e-6:
             pytest.fail(f"Residual too high for `{cls.__name__}` with `{method}`: {residue:.4e}")
+        assert False
     except ArithmeticError as e:
         pytest.xfail(f"ArithmeticError: {e}")

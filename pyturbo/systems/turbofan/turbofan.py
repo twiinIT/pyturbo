@@ -1,11 +1,8 @@
 # Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
-from pathlib import Path
-
 from cosapp.systems import System
 
-import pyturbo.systems.turbine.data as trb_data
 from pyturbo.systems.fan_module import FanModule
 from pyturbo.systems.gas_generator import GasGenerator
 from pyturbo.systems.generic import GenericSystemView
@@ -88,7 +85,7 @@ class Turbofan(System):
 
     """
 
-    def setup(self, init_file: Path = None):
+    def setup(self):
         # geom
         self.add_child(
             TurbofanGeom("geom"),
@@ -108,7 +105,7 @@ class Turbofan(System):
         self.add_child(Channel("fan_duct"))
         self.add_child(GasGenerator("core"), pulling={"fuel_W": "fuel_W", "N": "N2"})
         self.add_child(Channel("tcf"))
-        self.add_child(Turbine("turbine"))
+        self.add_child(Turbine("turbine", config="lpt"))
         self.add_child(Channel("trf"))
         self.add_child(Nozzle("primary_nozzle"), pulling=["pamb"])
         self.add_child(Nozzle("secondary_nozzle"), pulling=["pamb"])
@@ -206,9 +203,3 @@ class Turbofan(System):
         tuning = self.add_design_method("tuning_bpr")
         tuning.add_unknown("geom.core_inlet_radius_ratio", max_rel_step=0.8)
         tuning.add_target("bpr")
-
-        # init
-        load_from_json(self.turbine, Path(trb_data.__file__).parent / "lpt.json")
-
-        if init_file:
-            load_from_json(self, init_file)
