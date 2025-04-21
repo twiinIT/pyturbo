@@ -1,18 +1,14 @@
 # Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
-from pathlib import Path
-
 import numpy as np
 from cosapp.systems import System
 
-import pyturbo.systems.compressor.data as cmp_data
 from pyturbo.systems.compressor import Compressor
 from pyturbo.systems.fan_module import FanModuleGeom
 from pyturbo.systems.generic import GenericSimpleView, GenericSystemView
 from pyturbo.systems.mixers import MixerFluid, MixerShaft
 from pyturbo.systems.structures import Channel, IntermediateCasing
-from pyturbo.utils import load_from_json
 
 
 class FanModule(System):
@@ -80,8 +76,8 @@ class FanModule(System):
         children_name = ["spinner", "fan", "ogv", "booster", "ic"]
 
         # component
-        self.add_child(Compressor("fan"), pulling=["N"])
-        self.add_child(Compressor("booster"))
+        self.add_child(Compressor("fan", config="fan"), pulling={"N" : "N", "pr" : "fan_pr"})
+        self.add_child(Compressor("booster", config="booster"), pulling={'pr' : 'booster_pr'})
         self.add_child(Channel("ogv"))
         self.add_child(IntermediateCasing("ic"), pulling=["fl_core", "fl_bypass"])
         self.add_child(GenericSimpleView("spinner"))
@@ -132,19 +128,14 @@ class FanModule(System):
 
         # inwards/outwards
         self.add_outward("bpr", 1.0, unit="", desc="By pass ratio")
-        self.add_outward("fan_pr", 1.0, unit="", desc="fan pressure ratio")
-        self.add_outward("booster_pr", 1.0, unit="", desc="booster pressure ratio")
 
         # design methods
         scaling = self.add_design_method("scaling")
 
-        scaling.extend(self.fan.design_methods["scaling_fan"])
-        scaling.extend(self.booster.design_methods["scaling_booster"])
+        scaling.extend(self.fan.design_methods["scaling"])
+        scaling.extend(self.booster.design_methods["scaling"])
 
         # init
-        load_from_json(self.fan, Path(cmp_data.__file__).parent / "fan.json")
-        load_from_json(self.booster, Path(cmp_data.__file__).parent / "booster.json")
-
         self.booster.stage_count = 4
 
         self.sh_in.power = 20e6
@@ -156,5 +147,3 @@ class FanModule(System):
 
     def compute(self):
         self.bpr = self.splitter_fluid.fl_fan.W / self.splitter_fluid.fl_booster.W
-        self.fan_pr = self.fan.pr
-        self.booster_pr = self.booster.pr

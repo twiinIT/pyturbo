@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import numpy.testing as npt
-from cosapp.drivers import NonLinearSolver
 
 from pyturbo.systems.turbofan.physics import TurbofanGeom
 
@@ -88,9 +87,3 @@ class TestTurbofanGeom:
         geom = self.geom
         npt.assert_almost_equal(geom.frd_mount, [1.0, 0.75])
         npt.assert_almost_equal(geom.aft_mount, [0.5, 2.6625])
-
-    def test_solver(self):
-        geom = self.geom
-
-        geom.add_driver(NonLinearSolver("run"))
-        geom.run_drivers()

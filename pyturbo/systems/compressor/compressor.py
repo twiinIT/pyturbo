@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from pathlib import Path
+import inspect
 
 from cosapp.systems import System
 
@@ -54,7 +55,7 @@ class Compressor(System):
         initiate sh_in.power with the good order of magnitude of shaft power
     """
 
-    def setup(self, init_file: Path = None):
+    def setup(self, config=None):
         # children
         self.add_child(
             CompressorGeom("geom"),
@@ -81,23 +82,25 @@ class Compressor(System):
         self.connect(self.aero.inwards, self.view.inwards, {"stage_count": "n"})
 
         # design methods
-        # scaling fan
-        scaling = self.add_design_method("scaling_fan")
-        scaling.extend(self.aero.design_methods["scaling"])
+        if config == "booster":
+            scaling = self.add_design_method("scaling")
+            scaling.extend(self.aero.design_methods["scaling_booster"])
 
-        # scaling booster
-        scaling = self.add_design_method("scaling_booster")
-        scaling.extend(self.aero.design_methods["scaling_booster"])
+            scaling.add_unknown("geom.blade_hub_to_tip_ratio", upper_bound=1.0 - 1e-3)
 
-        scaling.add_unknown("geom.blade_hub_to_tip_ratio", upper_bound=1.0 - 1e-3)
+        elif config == "hpc":
+            scaling = self.add_design_method("scaling")
+            scaling.extend(self.aero.design_methods["scaling_hpc"])
 
-        # scaling hpc
-        scaling = self.add_design_method("scaling_hpc")
-        scaling.extend(self.aero.design_methods["scaling_hpc"])
+        else:
+            scaling = self.add_design_method("scaling")
+            scaling.extend(self.aero.design_methods["scaling"])
 
         # init
-        if init_file:
-            load_from_json(self, init_file)
+        if config:
+            class_dir = Path(inspect.getfile(self.__class__)).parent
+            data_path = class_dir / "data" / f"{config}.json"
+            load_from_json(self, data_path)
 
     def compute(self):
         self.N = self.sh_in.N

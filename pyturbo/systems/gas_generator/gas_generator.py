@@ -1,18 +1,13 @@
 # Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
-from pathlib import Path
-
 from cosapp.systems import System
 
-import pyturbo.systems.compressor.data as cmp_data
-import pyturbo.systems.turbine.data as trb_data
 from pyturbo.systems.combustor import Combustor
 from pyturbo.systems.compressor import Compressor
 from pyturbo.systems.gas_generator import GasGeneratorGeom
 from pyturbo.systems.generic import GenericSystemView
 from pyturbo.systems.turbine import Turbine
-from pyturbo.utils import load_from_json
 
 
 class GasGenerator(System):
@@ -68,9 +63,9 @@ class GasGenerator(System):
         # children
         self.add_child(GasGeneratorGeom("geom"), pulling=["kp"])
 
-        self.add_child(Compressor("compressor"), pulling=["fl_in", "pr", "N"])
+        self.add_child(Compressor("compressor", config="hpc"), pulling=["fl_in", "pr", "N"])
         self.add_child(Combustor("combustor"), pulling=["fuel_W"])
-        self.add_child(Turbine("turbine"), pulling=["fl_out"])
+        self.add_child(Turbine("turbine", config="hpt"), pulling=["fl_out"])
 
         self.add_child(GenericSystemView("view", children_name=children_name), pulling=["occ_view"])
 
@@ -89,10 +84,6 @@ class GasGenerator(System):
         # design methods
         scaling = self.add_design_method("scaling")
 
-        scaling.extend(self.compressor.design_methods["scaling_hpc"])
+        scaling.extend(self.compressor.design_methods["scaling"])
         scaling.extend(self.combustor.design_methods["scaling"])
         scaling.extend(self.turbine.design_methods["scaling"])
-
-        # init
-        load_from_json(self.compressor, Path(cmp_data.__file__).parent / "hpc.json")
-        load_from_json(self.turbine, Path(trb_data.__file__).parent / "hpt.json")

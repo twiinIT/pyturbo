@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from pathlib import Path
+import inspect
 
 from cosapp.systems import System
 
@@ -48,7 +49,7 @@ class Turbine(System):
         shaft speed rotation
     """
 
-    def setup(self, init_file: Path = None):
+    def setup(self, config=None):
         # children
         self.add_child(TurbineGeom("geom"), pulling=["stage_count", "kp", "fp_exit_hub_kp"])
         self.add_child(TurbineAero("aero"), pulling=["fl_in", "fl_out", "sh_out", "stage_count"])
@@ -76,5 +77,7 @@ class Turbine(System):
         scaling.add_equation("aero.Ncqdes == 100.0")
 
         # init
-        if init_file:
-            load_from_json(self, init_file)
+        if config:
+            class_dir = Path(inspect.getfile(self.__class__)).parent
+            data_path = class_dir / "data" / f"{config}.json"
+            load_from_json(self, data_path)
