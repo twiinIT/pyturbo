@@ -5,18 +5,32 @@ import numpy as np
 import pytest
 from cosapp.drivers import NonLinearSolver
 
+from pyturbo.utils import load_from_json
 
-def test_run_once(cls):
+
+def test_run_once(cls_and_data):
     """Run once systems."""
+    cls, data = cls_and_data
     print("System: ", cls.__name__)
     sys = cls("sys")
+
+    print("Load file: ", data)
+    load_from_json(sys, data)
+
     sys.run_once()
 
+    if "occ_view" in sys:
+        assert sys.occ_view.get_value().render()
 
-def test_run_off_design(cls):
+
+def test_run_off_design(cls_and_data):
     """Run off design methods."""
+    cls, data = cls_and_data
     print("System: ", cls.__name__)
     sys = cls("sys")
+    print("Load file: ", data)
+    load_from_json(sys, data)
+
     nls = sys.add_driver(NonLinearSolver("nls", tol=1e-6))
 
     try:

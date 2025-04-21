@@ -4,7 +4,7 @@
 import numpy.testing as npt
 from cosapp.drivers import NonLinearSolver
 
-from pyturbo.systems.turbofan import TurbofanGeom
+from pyturbo.systems.turbofan.physics import TurbofanGeom
 
 
 class TestTurbofanGeom:

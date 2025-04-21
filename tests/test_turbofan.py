@@ -85,13 +85,6 @@ class TestTurbofan:
         assert pytest.approx(sys.bpr) == bpr
         assert pytest.approx(sys.fan_diameter, rel=0.1) == 1.65
 
-    def test_view(self):
-        sys = Turbofan("sys")
-        sys.run_once()
-        sys.occ_view.get_value().render()
-
-        assert True
-
     def test_cfm56(self):
         """Calibration of CMF56-7 turbofan."""
         # Create a new turbofan system

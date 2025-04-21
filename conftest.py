@@ -54,6 +54,7 @@ def get_all_design_methods(classes):
 
 def get_all_data_files(classes):
     """Get all .json data files in the 'data' folder adjacent to each class file.
+
     If no data is found, still return (cls, None) to allow a basic test.
     """
     pairs = []
@@ -108,6 +109,4 @@ def pytest_generate_tests(metafunc):
         )
 
     if "cls_and_data" in metafunc.fixturenames:
-        metafunc.parametrize(
-            "cls_and_data", get_all_data_files(all_classes), scope="function"
-        )
+        metafunc.parametrize("cls_and_data", get_all_data_files(all_classes), scope="function")

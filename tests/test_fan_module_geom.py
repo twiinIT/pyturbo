@@ -3,7 +3,6 @@
 
 import numpy as np
 import numpy.testing as npt
-from cosapp.drivers import NonLinearSolver
 
 from pyturbo.systems.fan_module import FanModuleGeom
 
@@ -75,8 +74,3 @@ class TestFanModuleGeom:
         npt.assert_almost_equal(
             sys.ic_kp.exit_tip, [sys.fan_kp.inlet_tip_r, sys.shaft_kp.exit_hub_z]
         )
-
-    def test_solver(self):
-        sys = self.sys
-        sys.add_driver(NonLinearSolver("run"))
-        sys.run_drivers()

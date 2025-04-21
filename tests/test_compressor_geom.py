@@ -4,7 +4,7 @@
 import numpy as np
 import pytest
 
-from pyturbo.systems.compressor.compressor_geom import CompressorGeom
+from pyturbo.systems.compressor.physics.compressor_geom import CompressorGeom
 
 
 class TestCompressorGeom:

@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 from cosapp.drivers import NonLinearSolver
 
-from pyturbo.systems.compressor import CompressorAero
+from pyturbo.systems.compressor.physics import CompressorAero
 
 
 class TestCompressorAero:
@@ -14,7 +14,6 @@ class TestCompressorAero:
     def test_fan(self):
         sys = CompressorAero("cmp")
         sys.add_driver(NonLinearSolver("run"))
-        sys.add_unknown("phiP")
 
         sys.tip_in_r = 0.8
         sys.tip_out_r = 0.8

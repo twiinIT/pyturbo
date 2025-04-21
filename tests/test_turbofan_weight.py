@@ -3,7 +3,7 @@
 
 import pytest
 
-from pyturbo.systems.turbofan import TurbofanWeight
+from pyturbo.systems.turbofan.physics import TurbofanWeight
 
 
 class TestTurbofanWeight:

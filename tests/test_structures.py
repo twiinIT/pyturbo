@@ -50,17 +50,3 @@ class TestIntermediateCasing:
         sys.add_driver(NonLinearSolver("run"))
 
         sys.run_drivers()
-
-    def test_view_channel(self):
-        sys = Channel("sys")
-        sys.run_once()
-        sys.occ_view.get_value().render()
-
-        assert True
-
-    def test_view_ic(self):
-        sys = IntermediateCasing("sys")
-        sys.run_once()
-        sys.occ_view.get_value().render()
-
-        assert True
