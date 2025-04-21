@@ -90,7 +90,7 @@ class CompressorAero(System):
         self.add_inward("stage_count", 1, unit="", desc="number of stages")
         self.add_inward("tip_in_r", 1.0, unit="m", desc="inlet tip radius")
         self.add_inward("tip_out_r", 1.0, unit="m", desc="exit tip radius")
-        self.add_inward("inlet_area", 1.0, unit="m**2", desc="inlet area")
+        self.add_inward("inlet_area", 2.0, unit="m**2", desc="inlet area")
 
         # aero characteristics
         self.add_inward("eff_poly", 0.9, desc="polytropic efficiency")
@@ -103,15 +103,15 @@ class CompressorAero(System):
 
         # outwards
         # functional characteristics
-        self.add_outward("utip", 300.0, unit="m/s", desc="tip speed")
-        self.add_outward("phi", 0.0, unit="", desc="axial flow velocity coefficient")
-        self.add_outward("psi", 0.0, unit="", desc="load coefficient per stage")
+        self.add_outward("utip", 400.0, unit="m/s", desc="tip speed")
+        self.add_outward("phi", 0.5, unit="", desc="axial flow velocity coefficient")
+        self.add_outward("psi", 0.2, unit="", desc="load coefficient per stage")
 
         self.add_outward("pr", 1.0, unit="", desc="total to total pressure ratio")
         self.add_outward("tr", 1.0, unit="", desc="total to total temperature ratio")
         self.add_outward("spec_flow", 1.0, unit="kg/s/m**2", desc="inlet specific flow")
 
-        self.add_outward("pcnr", 100.0, unit="", desc="Percentage of rotational speed vs reference")
+        self.add_outward("pcnr", 95.0, unit="", desc="Percentage of rotational speed vs reference")
 
         # off design
         self.add_outward(
@@ -126,32 +126,27 @@ class CompressorAero(System):
         # design methods
         # generic
         scaling = self.add_design_method("scaling")
-        scaling.add_unknown("xnd", max_rel_step=0.5)
-        scaling.add_unknown("phiP", lower_bound=0.1, max_rel_step=0.5)
-
-        scaling.add_equation("pcnr == 95.0")
-        scaling.add_target("utip")
+        scaling.add_unknown("xnd")
+        scaling.add_target("pcnr")
 
         # scaling booster
-        scaling = self.add_design_method("scaling_booster")
-        scaling.add_unknown("phiP", max_rel_step=0.5)
-        scaling.add_unknown("xnd", max_rel_step=0.5)
+        scaling_booster = self.add_design_method("scaling_booster")
+        scaling_booster.extend(scaling)
+        scaling_booster.add_unknown("phiP", max_rel_step=0.5)
 
-        scaling.add_equation("phi == 0.45")
-        scaling.add_target("psi")
-        scaling.add_equation("pcnr == 95.0")
+        scaling_booster.add_target("phi")
+        scaling_booster.add_target("psi")
 
         # scaling hpc
-        scaling = self.add_design_method("scaling_hpc")
+        scaling_hpc = self.add_design_method("scaling_hpc")
+        scaling_hpc.extend(scaling)
 
-        scaling.add_unknown("xnd", max_rel_step=0.5)
-        scaling.add_unknown("phiP")
+        scaling_hpc.add_unknown("phiP")
+        scaling_hpc.add_target("phi")
+        scaling_hpc.add_target("utip")
+        scaling_hpc.add_target("psi")
 
-        scaling.add_equation("pcnr == 95.0")
-        scaling.add_equation("phi == 0.5")
-        scaling.add_target("utip")
-        scaling.add_target("psi")
-
+        # init
         self.sh_in.power = 1e6
 
     def compute(self):
@@ -180,5 +175,3 @@ class CompressorAero(System):
 
         self.spec_flow = Wc / self.inlet_area
         self.pcnr = self.sh_in.N / self.xnd * 100.0
-
-        print(self.sh_in.N, self.xnd, self.phiP)

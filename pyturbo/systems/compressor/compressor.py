@@ -89,7 +89,7 @@ class Compressor(System):
         scaling = self.add_design_method("scaling_booster")
         scaling.extend(self.aero.design_methods["scaling_booster"])
 
-        scaling.add_unknown("geom.blade_hub_to_tip_ratio", lower_bound=1e-5, upper_bound=1.0)
+        scaling.add_unknown("geom.blade_hub_to_tip_ratio", upper_bound=1.0 - 1e-3)
 
         # scaling hpc
         scaling = self.add_design_method("scaling_hpc")
