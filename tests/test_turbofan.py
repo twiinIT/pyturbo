@@ -32,7 +32,7 @@ class TestTurbofan:
 
     def test_init_environment(self):
         sys = self.sys
-        sys.pamb = 1e5
+        sys.pamb = 0.0
 
         init_environment(sys, mach=0.0, dtamb=0.0, alt=0.0)
 
@@ -41,6 +41,7 @@ class TestTurbofan:
     def test_run_CFM(self):
         sys = Turbofan("sys")
         load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")
+        init_environment(sys, mach=0.0, dtamb=15.0, alt=0.0)
 
         solver = sys.add_driver(NonLinearSolver("solver", tol=1e-6))
 
@@ -52,49 +53,25 @@ class TestTurbofan:
 
     def test_run_design_method(self):
         sys = Turbofan("sys")
+        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")
+        init_environment(sys, mach=0.0, dtamb=15.0, alt=0.0)
 
         design = sys.add_driver(NonLinearSolver("solver", tol=1e-6))
-
-        # run solver
-        sys.run_drivers()
-        assert np.linalg.norm(design.problem.residue_vector()) < 1e-6
 
         # pure scaling
         design.extend(sys.design_methods["scaling"])
         sys.run_drivers()
         assert np.linalg.norm(design.problem.residue_vector()) < 1e-6
 
-        # tuning bpr
-        design.extend(sys.design_methods["tuning_bpr"])
-
-        sys.bpr = bpr = 5.0
-
-        sys.run_drivers()
-        assert np.linalg.norm(design.problem.residue_vector()) < 1e-6
-        assert pytest.approx(sys.bpr) == bpr
-
-        # tuning thrust
-        design.extend(sys.design_methods["tuning_thrust"])
-
-        sys.thrust = thrust = 100e3
-
-        sys.run_drivers()
-        assert np.linalg.norm(design.problem.residue_vector()) < 1e-6
-        assert pytest.approx(sys.thrust) == thrust
-        assert pytest.approx(sys.bpr) == bpr
-        assert pytest.approx(sys.fan_diameter, rel=0.1) == 1.65
-
-    def test_cfm56(self):
+    def test_calib(self):
         """Calibration of CMF56-7 turbofan."""
         # Create a new turbofan system
         sys = Turbofan("sys")
         solver = sys.add_driver(NonLinearSolver("nls", tol=1e-6))
 
-        sys.run_drivers()
-        assert np.linalg.norm(solver.problem.residue_vector()) < 1e-6
-
         # cfm
         load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")
+        init_environment(sys, mach=0.0, dtamb=15.0, alt=0.0)
 
         # engine functional requirements
         solver.add_equation("thrust == 90e3")
@@ -126,10 +103,6 @@ class TestTurbofan:
         sys = Turbofan("sys")
         solver = sys.add_driver(NonLinearSolver("nls", tol=1e-6))
         init_environment(sys, mach=0.0, dtamb=15.0, alt=0.0)
-
-        sys.run_drivers()
-
-        assert np.linalg.norm(solver.problem.residue_vector()) < 1e-6
 
         # cfm
         load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")

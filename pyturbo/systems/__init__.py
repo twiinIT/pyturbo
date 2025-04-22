@@ -13,10 +13,7 @@ from pyturbo.systems.turbine import Turbine
 from pyturbo.systems.fan_module import FanModule  # isort: skip
 from pyturbo.systems.gas_generator import GasGenerator  # isort: skip
 
-from pyturbo.systems.turbofan import (  # isort: skip
-    Turbofan,
-    TurbofanWithAtm,
-)
+from pyturbo.systems.turbofan import Turbofan  # isort: skip
 
 
 __all__ = [
@@ -26,12 +23,8 @@ __all__ = [
     "Inlet",
     "Nacelle",
     "Nozzle",
-    "Channel",
-    "IntermediateCasing",
-    "FanDuct",
     "Turbine",
     "FanModule",
     "GasGenerator",
     "Turbofan",
-    "TurbofanWithAtm",
 ]

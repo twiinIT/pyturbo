@@ -3,6 +3,4 @@
 
 from pyturbo.systems.turbofan.turbofan import Turbofan
 
-from pyturbo.systems.turbofan.turbofan_with_atm import TurbofanWithAtm  # isort: skip
-
-__all__ = ["Turbofan", "TurbofanWithAtm"]
+__all__ = ["Turbofan"]

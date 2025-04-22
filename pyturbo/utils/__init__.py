@@ -12,10 +12,12 @@ from pyturbo.utils.view_tools import (
     create_sphere,
     rotate,
     translate,
+    view_system,
 )
 
 __all__ = [
     "add_nacelle_brand",
+    "view_system",
     "rz_to_3d",
     "slope_to_drdz",
     "slope_to_3d",
