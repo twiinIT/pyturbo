@@ -1,8 +1,11 @@
 # Copyright (C) 2022-2024, twiinIT
 # SPDX-License-Identifier: BSD-3-Clause
 
+from pathlib import Path
+
 from cosapp.systems import System
 
+import pyturbo.systems.turbofan.data as tf_data
 from pyturbo.systems.fan_module import FanModule
 from pyturbo.systems.gas_generator import GasGenerator
 from pyturbo.systems.generic import GenericSystemView
@@ -12,6 +15,7 @@ from pyturbo.systems.nozzle import Nozzle
 from pyturbo.systems.structures import Channel
 from pyturbo.systems.turbine import Turbine
 from pyturbo.systems.turbofan.physics import TurbofanAero, TurbofanGeom, TurbofanWeight
+from pyturbo.utils import load_from_json
 
 
 class Turbofan(System):
@@ -194,3 +198,6 @@ class Turbofan(System):
         scaling.extend(self.turbine.design_methods["scaling"])
         scaling.extend(self.core.design_methods["scaling"])
         scaling.extend(self.aero.design_methods["scaling"])
+
+        # init
+        load_from_json(self, Path(tf_data.__file__).parent / "CFM56_7.json")
