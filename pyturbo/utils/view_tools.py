@@ -4,6 +4,7 @@
 """Utility functions for visualisation."""
 
 import numpy as np
+from cosapp.base import System
 from pyoccad.create import (
     CreateAxis,
     CreateBox,
@@ -14,6 +15,14 @@ from pyoccad.create import (
 )
 from pyoccad.transform import Rotate, Translate
 from scipy.spatial.transform import Rotation as R
+
+
+def view_system(sys: System):
+    """View System in Jupyter Lab environement."""
+    try:
+        return sys.occ_view.get_value().render()
+    except KeyError:
+        raise (f"Missing occ_view port in system{sys.name}")
 
 
 def create_cylinder(r: float, h: float, r_top_bottom: float = 1.0):
