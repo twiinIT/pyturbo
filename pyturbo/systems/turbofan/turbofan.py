@@ -15,7 +15,8 @@ from pyturbo.systems.nozzle import Nozzle
 from pyturbo.systems.structures import Channel
 from pyturbo.systems.turbine import Turbine
 from pyturbo.systems.turbofan.physics import TurbofanAero, TurbofanGeom, TurbofanWeight
-from pyturbo.utils import load_from_json
+from pyturbo.thermo import init_environment
+from pyturbo.utils import load_from_json, view_system
 
 
 class Turbofan(System):
@@ -201,3 +202,13 @@ class Turbofan(System):
 
         # init
         load_from_json(self, Path(tf_data.__file__).parent / "CFM56_7.json")
+        self.init_environment()
+
+    def init_environment(self, mach=0.0, alt=0.0, dtamb=15.0):
+        """Initialize environement conditons."""
+        init_environment(self, mach=mach, alt=alt, dtamb=dtamb)
+        return self
+
+    def view_system(self):
+        """Return pyoccad view for jupyter lab."""
+        return view_system(self)
