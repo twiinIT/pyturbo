@@ -189,7 +189,7 @@ class Turbofan(System):
         # control mode
         control_mode = self.add_design_method("control_mode")
 
-        control_mode.add_unknown("fuel_W", max_rel_step=0.5)
+        control_mode.add_unknown("fuel_W", max_rel_step=0.1)
         control_mode.add_target("N1")
 
         # scaling method
