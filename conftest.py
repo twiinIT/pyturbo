@@ -101,7 +101,7 @@ def get_all_design_methods_and_data(class_and_path_list):
                 ]
 
             for method in instance.design_methods:
-                if method == "off_design":
+                if method == "off_design_stand_alone":
                     continue
 
                 if json_files:

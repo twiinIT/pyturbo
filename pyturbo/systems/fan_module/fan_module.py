@@ -136,11 +136,9 @@ class FanModule(System):
         scaling.extend(self.booster.design_methods["scaling"])
 
         # init
-        self.booster.stage_count = 4
-
         self.sh_in.power = 20e6
         self.sh_in.N = 5100.0
-        self.fl_in.W = 350.0
+        self.fl_in.W = 450.0
 
         self.splitter_shaft.power_fractions = np.r_[0.9]
         self.splitter_fluid.fluid_fractions = np.r_[0.8]

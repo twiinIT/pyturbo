@@ -183,13 +183,19 @@ class Turbofan(System):
         for name in children_view_name:
             self.connect(self[name], self.view, {"occ_view": f"{name}_view"})
 
-        # solver
+        # off design method
         self.add_unknown("fl_in.W", max_rel_step=0.5)
 
-        # design method
+        # control mode
+        control_mode = self.add_design_method("control_mode")
+
+        control_mode.add_unknown("fuel_W", max_rel_step=0.5)
+        control_mode.add_target("N1")
+
+        # scaling method
         scaling = self.add_design_method("scaling")
 
-        scaling.add_unknown("fuel_W")
+        scaling.add_unknown("fuel_W", max_rel_step=0.5)
         scaling.add_unknown("fan_diameter", max_rel_step=0.5)
         scaling.add_target("thrust")
 
