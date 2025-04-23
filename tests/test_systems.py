@@ -58,4 +58,7 @@ def test_run_design_method(cls_and_method_and_data):
         print("Problem: ", nls.problem)
         assert np.linalg.norm(nls.problem.residue_vector()) < 1e-6
     except ArithmeticError as e:
-        pytest.xfail(f"ArithmeticError: {e}")
+        if "Nonlinear problem nls error" in str(e):
+            pytest.xfail(f"ArithmeticError: {e}")
+        else:
+            raise ArithmeticError(e)
