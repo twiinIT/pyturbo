@@ -4,7 +4,7 @@ channels:
 dependencies:
   - python
   - cosapp
-  - numpy
+  - numpy<2.0
   - ambiance
   - pythonocc-core<7.9.0
   - pythermo
