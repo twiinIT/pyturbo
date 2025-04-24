@@ -213,7 +213,6 @@ class Turbofan(System):
     def init_environment(self, mach=0.0, alt=0.0, dtamb=15.0):
         """Initialize environement conditons."""
         init_environment(self, mach=mach, alt=alt, dtamb=dtamb)
-        print("coucou0", self.fl_in)
         return self
 
     def view_system(self):
