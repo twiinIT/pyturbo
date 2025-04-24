@@ -22,5 +22,6 @@ def init_environment(
 
     sys[fl_name].Tt = gas.total_t(tamb, mach)
     sys[fl_name].Pt = gas.total_p(pamb, tamb, sys[fl_name].Tt)
+    print("coucou2", tamb, sys[fl_name].Tt)
 
     return sys
