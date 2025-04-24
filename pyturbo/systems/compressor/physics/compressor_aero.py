@@ -172,6 +172,10 @@ class CompressorAero(System):
         self.eps_psi = delta_h / (self.stage_count * self.utip**2) - self.psi
 
         print("coucou1", self.fl_in.Tt)
+        if self.parent:
+            print("coucou1.1", self.parent.name)
+            if self.parent.parent:
+                print("coucou1.1", self.parent.parent.name)
         Wc = self.fl_in.W * sqrt(self.fl_in.Tt / 288.15) / (self.fl_in.Pt / 101325.0)
 
         self.spec_flow = Wc / self.inlet_area
