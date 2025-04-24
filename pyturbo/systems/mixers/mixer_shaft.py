@@ -87,7 +87,7 @@ class MixerShaft(System):
                 self.add_equation(f"N == {p}.N")
 
         if self.n_out > 1:
-            self.add_unknown("power_fractions")
+            self.add_unknown("power_fractions", max_rel_step=0.1)
 
     def compute(self):  # noqa: TWI002
 
