@@ -83,10 +83,7 @@ class TurbofanAero(System):
 
     def compute(self):
         self.thrust = self.primary_nozzle_thrust + self.secondary_nozzle_thrust - self.inlet_drag
-        if self.thrust:
-            self.sfc = self.fuel_W * 3600 / (self.thrust / 10)
-        else:
-            self.sfc = 0.0
+        self.sfc = self.fuel_W * 3600 / (self.thrust / 10) if self.thrust else 0.0
         self.opr = self.core_opr * self.booster_pr
         self.pr_split = self.core_opr / self.booster_pr
         self.pr_nozzle = self.fl_secondary_nozzle.Pt / self.fl_primary_nozzle.Pt
