@@ -33,8 +33,8 @@ def test_run_off_design(cls_and_data):
 
     nls = sys.add_driver(NonLinearSolver("nls", tol=1e-6))
 
-    if "off_design_stand_alone" in sys.design_methods:
-        nls.extend(sys.design_methods["off_design_stand_alone"])
+    if "off_design_standalone" in sys.design_methods:
+        nls.extend(sys.design_methods["off_design_standalone"])
 
     sys.run_drivers()
 

@@ -207,7 +207,7 @@ class Turbofan(System):
         scaling.extend(self.aero.design_methods["scaling"])
 
         # init
-        load_from_json(self, Path(tf_data.__file__).parent / "CFM56_7.json")
+        load_from_json(self, Path(tf_data.__file__).parent / "turbofan_default.json")
         self.init_environment()
 
     def init_environment(self, mach=0.0, alt=0.0, dtamb=15.0):

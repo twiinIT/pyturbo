@@ -40,7 +40,7 @@ class TestTurbofan:
 
     def test_run_CFM(self):
         sys = Turbofan("sys")
-        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")
+        load_from_json(sys, Path(tf_data.__file__).parent / "turbofan_default.json")
         init_environment(sys, mach=0.0, dtamb=15.0, alt=0.0)
 
         solver = sys.add_driver(NonLinearSolver("solver", tol=1e-6))
@@ -53,7 +53,7 @@ class TestTurbofan:
 
     def test_run_design_method(self):
         sys = Turbofan("sys")
-        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")
+        load_from_json(sys, Path(tf_data.__file__).parent / "turbofan_default.json")
         init_environment(sys, mach=0.0, dtamb=15.0, alt=0.0)
 
         design = sys.add_driver(NonLinearSolver("solver", tol=1e-6))
@@ -70,7 +70,7 @@ class TestTurbofan:
         solver = sys.add_driver(NonLinearSolver("nls", tol=1e-6))
 
         # cfm
-        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")
+        load_from_json(sys, Path(tf_data.__file__).parent / "turbofan_default.json")
         init_environment(sys, mach=0.0, dtamb=15.0, alt=0.0)
 
         # engine functional requirements
@@ -105,7 +105,7 @@ class TestTurbofan:
         init_environment(sys, mach=0.0, dtamb=15.0, alt=0.0)
 
         # cfm
-        load_from_json(sys, Path(tf_data.__file__).parent / "CFM56_7.json")
+        load_from_json(sys, Path(tf_data.__file__).parent / "turbofan_default.json")
 
         # engine functional requirements
         solver.add_equation("thrust == 90e3")

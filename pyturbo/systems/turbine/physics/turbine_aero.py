@@ -92,7 +92,7 @@ class TurbineAero(System):
         self.add_unknown("fl_in.W")
         self.add_equation("fl_in.W == Wcrit")
 
-        off_design = self.add_design_method("off_design_stand_alone")
+        off_design = self.add_design_method("off_design_standalone")
         off_design.add_target("sh_out.N")
         off_design.add_target("sh_out.power")
 
